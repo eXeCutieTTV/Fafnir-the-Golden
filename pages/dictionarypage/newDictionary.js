@@ -502,45 +502,48 @@ function dictionaryPage() {
                             suffix,
                             suffixStem
                         );*/
-                        if (suffixType === 'n' || suffixType === 'adj') {
-                            console.log('hello world')
-                        } else {
-                            const Shtml = `
-                                <div>
-                                    <table>
-                                        <tr>
-                                            <th>...</th>
-                                            <th>Word</th>
-                                            <th>Stem</th>
-                                            <th>Affix</th>
-                                            <th>Gender</th>
-                                            <th>Number</th>
-                                            <th>Person</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Prefix</th>
-                                            <td>${keyword}</td>
-                                            <td>${suffixStem}</td>
-                                            <td>${prefix}</td>
-                                            <td>${prefixGender}</td>
-                                            <td>${prefixNumber}</td>
-                                            <td>${prefixPerson}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Suffix</th>
-                                            <td>${keyword}</td>
-                                            <td>${suffixStem}</td>
-                                            <td>${suffix}</td>
-                                            <td>${suffixGender}</td>
-                                            <td>${suffixNumber}</td>
-                                            <td>${suffixPerson}</td>
-                                        </tr>
-                                    </table>
-                                </div>`;
 
-                            //const wrapper = document.getElementById('page96');
-                            //console.log(wrapper);
-                            helperFunctions.standard.createPageById('page96', Shtml);
+                        if (ALL_WORDS.MAP[suffixStem]) {
+                            if (suffixType === 'n' || suffixType === 'adj') {
+                                console.log('hello world')
+                            } else {
+                                const Shtml = `
+                                    <div>
+                                        <table>
+                                            <tr>
+                                                <th>...</th>
+                                                <th>Word</th>
+                                                <th>Stem</th>
+                                                <th>Affix</th>
+                                                <th>Gender</th>
+                                                <th>Number</th>
+                                                <th>Person</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Prefix</th>
+                                                <td>${keyword}</td>
+                                                <td>${suffixStem}</td>
+                                                <td>${prefix}</td>
+                                                <td>${prefixGender}</td>
+                                                <td>${prefixNumber}</td>
+                                                <td>${prefixPerson}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Suffix</th>
+                                                <td>${keyword}</td>
+                                                <td>${suffixStem}</td>
+                                                <td>${suffix}</td>
+                                                <td>${suffixGender}</td>
+                                                <td>${suffixNumber}</td>
+                                                <td>${suffixPerson}</td>
+                                            </tr>
+                                        </table>
+                                    </div>`;
+
+                                //const wrapper = document.getElementById('page96');
+                                //console.log(wrapper);
+                                helperFunctions.standard.createPageById('page96', Shtml);
+                            }
                         }
                     }
                 }
