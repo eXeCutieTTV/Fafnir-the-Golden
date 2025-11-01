@@ -437,22 +437,71 @@ function dictionaryPage() {
 
             if (hasPrefix) {
                 const array = prefixData[0].Prefixdeclension;
+                const parrentArray = prefixData[0];
                 const prefixGender = array[3];
                 const prefixNumber = array[2];
                 const prefixPerson = array[1];
-                const prefix = array[0];
+                const prefix = parrentArray.usedPrefix;
+                const prefixStem = parrentArray.Prefixstem;
 
-                console.log(//empty?? wtf. why empty :sob:vv
-
+                console.log(
                     prefixGender,
                     prefixNumber,
                     prefixPerson,
                     prefix,
-                    array
-
+                    array,
+                    prefixData[0],
+                    prefixStem
                 );
+                const Phtml = `
+                    ${keyword} <br>
+                    prefixGender, ${prefixGender} <br>
+                    prefixNumber, ${prefixNumber} <br>
+                    prefixPerson, ${prefixPerson} <br>
+                    prefix, ${prefix} <br>
+                    prefixStem, ${prefixStem}`;
+                helperFunctions.standard.createPageById('page96', Phtml);
+                if (helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData)) {
+                    hasSuffix = true;
+
+                    const array = suffixData[0];
+                    const suffixDeclensions = array.Suffixdeclensions;
+                    for (declension of Object.values(suffixDeclensions)) {
+                        const suffixDeclension = declension;
+                        const suffixGender = array.Suffixgender;
+                        const suffixNumber = array.Suffixnumber;
+                        const suffixPerson = array.Suffixperson;
+                        const suffixType = array.Suffixtype;
+                        const suffix = array.usedSuffix;
+                        const suffixStem = array.Suffixstem;
+
+                        console.log(
+                            suffixDeclension,
+                            suffixGender,
+                            suffixNumber,
+                            suffixPerson,
+                            suffixType,
+                            suffix,
+                            suffixStem
+                        );
+
+                        const Shtml = `
+                        ${keyword} <br>
+                        suffixDeclension, ${suffixDeclension} <br>
+                        suffixGender, ${suffixGender} <br>
+                        suffixNumber, ${suffixNumber} <br>
+                        suffixPerson, ${suffixPerson} <br>
+                        suffixType, ${suffixType} <br>
+                        suffix, ${suffix} <br>
+                        suffixStem, ${suffixStem}`;
+
+                        const wrapper = document.getElementById('page96');
+                        console.log(wrapper);
+                        helperFunctions.standard.createDivById('', wrapper, Shtml);
+                    }
+                }
             }
-            if (hasSuffix) {
+            else if (hasSuffix) {
                 const array = suffixData[0];
                 const suffixDeclensions = array.Suffixdeclensions;
                 for (declension of Object.values(suffixDeclensions)) {
@@ -462,6 +511,7 @@ function dictionaryPage() {
                     const suffixPerson = array.Suffixperson;
                     const suffixType = array.Suffixtype;
                     const suffix = array.usedSuffix;
+                    const suffixStem = array.Suffixstem;
 
                     console.log(
                         suffixDeclension,
@@ -469,16 +519,19 @@ function dictionaryPage() {
                         suffixNumber,
                         suffixPerson,
                         suffixType,
-                        suffix
+                        suffix,
+                        suffixStem
                     );
 
                     const html = `
+                        ${keyword} <br>
                         suffixDeclension, ${suffixDeclension} <br>
                         suffixGender, ${suffixGender} <br>
                         suffixNumber, ${suffixNumber} <br>
                         suffixPerson, ${suffixPerson} <br>
                         suffixType, ${suffixType} <br>
-                        suffix, ${suffix}`;
+                        suffix, ${suffix} <br>
+                        suffixStem, ${suffixStem}`;
 
                     helperFunctions.standard.createPageById('page96', html);
 

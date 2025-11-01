@@ -13,9 +13,10 @@ const createPageById = function createPageById(id, html) {
     let page = document.getElementById(id);
     if (!page) {
         page = document.createElement('div');
-        page.id = id;
-        page.className = 'page';
     }
+
+    page.id = id;
+    page.className = 'page';
     page.innerHTML = html;
 
     const pagewrapper = document.querySelector('.pages');
@@ -46,9 +47,19 @@ const createDivById = function createDivById(id, wrapper, html) {
 
     divwrapper.appendChild(div);
 }
-const sliceKeyword = function sliceKeyword(keyword, x) {
+const sliceKeywordNegative = function sliceKeywordNegative(keyword, x) {
     const slice1 = keyword.slice(0, -x);
     const slice2 = keyword.slice(-x);
+    return { slice1, slice2 };
+
+    // Example usage:
+    //const { slice1, slice2 } = sliceKeyword("ækluu", 2);
+    //console.log(slice1); // Output: ækl
+    //console.log(slice2); // Output: uu
+}
+const sliceKeywordPositive = function sliceKeywordPositive(keyword, x) {
+    const slice1 = keyword.slice(0, x);
+    const slice2 = keyword.slice(x);
     return { slice1, slice2 };
 
     // Example usage:
@@ -82,7 +93,8 @@ const standard = {
     clearPageById,
     createPageById,
     createDivById,
-    sliceKeyword,
+    sliceKeywordNegative,
+    sliceKeywordPositive,
     reverseSearchIdsOnSearch
 }
 
@@ -114,7 +126,7 @@ const neoSuffixChecker = function neoSuffixChecker(keyword, map, resultArray) {
     if (!usedSuffix) return null;
 
     const suffixLength = usedSuffix.length;
-    const { slice1, slice2 } = helperFunctions.standard.sliceKeyword(keyword, suffixLength);
+    const { slice1, slice2 } = helperFunctions.standard.sliceKeywordNegative(keyword, suffixLength);
     const Suffixstem = slice1;
 
     const result = {
@@ -163,8 +175,8 @@ const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
     }
 
     const prefixLength = usedPrefix.length;
-    const { slice1, slice2 } = helperFunctions.standard.sliceKeyword(keyword, prefixLength);
-    const Prefixstem = slice1;
+    const { slice1, slice2 } = helperFunctions.standard.sliceKeywordPositive(keyword, prefixLength);
+    const Prefixstem = slice2;
     console.log(prefix, usedPrefix); // worked earlier - havent changed anything:q
 
 
@@ -174,7 +186,8 @@ const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
         Prefixnumber,
         Prefixdeclension,
         usedPrefix,
-        Prefixstem
+        Prefixstem,
+        array
     }
     // push into provided array if it is a real array
     if (Array.isArray(resultArray)) resultArray.push(result);
