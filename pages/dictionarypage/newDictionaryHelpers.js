@@ -304,11 +304,6 @@ const neoVerbTables = function neoVerbTables(affixState, word, wrapper) {
         1: { 1: 'Prefix', 2: VERBS.PREFIXES.MAP },
         2: { 1: 'Suffix', 2: VERBS.SUFFIXES.MAP }
     }
-    let maybeAx = [];
-    affixState === 1 ? maybeAx = WORD_UTILS.axifyVowelCouples(affixStateMap[1][2][1].Singular['Exalted'], word, '') : maybeAx = [];
-
-
-    console.log(maybeAx[0]);
     const html = `
         <table id="Verb-Table-${affixStateMap[affixState][1]}" style="margin-bottom: 10px;">
             <tr>
