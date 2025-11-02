@@ -317,8 +317,8 @@ const neoVerbTables = function neoVerbTables(affixState, wrapper) {
                 <th>Abstract</th>
             </tr>
             <tr>
-                <th rowSpan = 3>Singular</th>
-                <th>1.</th>
+                <th style = "width:86px" rowSpan = 3>Singular</th>
+                <th style = "width:14px">1.</th>
                 <td>${affixStateMap[affixState][2][1].Singular['Exalted']}</td>
                 <td>${affixStateMap[affixState][2][1].Singular['Rational']}</td>
                 <td>${affixStateMap[affixState][2][1].Singular['Monstrous']}</td>

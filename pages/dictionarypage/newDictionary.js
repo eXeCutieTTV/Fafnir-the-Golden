@@ -276,9 +276,7 @@ function dictionaryPage() {
                     <div>
                         <table>
                             <tr>
-                                <th>...</th>
-                                <th>Word</th>
-                                <th>Stem</th>
+                                <th style="width:116px">...</th>
                                 <th>Prefix</th>
                                 <th>Gender</th>
                                 <th>Number</th>
@@ -286,8 +284,6 @@ function dictionaryPage() {
                             </tr>
                             <tr>
                                 <th>Prefix</th>
-                                <td>${prefixKeyword}</td>
-                                <td id="type2PrefixONLYStem">${prefixStem}</td>
                                 <td>${prefix}</td>
                                 <td>${prefixGender}</td>
                                 <td>${prefixNumber}</td>
@@ -297,10 +293,16 @@ function dictionaryPage() {
                         <br>
                         <table>
                             <tr>
+                                <th style="width:116px">...</th>
+                                <th>Word</th>
+                                <th>Stem</th>
                                 <th>Definition</th>
                                 <th>Usage Notes</th>
                             </tr>
                             <tr>
+                                <th>Info</th>
+                                <td>${prefixKeyword}</td>
+                                <td id="type2PrefixONLYStem">${prefixStem}</td>
                                 <td>${stemDifinition}</td>
                                 <td>${stemNotes || '...'}</td>
                             </tr>
@@ -364,7 +366,7 @@ function dictionaryPage() {
                                     <div>
                                         <table>
                                             <tr>
-                                                <th>...</th>
+                                                <th style="width:116px">...</th>
                                                 <th>Word</th>
                                                 <th>Stem</th>
                                                 <th>Affix</th>
@@ -469,9 +471,7 @@ function dictionaryPage() {
                         <div>
                             <table>
                                 <tr>
-                                    <th>...</th>
-                                    <th>Word</th>
-                                    <th>Stem</th>
+                                    <th style="width:116px">...</th>
                                     <th>Suffix</th>
                                     <th>Gender</th>
                                     <th>Number</th>
@@ -479,8 +479,6 @@ function dictionaryPage() {
                                 </tr>
                                 <tr>
                                     <th>Prefix</th>
-                                    <td>${keyword}</td>
-                                    <td id="type2SuffixONLYStem">${suffixStem}</td>
                                     <td>${suffix}</td>
                                     <td>${suffixGender}</td>
                                     <td>${suffixNumber}</td>
@@ -490,10 +488,16 @@ function dictionaryPage() {
                             <br>
                             <table>
                                 <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
                                     <th>Definition</th>
                                     <th>Usage Notes</th>
                                 </tr>
                                 <tr>
+                                    <th>Info</th>
+                                    <td>${suffixKeyword}</td>
+                                    <td id="type2SuffixONLYStem">${suffixStem}</td>
                                     <td>${stemDifinition}</td>
                                     <td>${stemNotes || '...'}</td>
                                 </tr>
