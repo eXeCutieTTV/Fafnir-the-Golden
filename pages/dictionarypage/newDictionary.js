@@ -238,6 +238,9 @@ function dictionaryPage() {
         else if (helperFunctions.affixHelpers.neoPrefixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, prefixData) || (helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {//type 2
             console.log('-----type2-----');
 
+
+
+
             let hasPrefix = (prefixData.length > 0 ? true : false);
             let hasSuffix = (suffixData.length > 0 ? true : false);
 
@@ -251,6 +254,7 @@ function dictionaryPage() {
                 const prefix = parrentArray.usedPrefix;
                 const prefixStem = parrentArray.Prefixstem;
                 const prefixKeyword = keyword;
+                const prefixType = 'v'; //can soft code later, when we add more prefixes than just v
 
                 const stemMap = ALL_WORDS.MAP[prefixStem] || [];
                 const stemDifinition = stemMap.definition || '...';
@@ -265,6 +269,13 @@ function dictionaryPage() {
                     prefixData[0],
                     prefixStem
                 );*/
+
+
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASS)) {
+                    if (key.SHORT === prefixType) { wordclass = key.NAME }
+                }; //console.log(wordclass);
+
                 const Phtml = `
                     <div>
                         <table>
@@ -272,6 +283,7 @@ function dictionaryPage() {
                                 <th style="width:116px">...</th>
                                 <th>Word</th>
                                 <th>Stem</th>
+                                <th>Wordclass</th>
                                 <th>Definition</th>
                                 <th>Usage Notes</th>
                             </tr>
@@ -279,6 +291,7 @@ function dictionaryPage() {
                                 <th>Info</th>
                                 <td>${prefixKeyword}</td>
                                 <td id="type2PrefixONLYStem">${prefixStem}</td>
+                                <td>${wordclass}</td>
                                 <td>${stemDifinition}</td>
                                 <td>${stemNotes || '...'}</td>
                             </tr>
@@ -355,6 +368,11 @@ function dictionaryPage() {
 
                             console.log(suffixType);
 
+                            let wordclass = '';
+                            for (const key of Object.values(WORDCLASS)) {
+                                if (key.SHORT === suffixType) { wordclass = key.NAME }
+                            }; //console.log(wordclass);
+
                             if (suffixType === 'n' || suffixType === 'adj') {
                                 console.log('hello world')
                             } else {
@@ -365,6 +383,7 @@ function dictionaryPage() {
                                                 <th style="width:116px">...</th>
                                                 <th>Word</th>
                                                 <th>Stem</th>
+                                                <th>Wordclass</th>
                                                 <th>Definition</th>
                                                 <th>Usage Notes</th>
                                             </tr>
@@ -372,6 +391,7 @@ function dictionaryPage() {
                                                 <th>Info</th>
                                                 <td>${keyword}</td>
                                                 <td id="type2SuffixBOTHStem">${suffixStem}</td>
+                                                <td>${wordclass}</td>
                                                 <td>${stemDifinition}</td>
                                                 <td>${stemNotes || '...'}</td>
                                             </tr>
@@ -450,7 +470,7 @@ function dictionaryPage() {
                         suffixStem
                     );*/
                     const stemMap = ALL_WORDS.MAP[suffixStem] || [];
-                    const stemDifinition = stemMap.definition || '...';
+                    let stemDifinition = stemMap.definition || '...';
                     const stemNotes = stemMap.usage_notes || '...';
 
                     console.log(
@@ -462,9 +482,27 @@ function dictionaryPage() {
                         suffix,
                         suffixStem
                     );
-                    console.log(suffixType);
+                    console.log(
+                        stemMap,
+                        stemMap.genders,
+                        stemDifinition,
+                        stemNotes
+                    )
+                    let wordclass = '';
+                    for (const key of Object.values(WORDCLASS)) {
+                        if (key.SHORT === suffixType) { wordclass = key.NAME }
+                    }; //console.log(wordclass);
+
 
                     if (suffixType === 'n' || suffixType === 'adj') {
+
+                        const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                        for (const [gndr, def] of Object.entries(combinedGendersObject)) {
+                            if (gndr === suffixGender) {
+                                stemDifinition = def;
+                            }
+                        }
+
                         const SNhtml = `
                         <div>
                             <table>
@@ -472,6 +510,7 @@ function dictionaryPage() {
                                     <th style="width:116px">...</th>
                                     <th>Word</th>
                                     <th>Stem</th>
+                                    <th>Wordclass</th>
                                     <th>Definition</th>
                                     <th>Usage Notes</th>
                                 </tr>
@@ -479,6 +518,7 @@ function dictionaryPage() {
                                     <th>Info</th>
                                     <td>${suffixKeyword}</td>
                                     <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                    <td>${wordclass}</td>
                                     <td>${stemDifinition}</td>
                                     <td>${stemNotes || '...'}</td>
                                 </tr>
@@ -514,6 +554,7 @@ function dictionaryPage() {
                                         <th style="width:116px">...</th>
                                         <th>Word</th>
                                         <th>Stem</th>
+                                        <th>Wordclass</th>
                                         <th>Definition</th>
                                         <th>Usage Notes</th>
                                     </tr>
@@ -521,6 +562,7 @@ function dictionaryPage() {
                                         <th>Info</th>
                                         <td>${suffixKeyword}</td>
                                         <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                        <td>${wordclass}</td>
                                         <td>${stemDifinition}</td>
                                         <td>${stemNotes || '...'}</td>
                                     </tr>
