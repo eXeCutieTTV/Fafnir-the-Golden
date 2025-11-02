@@ -494,7 +494,7 @@ function dictionaryPage() {
                     }; //console.log(wordclass);
 
 
-                    if (suffixType === 'n' || suffixType === 'adj') {
+                    if (suffixType === 'n' || suffixType === 'adj') {//TODO due to how keywords populate suffix tables, ie theres symbols in parenthesis', it sometimes fails to find the correct stem.
 
                         const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
                         for (const [gndr, def] of Object.entries(combinedGendersObject)) {
