@@ -298,12 +298,17 @@ const type1extraTableRow = function type1extraTableRow(word, declension, forms, 
 
     return row;
 }
-const neoVerbTables = function neoVerbTables(affixState, wrapper) {
+const neoVerbTables = function neoVerbTables(affixState, word, wrapper) {
 
     const affixStateMap = {
         1: { 1: 'Prefix', 2: VERBS.PREFIXES.MAP },
         2: { 1: 'Suffix', 2: VERBS.SUFFIXES.MAP }
     }
+    let maybeAx = [];
+    affixState === 1 ? maybeAx = WORD_UTILS.axifyVowelCouples(affixStateMap[1][2][1].Singular['Exalted'], word, '') : maybeAx = [];
+
+
+    console.log(maybeAx[0]);
     const html = `
         <table id="Verb-Table-${affixStateMap[affixState][1]}" style="margin-bottom: 10px;">
             <tr>
@@ -319,101 +324,101 @@ const neoVerbTables = function neoVerbTables(affixState, wrapper) {
             <tr>
                 <th style = "width:86px" rowSpan = 3>Singular</th>
                 <th style = "width:14px">1.</th>
-                <td>${affixStateMap[affixState][2][1].Singular['Exalted']}</td>
-                <td>${affixStateMap[affixState][2][1].Singular['Rational']}</td>
-                <td>${affixStateMap[affixState][2][1].Singular['Monstrous']}</td>
-                <td>${affixStateMap[affixState][2][1].Singular['Irrational']}</td>
-                <td>${affixStateMap[affixState][2][1].Singular['Magical']}</td>
-                <td>${affixStateMap[affixState][2][1].Singular['Mundane']}</td>
-                <td>${affixStateMap[affixState][2][1].Singular['Abstract']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Exalted'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Exalted']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Rational'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Rational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Monstrous'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Monstrous']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Irrational'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Irrational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Magical'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Magical']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Mundane'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Mundane']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Abstract'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Abstract']}</td>
             </tr>
             <tr>
                 <th>2.</th>
-                <td>${affixStateMap[affixState][2][2].Singular['Exalted']}</td>
-                <td>${affixStateMap[affixState][2][2].Singular['Rational']}</td>
-                <td>${affixStateMap[affixState][2][2].Singular['Monstrous']}</td>
-                <td>${affixStateMap[affixState][2][2].Singular['Irrational']}</td>
-                <td>${affixStateMap[affixState][2][2].Singular['Magical']}</td>
-                <td>${affixStateMap[affixState][2][2].Singular['Mundane']}</td>
-                <td>${affixStateMap[affixState][2][2].Singular['Abstract']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Exalted'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Exalted']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Rational'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Rational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Monstrous'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Monstrous']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Irrational'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Irrational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Magical'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Magical']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Mundane'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Mundane']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Abstract'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Abstract']}</td>
             </tr>
             <tr>
                 <th>3.</th>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Exalted']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Rational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Monstrous']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Irrational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Magical']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Mundane']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Abstract']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Exalted'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Exalted']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Rational'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Rational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Monstrous'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Monstrous']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Irrational'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Irrational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Magical'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Magical']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Mundane'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Mundane']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Abstract'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Abstract']}</td>
             </tr>
             <tr>
                 <th rowSpan = 3>Dual</th>
                 <th>1.</th>
-                <td>${affixStateMap[affixState][2][1].Dual['Exalted']}</td>
-                <td>${affixStateMap[affixState][2][1].Dual['Rational']}</td>
-                <td>${affixStateMap[affixState][2][1].Dual['Monstrous']}</td>
-                <td>${affixStateMap[affixState][2][1].Dual['Irrational']}</td>
-                <td>${affixStateMap[affixState][2][1].Dual['Magical']}</td>
-                <td>${affixStateMap[affixState][2][1].Dual['Mundane']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Exalted'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Exalted']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Rational'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Rational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Monstrous'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Monstrous']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Irrational'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Irrational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Magical'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Magical']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Mundane'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Mundane']}</td>
                 <td>${affixStateMap[affixState][2][1].Dual['Abstract']}</td>
             </tr>
             <tr>
                 <th>2.</th>
-                <td>${affixStateMap[affixState][2][2].Dual['Exalted']}</td>
-                <td>${affixStateMap[affixState][2][2].Dual['Rational']}</td>
-                <td>${affixStateMap[affixState][2][2].Dual['Monstrous']}</td>
-                <td>${affixStateMap[affixState][2][2].Dual['Irrational']}</td>
-                <td>${affixStateMap[affixState][2][2].Dual['Magical']}</td>
-                <td>${affixStateMap[affixState][2][2].Dual['Mundane']}</td>
-                <td>${affixStateMap[affixState][2][2].Dual['Abstract']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Exalted'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Exalted']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Rational'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Rational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Monstrous'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Monstrous']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Irrational'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Irrational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Magical'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Magical']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Mundane'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Mundane']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Abstract'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Abstract']}</td>
             </tr>
             <tr>
                 <th>3.</th>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Exalted']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Rational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Monstrous']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Irrational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Magical']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Mundane']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Abstract']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Exalted'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Exalted']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Rational'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Rational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Monstrous'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Monstrous']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Irrational'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Irrational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Magical'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Magical']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Mundane'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Mundane']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Abstract'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Abstract']}</td>
             </tr>
             <tr>
                 <th rowSpan = 3>Plural</th>
                 <th>1.</th>
-                <td>${affixStateMap[affixState][2][1].Plural['Exalted']}</td>
-                <td>${affixStateMap[affixState][2][1].Plural['Rational']}</td>
-                <td>${affixStateMap[affixState][2][1].Plural['Monstrous']}</td>
-                <td>${affixStateMap[affixState][2][1].Plural['Irrational']}</td>
-                <td>${affixStateMap[affixState][2][1].Plural['Magical']}</td>
-                <td>${affixStateMap[affixState][2][1].Plural['Mundane']}</td>
-                <td>${affixStateMap[affixState][2][1].Plural['Abstract']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Exalted'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Exalted']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Rational'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Rational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Monstrous'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Monstrous']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Irrational'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Irrational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Magical'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Magical']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Mundane'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Mundane']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Abstract'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Abstract']}</td>
             </tr>
             <tr>
                 <th>2.</th>
-                <td>${affixStateMap[affixState][2][2].Plural['Exalted']}</td>
-                <td>${affixStateMap[affixState][2][2].Plural['Rational']}</td>
-                <td>${affixStateMap[affixState][2][2].Plural['Monstrous']}</td>
-                <td>${affixStateMap[affixState][2][2].Plural['Irrational']}</td>
-                <td>${affixStateMap[affixState][2][2].Plural['Magical']}</td>
-                <td>${affixStateMap[affixState][2][2].Plural['Mundane']}</td>
-                <td>${affixStateMap[affixState][2][2].Plural['Abstract']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Exalted'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Exalted']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Rational'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Rational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Monstrous'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Monstrous']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Irrational'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Irrational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Magical'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Magical']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Mundane'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Mundane']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Abstract'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Abstract']}</td>
             </tr>
             <tr>
                 <th>3.</th>
-                <td>${affixStateMap[affixState][2][3].Plural['Exalted']}</td>
-                <td>${affixStateMap[affixState][2][3].Plural['Rational']}</td>
-                <td>${affixStateMap[affixState][2][3].Plural['Monstrous']}</td>
-                <td>${affixStateMap[affixState][2][3].Plural['Irrational']}</td>
-                <td>${affixStateMap[affixState][2][3].Plural['Magical']}</td>
-                <td>${affixStateMap[affixState][2][3].Plural['Mundane']}</td>
-                <td>${affixStateMap[affixState][2][3].Plural['Abstract']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Exalted'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Exalted']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Rational'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Rational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Monstrous'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Monstrous']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Irrational'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Irrational']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Magical'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Magical']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Mundane'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Mundane']}</td>
+                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Abstract'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Abstract']}</td>
             </tr>
         </table>
         `;
     helperFunctions.standard.createDivById('', wrapper, html);
 }
-const neoNounTables = function neoNounTables(declension, mood, wrapper,combinedGendersObject) {
+const neoNounTables = function neoNounTables(declension, mood, wrapper, combinedGendersObject) {
     const table = document.createElement('table');
 
     const moodMap = {
