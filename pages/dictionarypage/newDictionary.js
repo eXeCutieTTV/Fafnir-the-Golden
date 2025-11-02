@@ -453,7 +453,7 @@ function dictionaryPage() {
                     const stemDifinition = stemMap.definition || '...';
                     const stemNotes = stemMap.usage_notes || '...';
 
-                    /*console.log(
+                    console.log(
                         suffixDeclension,
                         suffixGender,
                         suffixNumber,
@@ -461,16 +461,55 @@ function dictionaryPage() {
                         suffixType,
                         suffix,
                         suffixStem
-                    );*/
+                    );
                     console.log(suffixType);
 
                     if (suffixType === 'n' || suffixType === 'adj') {
-                        console.log('hello world')
-                    } else {
+                        const SNhtml = `
+                        <div>
+                            <table>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                </tr>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${suffixKeyword}</td>
+                                    <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                    <td>${stemDifinition}</td>
+                                    <td>${stemNotes || '...'}</td>
+                                </tr>
+                            </table>
+                            <br>
+                            <table>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Suffix</th>
+                                    <th>Declension</th>
+                                    <th>Case</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                </tr>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${suffix}</td>
+                                    <td>${suffixDeclension}</td>
+                                    <td>${suffixPerson}</td>
+                                    <td>${suffixGender}</td>
+                                    <td>${suffixNumber}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        `;
 
+                        helperFunctions.standard.createPageById('page96', SNhtml);
+                    } else {
                         const Shtml = `
                             <div>
-                            <table>
+                                <table>
                                     <tr>
                                         <th style="width:116px">...</th>
                                         <th>Word</th>
