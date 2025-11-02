@@ -620,7 +620,7 @@ function dictionaryPage() {
                                 <th>...</th>
                                 <th>Word</th>
                                 <th>Stem</th>
-                                <th>Prefix</th>
+                                <th>Suffix</th>
                                 <th>Gender</th>
                                 <th>Number</th>
                                 <th>Person</th>
