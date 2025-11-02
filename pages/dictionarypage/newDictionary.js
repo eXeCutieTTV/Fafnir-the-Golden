@@ -329,7 +329,10 @@ function dictionaryPage() {
 
                     helperFunctions.tablegen.populateSummaryTables(prefixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
+                console.log(prefixData, suffixData);
                 if ((helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
+
+                console.log(prefixData, suffixData);
                     hasSuffix = true;
 
                     const array = suffixData[0];
@@ -367,8 +370,6 @@ function dictionaryPage() {
                                         <table>
                                             <tr>
                                                 <th style="width:116px">...</th>
-                                                <th>Word</th>
-                                                <th>Stem</th>
                                                 <th>Affix</th>
                                                 <th>Gender</th>
                                                 <th>Number</th>
@@ -376,8 +377,6 @@ function dictionaryPage() {
                                             </tr>
                                             <tr>
                                                 <th>Prefix</th>
-                                                <td>${keyword}</td>
-                                                <td id="type2PrefixBOTHStem">${suffixStem}</td>
                                                 <td>${prefix}</td>
                                                 <td>${prefixGender}</td>
                                                 <td>${prefixNumber}</td>
@@ -385,8 +384,6 @@ function dictionaryPage() {
                                             </tr>
                                             <tr>
                                                 <th>Suffix</th>
-                                                <td>${keyword}</td>
-                                                <td id="type2SuffixBOTHStem">${suffixStem}</td>
                                                 <td>${suffix}</td>
                                                 <td>${suffixGender}</td>
                                                 <td>${suffixNumber}</td>
@@ -396,10 +393,16 @@ function dictionaryPage() {
                                         <br>
                                         <table>
                                             <tr>
+                                                <th style="width:116px">...</th>
+                                                <th>Word</th>
+                                                <th>Stem</th>
                                                 <th>Definition</th>
                                                 <th>Usage Notes</th>
                                             </tr>
                                             <tr>
+                                                <th>Info</th>
+                                                <td>${keyword}</td>
+                                                <td id="type2SuffixBOTHStem">${suffixStem}</td>
                                                 <td>${stemDifinition}</td>
                                                 <td>${stemNotes || '...'}</td>
                                             </tr>
