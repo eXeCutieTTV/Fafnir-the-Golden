@@ -353,6 +353,8 @@ function dictionaryPage() {
                             const stemDifinition = stemMap.definition || '...';
                             const stemNotes = stemMap.usage_notes || '...';
 
+                            console.log(suffixType);
+
                             if (suffixType === 'n' || suffixType === 'adj') {
                                 console.log('hello world')
                             } else {
@@ -460,57 +462,62 @@ function dictionaryPage() {
                         suffix,
                         suffixStem
                     );*/
+                    console.log(suffixType);
 
-                    const Shtml = `
-                        <div>
-                        <table>
-                                <tr>
-                                    <th style="width:116px">...</th>
-                                    <th>Word</th>
-                                    <th>Stem</th>
-                                    <th>Definition</th>
-                                    <th>Usage Notes</th>
-                                </tr>
-                                <tr>
-                                    <th>Info</th>
-                                    <td>${suffixKeyword}</td>
-                                    <td id="type2SuffixONLYStem">${suffixStem}</td>
-                                    <td>${stemDifinition}</td>
-                                    <td>${stemNotes || '...'}</td>
-                                </tr>
-                            </table>
-                            <br>
+                    if (suffixType === 'n' || suffixType === 'adj') {
+                        console.log('hello world')
+                    } else {
+
+                        const Shtml = `
+                            <div>
                             <table>
-                                <tr>
-                                    <th style="width:116px">...</th>
-                                    <th>Suffix</th>
-                                    <th>Gender</th>
-                                    <th>Number</th>
-                                    <th>Person</th>
-                                </tr>
-                                <tr>
-                                    <th>Suffix</th>
-                                    <td>${suffix}</td>
-                                    <td>${suffixGender}</td>
-                                    <td>${suffixNumber}</td>
-                                    <td>${suffixPerson}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <br>
-                        <div id="suffixONLYPrefixtable">
-                        </div>`;
+                                    <tr>
+                                        <th style="width:116px">...</th>
+                                        <th>Word</th>
+                                        <th>Stem</th>
+                                        <th>Definition</th>
+                                        <th>Usage Notes</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Info</th>
+                                        <td>${suffixKeyword}</td>
+                                        <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                        <td>${stemDifinition}</td>
+                                        <td>${stemNotes || '...'}</td>
+                                    </tr>
+                                </table>
+                                <br>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">...</th>
+                                        <th>Suffix</th>
+                                        <th>Gender</th>
+                                        <th>Number</th>
+                                        <th>Person</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Suffix</th>
+                                        <td>${suffix}</td>
+                                        <td>${suffixGender}</td>
+                                        <td>${suffixNumber}</td>
+                                        <td>${suffixPerson}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <br>
+                            <div id="suffixONLYPrefixtable">
+                            </div>`;
 
-                    // Inject the content first, then attach listeners
-                    helperFunctions.standard.createPageById('page96', Shtml);
-
-                    const stemTd = document.querySelector('#type2SuffixONLYStem');
-                    if (stemTd) {
-                        stemTd.style.cursor = 'pointer';
-                        stemTd.addEventListener('click', () => {
-                            keyword = suffixStem;
-                            search(keyword);
-                        });
+                        // Inject the content first, then attach listeners
+                        helperFunctions.standard.createPageById('page96', Shtml);
+                        const stemTd = document.querySelector('#type2SuffixONLYStem');
+                        if (stemTd) {
+                            stemTd.style.cursor = 'pointer';
+                            stemTd.addEventListener('click', () => {
+                                keyword = suffixStem;
+                                search(keyword);
+                            });
+                        }
                     }
 
                     const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
