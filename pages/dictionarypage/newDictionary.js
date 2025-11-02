@@ -897,23 +897,19 @@ function dictionaryPage() {
                 nounTable1.querySelectorAll('td').forEach(td => {
                     td.style.cursor = 'pointer';
                     const tdWord = td.textContent;
-                    keyword = tdWord;
                     //console.log(keyword, td);
                     td.addEventListener('click', () => {
-
-                        //console.log(keyword);
-                        search(keyword);
+                        // Use the clicked cell's word, not a shared variable
+                        search(tdWord);
                     });
                 });
                 nounTable2.querySelectorAll('td').forEach(td => {
                     td.style.cursor = 'pointer';
                     const tdWord = td.textContent;
-                    keyword = tdWord;
                     //console.log(keyword, td);
                     td.addEventListener('click', () => {
-
                         // console.log(keyword);
-                        search(keyword);
+                        search(tdWord);
                     });
                 });
                 break;
@@ -925,21 +921,19 @@ function dictionaryPage() {
                 verbTable1.querySelectorAll('td').forEach(td => {
                     td.style.cursor = 'pointer';
                     const tdWord = td.textContent;
-                    keyword = tdWord;
                     //console.log(td, keyword);
 
                     td.addEventListener('click', () => {
-                        search(keyword);
+                        search(tdWord);
                     });
                 });
                 verbTable2.querySelectorAll('td').forEach(td => {
                     td.style.cursor = 'pointer';
                     const tdWord = td.textContent;
-                    keyword = tdWord;
                     //console.log(td, keyword);
 
                     td.addEventListener('click', () => {
-                        search(keyword);
+                        search(tdWord);
                     });
                 });
                 break;
