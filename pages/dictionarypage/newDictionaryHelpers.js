@@ -298,9 +298,196 @@ const type1extraTableRow = function type1extraTableRow(word, declension, forms, 
 
     return row;
 }
+const neoVerbTables = function neoVerbTables(affixState, wrapper) {
+
+    const affixStateMap = {
+        1: { 1: 'Prefix', 2: VERBS.PREFIXES.MAP },
+        2: { 1: 'Suffix', 2: VERBS.SUFFIXES.MAP }
+    }
+    const html = `
+        <table id="Verb-Table-${affixStateMap[affixState][1]}" style="margin-bottom: 10px;">
+            <tr>
+                <th colSpan = 2>${affixStateMap[affixState][1]}</th>
+                <th>Exalted</th>
+                <th>Rational</th>
+                <th>Monstrous</th>
+                <th>Irrational</th>
+                <th>Magical</th>
+                <th>Mundane</th>
+                <th>Abstract</th>
+            </tr>
+            <tr>
+                <th rowSpan = 3>Singular</th>
+                <th>1.</th>
+                <td>${affixStateMap[affixState][2][1].Singular['Exalted']}</td>
+                <td>${affixStateMap[affixState][2][1].Singular['Rational']}</td>
+                <td>${affixStateMap[affixState][2][1].Singular['Monstrous']}</td>
+                <td>${affixStateMap[affixState][2][1].Singular['Irrational']}</td>
+                <td>${affixStateMap[affixState][2][1].Singular['Magical']}</td>
+                <td>${affixStateMap[affixState][2][1].Singular['Mundane']}</td>
+                <td>${affixStateMap[affixState][2][1].Singular['Abstract']}</td>
+            </tr>
+            <tr>
+                <th>2.</th>
+                <td>${affixStateMap[affixState][2][2].Singular['Exalted']}</td>
+                <td>${affixStateMap[affixState][2][2].Singular['Rational']}</td>
+                <td>${affixStateMap[affixState][2][2].Singular['Monstrous']}</td>
+                <td>${affixStateMap[affixState][2][2].Singular['Irrational']}</td>
+                <td>${affixStateMap[affixState][2][2].Singular['Magical']}</td>
+                <td>${affixStateMap[affixState][2][2].Singular['Mundane']}</td>
+                <td>${affixStateMap[affixState][2][2].Singular['Abstract']}</td>
+            </tr>
+            <tr>
+                <th>3.</th>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Exalted']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Rational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Monstrous']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Irrational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Magical']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Mundane']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Abstract']}</td>
+            </tr>
+            <tr>
+                <th rowSpan = 3>Dual</th>
+                <th>1.</th>
+                <td>${affixStateMap[affixState][2][1].Dual['Exalted']}</td>
+                <td>${affixStateMap[affixState][2][1].Dual['Rational']}</td>
+                <td>${affixStateMap[affixState][2][1].Dual['Monstrous']}</td>
+                <td>${affixStateMap[affixState][2][1].Dual['Irrational']}</td>
+                <td>${affixStateMap[affixState][2][1].Dual['Magical']}</td>
+                <td>${affixStateMap[affixState][2][1].Dual['Mundane']}</td>
+                <td>${affixStateMap[affixState][2][1].Dual['Abstract']}</td>
+            </tr>
+            <tr>
+                <th>2.</th>
+                <td>${affixStateMap[affixState][2][2].Dual['Exalted']}</td>
+                <td>${affixStateMap[affixState][2][2].Dual['Rational']}</td>
+                <td>${affixStateMap[affixState][2][2].Dual['Monstrous']}</td>
+                <td>${affixStateMap[affixState][2][2].Dual['Irrational']}</td>
+                <td>${affixStateMap[affixState][2][2].Dual['Magical']}</td>
+                <td>${affixStateMap[affixState][2][2].Dual['Mundane']}</td>
+                <td>${affixStateMap[affixState][2][2].Dual['Abstract']}</td>
+            </tr>
+            <tr>
+                <th>3.</th>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Exalted']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Rational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Monstrous']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Irrational']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Magical']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Mundane']}</td>
+                <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Abstract']}</td>
+            </tr>
+            <tr>
+                <th rowSpan = 3>Plural</th>
+                <th>1.</th>
+                <td>${affixStateMap[affixState][2][1].Plural['Exalted']}</td>
+                <td>${affixStateMap[affixState][2][1].Plural['Rational']}</td>
+                <td>${affixStateMap[affixState][2][1].Plural['Monstrous']}</td>
+                <td>${affixStateMap[affixState][2][1].Plural['Irrational']}</td>
+                <td>${affixStateMap[affixState][2][1].Plural['Magical']}</td>
+                <td>${affixStateMap[affixState][2][1].Plural['Mundane']}</td>
+                <td>${affixStateMap[affixState][2][1].Plural['Abstract']}</td>
+            </tr>
+            <tr>
+                <th>2.</th>
+                <td>${affixStateMap[affixState][2][2].Plural['Exalted']}</td>
+                <td>${affixStateMap[affixState][2][2].Plural['Rational']}</td>
+                <td>${affixStateMap[affixState][2][2].Plural['Monstrous']}</td>
+                <td>${affixStateMap[affixState][2][2].Plural['Irrational']}</td>
+                <td>${affixStateMap[affixState][2][2].Plural['Magical']}</td>
+                <td>${affixStateMap[affixState][2][2].Plural['Mundane']}</td>
+                <td>${affixStateMap[affixState][2][2].Plural['Abstract']}</td>
+            </tr>
+            <tr>
+                <th>3.</th>
+                <td>${affixStateMap[affixState][2][3].Plural['Exalted']}</td>
+                <td>${affixStateMap[affixState][2][3].Plural['Rational']}</td>
+                <td>${affixStateMap[affixState][2][3].Plural['Monstrous']}</td>
+                <td>${affixStateMap[affixState][2][3].Plural['Irrational']}</td>
+                <td>${affixStateMap[affixState][2][3].Plural['Magical']}</td>
+                <td>${affixStateMap[affixState][2][3].Plural['Mundane']}</td>
+                <td>${affixStateMap[affixState][2][3].Plural['Abstract']}</td>
+            </tr>
+        </table>
+        `;
+    helperFunctions.standard.createDivById('', wrapper, html);
+}
+const neoNounTables = function neoNounTables(declension, mood, wrapper,combinedGendersObject) {
+    const table = document.createElement('table');
+
+    const moodMap = {
+        1: 'Directive',
+        2: 'Recessive'
+    }
+    table.id = `Noun-Table-${moodMap[mood]}`;
+    //th
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = [moodMap[mood], "Singular", "Dual", "Plural"];
+    headers.forEach(text => {
+        const th = document.createElement('th');
+        th.textContent = text;
+        headerRow.appendChild(th);
+        th.id = `neoSummaryHeader-${text}`;
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    //rows
+    for (const [gender, def] of Object.entries(combinedGendersObject)) {
+        const trd = document.createElement('tr');
+        const rowth = document.createElement('th');
+        rowth.textContent = gender;
+        trd.appendChild(rowth);
+        const map = {
+            1: 'Singular',
+            2: 'Dual',
+            3: 'Plural'
+        }
+
+        for (let i = 0; i < (headers.length - 1); i++) {
+            const td = document.createElement('td');
+            td.textContent = 'placeholder';
+            if (i === 0) {
+                td.className = `neoSummarytd-${map[1]}`
+            }
+            else if (i === 1) {
+                td.className = `neoSummarytd-${map[2]}`
+            }
+            else if (i === 2) {
+                td.className = `neoSummarytd-${map[3]}`
+            }
+            const mooooood = moodMap[mood];
+            //inner
+            const entry = Object.entries(NOUNS.SUFFIXES.MAP[mooooood]);
+            for (const [gndr, array] of entry) {
+                if (gndr === gender) {
+                    const numberKey = map[i + 1];
+                    const cellValue = array[numberKey] && array[numberKey][declension];
+                    if (cellValue !== undefined) {
+                        td.textContent = cellValue;
+                    }
+                }
+            }
+            trd.appendChild(td);
+
+        }
+        table.appendChild(trd);
+    }
+
+    table.style = "margin-bottom: 10px";
+
+    const tbody = document.createElement('tbody');
+    table.appendChild(tbody);
+
+    wrapper.appendChild(table);
+}
 
 const matchtype1 = {
-    type1extraTableRow
+    type1extraTableRow,
+    neoVerbTables,
+    neoNounTables
 }
 
 

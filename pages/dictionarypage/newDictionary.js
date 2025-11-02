@@ -93,6 +93,7 @@ function dictionaryPage() {
 
 
         if (ALL_WORDS.fetch(keyword) && ALL_WORDS.fetch(keyword).length > 0) {//type 1
+            console.log('-----type1-----');
             const searchHandler = ALL_WORDS.fetch(keyword);
             console.log('searchHandler |', searchHandler);
             searchHandler.forEach(entry => { // what for is this search handler 
@@ -212,79 +213,9 @@ function dictionaryPage() {
                         }
                         switch (wordclass) {
                             case 'n':
-                                function neoNounTables(declension, mood) {
-                                    const tableWrap = document.getElementById('leftleftdivdictionary')
-                                    const table = document.createElement('table');
-
-                                    const moodMap = {
-                                        1: 'Directive',
-                                        2: 'Recessive'
-                                    }
-                                    table.id = `Noun-Table-${moodMap[mood]}`;
-                                    //th
-                                    const thead = document.createElement('thead');
-                                    const headerRow = document.createElement('tr');
-                                    const headers = [moodMap[mood], "Singular", "Dual", "Plural"];
-                                    headers.forEach(text => {
-                                        const th = document.createElement('th');
-                                        th.textContent = text;
-                                        headerRow.appendChild(th);
-                                        th.id = `neoSummaryHeader-${text}`;
-                                    });
-                                    thead.appendChild(headerRow);
-                                    table.appendChild(thead);
-
-                                    //rows
-                                    for (const [gender, def] of Object.entries(combinedGendersObject)) {
-                                        const trd = document.createElement('tr');
-                                        const rowth = document.createElement('th');
-                                        rowth.textContent = gender;
-                                        trd.appendChild(rowth);
-                                        const map = {
-                                            1: 'Singular',
-                                            2: 'Dual',
-                                            3: 'Plural'
-                                        }
-
-                                        for (let i = 0; i < (headers.length - 1); i++) {
-                                            const td = document.createElement('td');
-                                            td.textContent = 'placeholder';
-                                            if (i === 0) {
-                                                td.className = `neoSummarytd-${map[1]}`
-                                            }
-                                            else if (i === 1) {
-                                                td.className = `neoSummarytd-${map[2]}`
-                                            }
-                                            else if (i === 2) {
-                                                td.className = `neoSummarytd-${map[3]}`
-                                            }
-                                            const mooooood = moodMap[mood];
-                                            //inner
-                                            const entry = Object.entries(NOUNS.SUFFIXES.MAP[mooooood]);
-                                            for (const [gndr, array] of entry) {
-                                                if (gndr === gender) {
-                                                    const numberKey = map[i + 1];
-                                                    const cellValue = array[numberKey] && array[numberKey][declension];
-                                                    if (cellValue !== undefined) {
-                                                        td.textContent = cellValue;
-                                                    }
-                                                }
-                                            }
-                                            trd.appendChild(td);
-
-                                        }
-                                        table.appendChild(trd);
-                                    }
-
-                                    table.style = "margin-bottom: 10px";
-
-                                    const tbody = document.createElement('tbody');
-                                    table.appendChild(tbody);
-
-                                    tableWrap.appendChild(table);
-                                }
-                                neoNounTables(entry.declension, 1);
-                                neoNounTables(entry.declension, 2);
+                                const Nwrapper = document.getElementById('leftleftdivdictionary');
+                                helperFunctions.matchtype1.neoNounTables(entry.declension, 1, Nwrapper, combinedGendersObject);
+                                helperFunctions.matchtype1.neoNounTables(entry.declension, 2, Nwrapper, combinedGendersObject);
 
                                 //const dirTable = document.getElementById('Noun-Table-Directive');
                                 //const recTable = document.getElementById('Noun-Table-Recessive');
@@ -294,124 +225,9 @@ function dictionaryPage() {
 
                                 break;
                             case 'v':
-                                function neoVerbTables(affixState) {
-
-                                    const wrapper = document.getElementById('leftleftdivdictionary');
-                                    const affixStateMap = {
-                                        1: { 1: 'Prefix', 2: VERBS.PREFIXES.MAP },
-                                        2: { 1: 'Suffix', 2: VERBS.SUFFIXES.MAP }
-                                    }
-                                    const html = `
-                                    <table id="Verb-Table-${affixStateMap[affixState][1]}" style="margin-bottom: 10px;">
-                                        <tr>
-                                            <th colSpan = 2>${affixStateMap[affixState][1]}</th>
-                                            <th>Exalted</th>
-                                            <th>Rational</th>
-                                            <th>Monstrous</th>
-                                            <th>Irrational</th>
-                                            <th>Magical</th>
-                                            <th>Mundane</th>
-                                            <th>Abstract</th>
-                                        </tr>
-                                        <tr>
-                                            <th rowSpan = 3>Singular</th>
-                                            <th>1.</th>
-                                            <td>${affixStateMap[affixState][2][1].Singular['Exalted']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Singular['Rational']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Singular['Monstrous']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Singular['Irrational']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Singular['Magical']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Singular['Mundane']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Singular['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>2.</th>
-                                            <td>${affixStateMap[affixState][2][2].Singular['Exalted']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Singular['Rational']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Singular['Monstrous']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Singular['Irrational']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Singular['Magical']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Singular['Mundane']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Singular['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>3.</th>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Exalted']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Rational']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Monstrous']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Irrational']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Magical']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Mundane']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Singular['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th rowSpan = 3>Dual</th>
-                                            <th>1.</th>
-                                            <td>${affixStateMap[affixState][2][1].Dual['Exalted']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Dual['Rational']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Dual['Monstrous']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Dual['Irrational']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Dual['Magical']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Dual['Mundane']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Dual['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>2.</th>
-                                            <td>${affixStateMap[affixState][2][2].Dual['Exalted']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Dual['Rational']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Dual['Monstrous']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Dual['Irrational']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Dual['Magical']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Dual['Mundane']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Dual['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>3.</th>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Exalted']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Rational']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Monstrous']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Irrational']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Magical']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Mundane']}</td>
-                                            <td style = "border-bottom: 1px solid var(--border)">${affixStateMap[affixState][2][3].Dual['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th rowSpan = 3>Plural</th>
-                                            <th>1.</th>
-                                            <td>${affixStateMap[affixState][2][1].Plural['Exalted']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Plural['Rational']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Plural['Monstrous']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Plural['Irrational']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Plural['Magical']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Plural['Mundane']}</td>
-                                            <td>${affixStateMap[affixState][2][1].Plural['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>2.</th>
-                                            <td>${affixStateMap[affixState][2][2].Plural['Exalted']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Plural['Rational']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Plural['Monstrous']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Plural['Irrational']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Plural['Magical']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Plural['Mundane']}</td>
-                                            <td>${affixStateMap[affixState][2][2].Plural['Abstract']}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>3.</th>
-                                            <td>${affixStateMap[affixState][2][3].Plural['Exalted']}</td>
-                                            <td>${affixStateMap[affixState][2][3].Plural['Rational']}</td>
-                                            <td>${affixStateMap[affixState][2][3].Plural['Monstrous']}</td>
-                                            <td>${affixStateMap[affixState][2][3].Plural['Irrational']}</td>
-                                            <td>${affixStateMap[affixState][2][3].Plural['Magical']}</td>
-                                            <td>${affixStateMap[affixState][2][3].Plural['Mundane']}</td>
-                                            <td>${affixStateMap[affixState][2][3].Plural['Abstract']}</td>
-                                        </tr>
-                                    </table>
-                                    `;
-                                    helperFunctions.standard.createDivById('', wrapper, html);
-                                }
-                                neoVerbTables(1);
-                                neoVerbTables(2);
+                                const Vwrapper = document.getElementById('leftleftdivdictionary');
+                                helperFunctions.matchtype1.neoVerbTables(1, Vwrapper);
+                                helperFunctions.matchtype1.neoVerbTables(2, Vwrapper);
 
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                                 break
@@ -427,10 +243,7 @@ function dictionaryPage() {
         }
 
         else if (helperFunctions.affixHelpers.neoPrefixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, prefixData) || (helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {//type 2
-            console.log('type2');
-
-
-
+            console.log('-----type2-----');
 
             let hasPrefix = (prefixData.length > 0 ? true : false);
             let hasSuffix = (suffixData.length > 0 ? true : false);
@@ -444,12 +257,13 @@ function dictionaryPage() {
                 const prefixPerson = array[1];
                 const prefix = parrentArray.usedPrefix;
                 const prefixStem = parrentArray.Prefixstem;
+                const prefixKeyword = keyword;
 
                 const stemMap = ALL_WORDS.MAP[prefixStem] || [];
                 const stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
-                console.log(
+                /*console.log(
                     prefixGender,
                     prefixNumber,
                     prefixPerson,
@@ -457,7 +271,7 @@ function dictionaryPage() {
                     array,
                     prefixData[0],
                     prefixStem
-                );
+                );*/
                 const Phtml = `
                     <div>
                         <table>
@@ -472,7 +286,7 @@ function dictionaryPage() {
                             </tr>
                             <tr>
                                 <th>Prefix</th>
-                                <td>${keyword}</td>
+                                <td>${prefixKeyword}</td>
                                 <td id="type2PrefixONLYStem">${prefixStem}</td>
                                 <td>${prefix}</td>
                                 <td>${prefixGender}</td>
@@ -491,9 +305,12 @@ function dictionaryPage() {
                                 <td>${stemNotes || '...'}</td>
                             </tr>
                         </table>
+                    </div>
+                    <br>
+                    <div id="prefixONLYSuffixtable">
                     </div>`;
 
-                helperFunctions.standard.createPageById('page96', Phtml)
+                helperFunctions.standard.createPageById('page96', Phtml);
 
                 const stemPTd = document.querySelector('#type2PrefixONLYStem');
                 if (stemPTd) {
@@ -503,7 +320,14 @@ function dictionaryPage() {
                         search(keyword);
                     });
                 }
-                if ((helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
+
+                const prefixONLYSuffixtableWrapper = document.getElementById('prefixONLYSuffixtable');
+                if (prefixONLYSuffixtableWrapper) {
+                    helperFunctions.matchtype1.neoVerbTables(2, prefixONLYSuffixtableWrapper);
+
+                    helperFunctions.tablegen.populateSummaryTables(prefixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                }
+                if ((helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
                     hasSuffix = true;
 
                     const array = suffixData[0];
@@ -529,9 +353,9 @@ function dictionaryPage() {
                         );*/
 
                         if (ALL_WORDS.MAP[suffixStem]) {
-                            const stemMap = ALL_WORDS.MAP[suffixStem]; console.log(stemMap);
-                            const stemDifinition = stemMap.definition;
-                            const stemNotes = stemMap.usage_notes;
+                            const stemMap = ALL_WORDS.MAP[suffixStem] || [];
+                            const stemDifinition = stemMap.definition || '...';
+                            const stemNotes = stemMap.usage_notes || '...';
 
                             if (suffixType === 'n' || suffixType === 'adj') {
                                 console.log('hello world')
@@ -606,6 +430,7 @@ function dictionaryPage() {
                 }
             }
             else if (hasSuffix) {
+                hasPrefix = false;
                 const array = suffixData[0];
                 const suffixDeclensions = array.Suffixdeclensions;
                 for (declension of Object.values(suffixDeclensions)) {
@@ -616,7 +441,8 @@ function dictionaryPage() {
                     const suffixType = array.Suffixtype;
                     const suffix = array.usedSuffix;
                     const suffixStem = array.Suffixstem;
-                    console.log(
+                    const suffixKeyword = keyword;
+                    /*console.log(
                         suffixDeclension,
                         suffixGender,
                         suffixNumber,
@@ -624,12 +450,12 @@ function dictionaryPage() {
                         suffixType,
                         suffix,
                         suffixStem
-                    );
-                    const stemMap = ALL_WORDS.MAP[suffixStem]; console.log(stemMap);
-                    const stemDifinition = stemMap.definition;
-                    const stemNotes = stemMap.usage_notes;
+                    );*/
+                    const stemMap = ALL_WORDS.MAP[suffixStem] || [];
+                    const stemDifinition = stemMap.definition || '...';
+                    const stemNotes = stemMap.usage_notes || '...';
 
-                    console.log(
+                    /*console.log(
                         suffixDeclension,
                         suffixGender,
                         suffixNumber,
@@ -637,7 +463,7 @@ function dictionaryPage() {
                         suffixType,
                         suffix,
                         suffixStem
-                    );
+                    );*/
 
                     const Shtml = `
                         <div>
@@ -672,6 +498,9 @@ function dictionaryPage() {
                                     <td>${stemNotes || '...'}</td>
                                 </tr>
                             </table>
+                        </div>
+                        <br>
+                        <div id="suffixONLYPrefixtable">
                         </div>`;
 
                     // Inject the content first, then attach listeners
@@ -686,84 +515,23 @@ function dictionaryPage() {
                         });
                     }
 
+                    const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
+                    if (suffixONLYPrefixtableWrapper) {
+                        helperFunctions.matchtype1.neoVerbTables(1, suffixONLYPrefixtableWrapper);
+
+                        helperFunctions.tablegen.populateSummaryTables(suffixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                    }
+
                 }
                 //console.log(array);
             }
             console.log('has prefix | ', hasPrefix);
             console.log('has suffix | ', hasSuffix);
-            // so whats not workin. type 2 logic.
-            // logic to deduce if we have only prefix, only suffix, or both - and display data on affixpage.
-
-            /*
-            if (usedPrefix.length > 0) {
-                if (usedSuffix.length > 0) {
-                    const prefixSettings = {
-                        gender: Prefixgender || '',
-                        number: Prefixnumber || '',
-                        person: Prefixperson || '',
-                        prefix: usedPrefix || '',
-                        stem: Prefixstem || '',
-                        declension: Prefixdeclension || ''
-                    };
-
-                    const buildSuffixSettings = (declensionValue) => ({
-                        gender: Suffixgender,
-                        number: Suffixnumber,
-                        person: Suffixperson,
-                        suffix: usedSuffix,
-                        stem: Suffixstem,
-                        declension: declensionValue || ''
-                    });
-                    console.log('prefix AND suffix');
-                }
-                if (usedSuffix.length === 0 && ALL_WORDS) {
-                    const prefixSettings = {
-                        gender: Prefixgender || '',
-                        number: Prefixnumber || '',
-                        person: Prefixperson || '',
-                        prefix: usedPrefix || '',
-                        stem: Prefixstem || '',
-                        declension: Prefixdeclension || ''
-                    };
-                    if (Prefixtype === 'n' || Prefixtype === 'adj') {
-                        affixPage(keyword, '', prefixSettings);
-                        //affixPage(keyword, { gender: Suffixgebder, number: Suffixnumber, person: Suffixperson, suffix: usedSuffix, stem: Suffixstem, declension: el }, '');
-
-                    } else {
-                        affixPage(keyword, '', prefixSettings);
-                        //console.log(affixPage(keyword, suffixSettings, ''));
-                    }
-                    console.log('ONLY prefix');
-                }
-            }
-            if (usedPrefix.length === 0) {
-                if (usedSuffix.length > 0) {
-                    const buildSuffixSettings = (declensionValue) => ({
-                        gender: Suffixgender,
-                        number: Suffixnumber,
-                        person: Suffixperson,
-                        suffix: usedSuffix,
-                        stem: Suffixstem,
-                        declension: declensionValue || ''
-                    });
-                    if (Suffixtype === 'n' || Suffixtype === 'adj') {
-                        Suffixdeclensions.forEach(el => {
-                            console.log(el);
-                            affixPage(keyword, buildSuffixSettings(el), '');
-                            //affixPage(keyword, { gender: Suffixgebder, number: Suffixnumber, person: Suffixperson, suffix: usedSuffix, stem: Suffixstem, declension: el }, '');
-                        });
-                    } else {
-                        const suffixSettings = buildSuffixSettings('');
-                        affixPage(keyword, suffixSettings, '');
-                        //console.log(affixPage(keyword, suffixSettings, ''));
-                    }
-                    console.log('ONLY suffix');
-                }
-            }*/
 
             openPageOld('page96');
         }
         else {//type 3
+            console.log('-----type3-----');
             const searchHandler = ALL_WORDS.fetchByDefinition(keyword); // Array[]
             console.log('3', 'searchHandler |', searchHandler);
             searchHandler.forEach(entry => {
@@ -792,95 +560,6 @@ function dictionaryPage() {
                     helperFunctions.matchtype3.extraTableRow(word, wordclassText, forms, definition, usage_notes);
                 }
             });
-        }
-
-        /*
-        function affixPage(keyword, gender, number, person, suffix, stem, declension, prefix) {
-                    let page = '';
-                    page = document.getElementById('page96');
-                    if (page != 'object') { page = document.createElement('div'); }
-        
-                    page.id = 'page96';
-                    page.className = 'page';
-                    const div = document.createElement('div');
-        
-                    if (!declension) { declension = '' }
-        
-                    div.innerHTML = `gender: ${gender}<br> number: ${number}<br> person: ${person}<br> suffix: ${suffix}<br> stem: ${stem}<br> declension: ${declension} <br> keyword: ${keyword}<br> prefix: ${prefix}`;
-        
-                    pagesWrap = document.querySelector('.pages');
-                    pagesWrap.appendChild(page);
-                    page.appendChild(div);
-                }
-        */
-
-        function affixPage(keyword, suffixSettings = {}, prefixSettings = {}) {
-            const normalize = (value) => {
-                if (Array.isArray(value)) {
-                    return value.join(', ');
-                }
-                return value ?? '';
-            };
-
-            const {
-                gender: Suffixgender = '',
-                number: Suffixnumber = '',
-                person: Suffixperson = '',
-                suffix: suffix = '',
-                stem: Suffixstem = '',
-                declension: Suffixdeclension = ''
-            } = suffixSettings;
-
-            const {
-                gender: prefixGender = '',
-                number: prefixNumber = '',
-                person: prefixPerson = '',
-                prefix: prefix = '',
-                stem: prefixStem = '',
-                declension: prefixDeclension = ''
-            } = prefixSettings;
-
-            const pageId = 'page96';
-            let page = document.getElementById(pageId);
-            if (!page) {
-                page = document.createElement('div');
-                page.id = pageId;
-                page.className = 'page';
-            }
-
-            const div = document.createElement('div');
-
-            const prefixLines = [
-                `prefix: ${normalize(prefix)}`,
-                `prefix stem: ${normalize(prefixStem)}`,
-                `prefix declension: ${normalize(prefixDeclension)}`,
-                `prefix gender: ${normalize(prefixGender)}`,
-                `prefix number: ${normalize(prefixNumber)}`,
-                `prefix person: ${normalize(prefixPerson)}`
-            ];
-
-            const suffixLines = [
-                `suffix: ${normalize(suffix)}`,
-                `suffix stem: ${normalize(Suffixstem)}`,
-                `suffix declension: ${normalize(Suffixdeclension)}`,
-                `suffix gender: ${normalize(Suffixgender)}`,
-                `suffix number: ${normalize(Suffixnumber)}`,
-                `suffix person: ${normalize(Suffixperson)}`
-            ];
-
-            const lines = [
-                `keyword: ${normalize(keyword)}`,
-                ...prefixLines,
-                ...suffixLines
-            ];
-
-            div.innerHTML = lines.join('<br> ');
-
-            const pagesWrap = document.querySelector('.pages');
-            if (pagesWrap) {
-                pagesWrap.appendChild(page);
-                page.appendChild(div);
-            }
         }
         helperFunctions.standard.reverseSearchIdsOnSearch();
     }
