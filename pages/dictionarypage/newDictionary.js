@@ -1,4 +1,4 @@
-function dictionaryPage() {
+function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. not only verbs & nouns :sob:
     // /\(/o.o\)/\ - Spooky the spider
 
     let searchBTN = document.getElementById('search_button');
