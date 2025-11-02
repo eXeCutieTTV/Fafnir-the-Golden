@@ -15,9 +15,9 @@ function dictionaryPage() {
         let suffixData = [];
         let prefixData = [];
 
+        
         function bkjlcdfkjbacsfksjbsdkabjc() {
             /*  
-                why cant i close thisadscasdcawdasdawdcadacagkbjgagjbkjbgæsfcækjbgscdfækjibgfscækijbgf
                 æze-
                 aze-
                 fenlly-
