@@ -590,7 +590,15 @@ function dictionaryPage() {
                     const suffixType = array.Suffixtype;
                     const suffix = array.usedSuffix;
                     const suffixStem = array.Suffixstem;
-
+                    console.log(
+                        suffixDeclension,
+                        suffixGender,
+                        suffixNumber,
+                        suffixPerson,
+                        suffixType,
+                        suffix,
+                        suffixStem
+                    );
                     const stemMap = ALL_WORDS.MAP[suffixStem]; console.log(stemMap);
                     const stemDifinition = stemMap.definition;
                     const stemNotes = stemMap.usage_notes;
