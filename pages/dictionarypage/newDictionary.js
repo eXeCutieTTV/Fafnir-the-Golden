@@ -1,21 +1,19 @@
 function dictionaryPage() {
+    // /\(/o.o\)/\ - Spooky the spider
 
-    //yoo new dictionary xd // /\(/o.o\)/\ - Spooky the spider
-
-
-    const searchBTN = document.getElementById('search_button');
-    const searchFLD = document.getElementById('search_field');
+    let searchBTN = document.getElementById('search_button');
+    let searchFLD = document.getElementById('search_field');
 
     // main search function
     function search(word) {
+        searchBTN = document.getElementById('search_button');
+        searchFLD = document.getElementById('search_field');
+
         let keyword = ((searchFLD && searchFLD.value ? searchFLD.value.trim() : '').toLowerCase()) || word;
 
-
-        // vars for suffix detection
-        let suffixData = []; //<-- probably only need this now
-
-        // vars for prefix detection
-        let prefixData = []; //<-- probably only need this now
+        // for type2
+        let suffixData = [];
+        let prefixData = [];
 
         function bkjlcdfkjbacsfksjbsdkabjc() {
             /*  
@@ -86,11 +84,6 @@ function dictionaryPage() {
         helperFunctions.standard.clearPageById('page97'); //type 1
         helperFunctions.standard.clearPageById('page96'); //type 2
         helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
-
-
-
-        //console.log('1', search_word(keyword), '2', search_word_by_definition(keyword), '3', ALL_WORDS);
-
 
         if (ALL_WORDS.fetch(keyword) && ALL_WORDS.fetch(keyword).length > 0) {//type 1
             console.log('-----type1-----');
@@ -318,8 +311,7 @@ function dictionaryPage() {
                 if (stemPTd) {
                     stemPTd.style.cursor = 'pointer';
                     stemPTd.addEventListener('click', () => {
-                        keyword = prefixStem;
-                        search(keyword);
+                        search(prefixStem);
                     });
                 }
 
@@ -329,11 +321,10 @@ function dictionaryPage() {
 
                     helperFunctions.tablegen.populateSummaryTables(prefixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
-                console.log(prefixData, suffixData);
-                if ((helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
+                //console.log(prefixData, suffixData);
+                if ((helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
 
-                console.log(prefixData, suffixData);
-                    hasSuffix = true;
+                    //console.log(prefixData, suffixData);
 
                     const array = suffixData[0];
                     const suffixDeclensions = array.Suffixdeclensions;
@@ -346,8 +337,7 @@ function dictionaryPage() {
                         const suffix = array.usedSuffix;
                         const suffixStem = array.Suffixstem;
 
-                        /*
-                        console.log(
+                        /*console.log(
                             suffixDeclension,
                             suffixGender,
                             suffixNumber,
@@ -358,6 +348,7 @@ function dictionaryPage() {
                         );*/
 
                         if (ALL_WORDS.MAP[suffixStem]) {
+                            hasSuffix = true;
                             const stemMap = ALL_WORDS.MAP[suffixStem] || [];
                             const stemDifinition = stemMap.definition || '...';
                             const stemNotes = stemMap.usage_notes || '...';
