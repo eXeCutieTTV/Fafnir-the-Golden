@@ -445,9 +445,9 @@ function dictionaryPage() {
                 const prefix = parrentArray.usedPrefix;
                 const prefixStem = parrentArray.Prefixstem;
 
-                const stemMap = ALL_WORDS.MAP[prefixStem];
-                const stemDifinition = stemMap.definition;
-                const stemNotes = stemMap.usage_notes;
+                const stemMap = ALL_WORDS.MAP[prefixStem] || [];
+                const stemDifinition = stemMap.definition || '...';
+                const stemNotes = stemMap.usage_notes || '...';
 
                 console.log(
                     prefixGender,
@@ -473,7 +473,7 @@ function dictionaryPage() {
                             <tr>
                                 <th>Prefix</th>
                                 <td>${keyword}</td>
-                                <td>${prefixStem}</td>
+                                <td id="type2PrefixONLYStem">${prefixStem}</td>
                                 <td>${prefix}</td>
                                 <td>${prefixGender}</td>
                                 <td>${prefixNumber}</td>
@@ -493,7 +493,16 @@ function dictionaryPage() {
                         </table>
                     </div>`;
 
-                helperFunctions.standard.createPageById('page96', Phtml);
+                helperFunctions.standard.createPageById('page96', Phtml)
+
+                const stemPTd = document.querySelector('#type2PrefixONLYStem');
+                if (stemPTd) {
+                    stemPTd.style.cursor = 'pointer';
+                    stemPTd.addEventListener('click', () => {
+                        keyword = prefixStem;
+                        search(keyword);
+                    });
+                }
                 if ((helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
                     hasSuffix = true;
 
@@ -542,7 +551,7 @@ function dictionaryPage() {
                                             <tr>
                                                 <th>Prefix</th>
                                                 <td>${keyword}</td>
-                                                <td>${suffixStem}</td>
+                                                <td id="type2PrefixBOTHStem">${suffixStem}</td>
                                                 <td>${prefix}</td>
                                                 <td>${prefixGender}</td>
                                                 <td>${prefixNumber}</td>
@@ -551,7 +560,7 @@ function dictionaryPage() {
                                             <tr>
                                                 <th>Suffix</th>
                                                 <td>${keyword}</td>
-                                                <td>${suffixStem}</td>
+                                                <td id="type2SuffixBOTHStem">${suffixStem}</td>
                                                 <td>${suffix}</td>
                                                 <td>${suffixGender}</td>
                                                 <td>${suffixNumber}</td>
@@ -574,6 +583,23 @@ function dictionaryPage() {
                                 //const wrapper = document.getElementById('page96');
                                 //console.log(wrapper);
                                 helperFunctions.standard.createPageById('page96', PShtml);
+
+                                const stemPTd = document.querySelector('#type2PrefixBOTHStem');
+                                if (stemPTd) {
+                                    stemPTd.style.cursor = 'pointer';
+                                    stemPTd.addEventListener('click', () => {
+                                        keyword = suffixStem;
+                                        search(keyword);
+                                    });
+                                }
+                                const stemSTd = document.querySelector('#type2SuffixBOTHStem');
+                                if (stemSTd) {
+                                    stemSTd.style.cursor = 'pointer';
+                                    stemSTd.addEventListener('click', () => {
+                                        keyword = suffixStem;
+                                        search(keyword);
+                                    });
+                                }
                             }
                         }
                     }
@@ -614,46 +640,57 @@ function dictionaryPage() {
                     );
 
                     const Shtml = `
-                    <div>
-                        <table>
-                            <tr>
-                                <th>...</th>
-                                <th>Word</th>
-                                <th>Stem</th>
-                                <th>Suffix</th>
-                                <th>Gender</th>
-                                <th>Number</th>
-                                <th>Person</th>
-                            </tr>
-                            <tr>
-                                <th>Prefix</th>
-                                <td>${keyword}</td>
-                                <td>${suffixStem}</td>
-                                <td>${suffix}</td>
-                                <td>${suffixGender}</td>
-                                <td>${suffixNumber}</td>
-                                <td>${suffixPerson}</td>
-                            </tr>
-                        </table>
-                        <br>
-                        <table>
-                            <tr>
-                                <th>Definition</th>
-                                <th>Usage Notes</th>
-                            </tr>
-                            <tr>
-                                <td>${stemDifinition}</td>
-                                <td>${stemNotes || '...'}</td>
-                            </tr>
-                        </table>
-                    </div>`;
+                        <div>
+                            <table>
+                                <tr>
+                                    <th>...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
+                                    <th>Suffix</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                    <th>Person</th>
+                                </tr>
+                                <tr>
+                                    <th>Prefix</th>
+                                    <td>${keyword}</td>
+                                    <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                    <td>${suffix}</td>
+                                    <td>${suffixGender}</td>
+                                    <td>${suffixNumber}</td>
+                                    <td>${suffixPerson}</td>
+                                </tr>
+                            </table>
+                            <br>
+                            <table>
+                                <tr>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                </tr>
+                                <tr>
+                                    <td>${stemDifinition}</td>
+                                    <td>${stemNotes || '...'}</td>
+                                </tr>
+                            </table>
+                        </div>`;
 
+                    // Inject the content first, then attach listeners
                     helperFunctions.standard.createPageById('page96', Shtml);
 
+                    const stemTd = document.querySelector('#type2SuffixONLYStem');
+                    if (stemTd) {
+                        stemTd.style.cursor = 'pointer';
+                        stemTd.addEventListener('click', () => {
+                            keyword = suffixStem;
+                            search(keyword);
+                        });
+                    }
+
                 }
-                console.log(array);
+                //console.log(array);
             }
-            console.log(hasPrefix, hasSuffix);
+            console.log('has prefix | ', hasPrefix);
+            console.log('has suffix | ', hasSuffix);
             // so whats not workin. type 2 logic.
             // logic to deduce if we have only prefix, only suffix, or both - and display data on affixpage.
 
