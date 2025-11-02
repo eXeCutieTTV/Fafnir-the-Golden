@@ -436,6 +436,7 @@ function dictionaryPage() {
             let hasSuffix = (suffixData.length > 0 ? true : false);
 
             if (hasPrefix) {
+
                 const array = prefixData[0].Prefixdeclension;
                 const parrentArray = prefixData[0];
                 const prefixGender = array[3];
@@ -443,6 +444,10 @@ function dictionaryPage() {
                 const prefixPerson = array[1];
                 const prefix = parrentArray.usedPrefix;
                 const prefixStem = parrentArray.Prefixstem;
+
+                const stemMap = ALL_WORDS.MAP[prefixStem];
+                const stemDifinition = stemMap.definition;
+                const stemNotes = stemMap.usage_notes;
 
                 console.log(
                     prefixGender,
@@ -475,6 +480,17 @@ function dictionaryPage() {
                                 <td>${prefixPerson}</td>
                             </tr>
                         </table>
+                        <br>
+                        <table>
+                            <tr>
+                                <th>Definition</th>
+                                <th>Usage Notes</th>
+                            </tr>
+                            <tr>
+                                <td>${stemDifinition}</td>
+                                <td>${stemNotes || '...'}</td>
+                            </tr>
+                        </table>
                     </div>`;
 
                 helperFunctions.standard.createPageById('page96', Phtml);
@@ -504,10 +520,14 @@ function dictionaryPage() {
                         );*/
 
                         if (ALL_WORDS.MAP[suffixStem]) {
+                            const stemMap = ALL_WORDS.MAP[suffixStem]; console.log(stemMap);
+                            const stemDifinition = stemMap.definition;
+                            const stemNotes = stemMap.usage_notes;
+
                             if (suffixType === 'n' || suffixType === 'adj') {
                                 console.log('hello world')
                             } else {
-                                const Shtml = `
+                                const PShtml = `
                                     <div>
                                         <table>
                                             <tr>
@@ -538,11 +558,22 @@ function dictionaryPage() {
                                                 <td>${suffixPerson}</td>
                                             </tr>
                                         </table>
+                                        <br>
+                                        <table>
+                                            <tr>
+                                                <th>Definition</th>
+                                                <th>Usage Notes</th>
+                                            </tr>
+                                            <tr>
+                                                <td>${stemDifinition}</td>
+                                                <td>${stemNotes || '...'}</td>
+                                            </tr>
+                                        </table>
                                     </div>`;
 
                                 //const wrapper = document.getElementById('page96');
                                 //console.log(wrapper);
-                                helperFunctions.standard.createPageById('page96', Shtml);
+                                helperFunctions.standard.createPageById('page96', PShtml);
                             }
                         }
                     }
@@ -560,6 +591,10 @@ function dictionaryPage() {
                     const suffix = array.usedSuffix;
                     const suffixStem = array.Suffixstem;
 
+                    const stemMap = ALL_WORDS.MAP[suffixStem]; console.log(stemMap);
+                    const stemDifinition = stemMap.definition;
+                    const stemNotes = stemMap.usage_notes;
+
                     console.log(
                         suffixDeclension,
                         suffixGender,
@@ -570,17 +605,42 @@ function dictionaryPage() {
                         suffixStem
                     );
 
-                    const html = `
-                        ${keyword} <br>
-                        suffixDeclension, ${suffixDeclension} <br>
-                        suffixGender, ${suffixGender} <br>
-                        suffixNumber, ${suffixNumber} <br>
-                        suffixPerson, ${suffixPerson} <br>
-                        suffixType, ${suffixType} <br>
-                        suffix, ${suffix} <br>
-                        suffixStem, ${suffixStem}`;
+                    const Shtml = `
+                    <div>
+                        <table>
+                            <tr>
+                                <th>...</th>
+                                <th>Word</th>
+                                <th>Stem</th>
+                                <th>Prefix</th>
+                                <th>Gender</th>
+                                <th>Number</th>
+                                <th>Person</th>
+                            </tr>
+                            <tr>
+                                <th>Prefix</th>
+                                <td>${keyword}</td>
+                                <td>${suffixStem}</td>
+                                <td>${suffix}</td>
+                                <td>${suffixGender}</td>
+                                <td>${suffixNumber}</td>
+                                <td>${suffixPerson}</td>
+                            </tr>
+                        </table>
+                        <br>
+                        <table>
+                            <tr>
+                                <th>Definition</th>
+                                <th>Usage Notes</th>
+                            </tr>
+                            <tr>
+                                <td>${stemDifinition}</td>
+                                <td>${stemNotes || '...'}</td>
+                            </tr>
+                        </table>
+                    </div>`;
 
-                    helperFunctions.standard.createPageById('page96', html);
+                    helperFunctions.standard.createPageById('page96', Shtml);
 
                 }
                 console.log(array);
