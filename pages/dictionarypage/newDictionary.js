@@ -15,7 +15,6 @@ function dictionaryPage() {
         let suffixData = [];
         let prefixData = [];
 
-        
         function bkjlcdfkjbacsfksjbsdkabjc() {
             /*  
                 æze-
