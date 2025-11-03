@@ -220,8 +220,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 //const recTable = document.getElementById('Noun-Table-Recessive');
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
-
-
                                 tableSearchable.addEventListener('click', () => {
                                     console.log(wordclass);
                                     searchableTable(wordclass);
@@ -247,6 +245,101 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             console.log('clean match |', keyword);
 
                             const html = `
+                                <div class="outerdiv">
+                                    <div id="leftdivdictionary" class="leftdivdictionary">
+                                        <div class="keyworddiv"></div>
+                                        <h2>
+                                            ${keyword}
+                                        </h2>
+                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
+                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
+                                        or read the short outline in here.</p>
+                                        <br><br>
+                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
+
+                                        <div class="tablesContainer"></div>
+
+                                        <div id="includeTarget">
+                                            <div id="leftleftdivdictionary"></div>
+                                            <div id="rightleftdivdictionary"></div>
+                                        </div>
+                                    </div>
+                                    <div id="rightdivdictionary" class="rightdivdictionary">
+                                        <div class="pageSearch">
+                                            <input type="text" id="unusedField" placeholder="Search..." />
+                                            <button id="unusedBtn">Search</button>
+                                            <button id="tableSearchBtn">Table is seachable</button>
+                                            <div id="textBoxContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            helperFunctions.standard.createPageById('page97', html);
+
+                            const tableSearchable = document.getElementById('tableSearchBtn');
+
+
+                            // Wait for the page content to load, then setup the table (header table)
+                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                                // Create and fill the table
+                                //console.log(NOUNS.SUFFIXES.MAP);
+                                //const table = createTable(keyword, pageContainer);//just copy english table logic??
+                                //console.log(wordclass);
+                                //fillTable(keyword, wordclass, table);
+                                function newFillTable(row, word, declension, definition, forms, usage_notes, type) {
+                                    if (!row) return;
+
+                                    const cells = row.querySelectorAll('td');
+                                    const getCell = index => cells[index] || null;
+
+
+                                    const vcell0 = getCell(0);
+                                    const vcell1 = getCell(1);
+                                    const vcell2 = getCell(2);
+                                    const vcell3 = getCell(3);
+                                    const vcell4 = getCell(4);
+                                    const vcell5 = getCell(5);
+
+                                    if (vcell0) vcell0.innerHTML = word || '...';
+                                    if (vcell1) vcell1.innerHTML = declension || '...';
+                                    if (vcell2) vcell2.innerHTML = definition || '...';
+                                    if (vcell3) vcell3.innerHTML = forms || '...';
+                                    if (vcell4) vcell4.innerHTML = usage_notes || '...';
+                                    if (vcell5) vcell5.innerHTML = type || '...';
+
+                                }
+
+                                const row = helperFunctions.matchtype1.type1extraTableRow(
+                                    entry.word || '...',
+                                    entry.declension || '...',
+                                    entry.forms || '...',
+                                    entry.definition || '...',
+                                    entry.usage_notes || '...')
+                                newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
+                                const Vwrapper = document.getElementById('leftleftdivdictionary');
+                                helperFunctions.matchtype1.neoVerbTables(1, keyword, Vwrapper);
+                                helperFunctions.matchtype1.neoVerbTables(2, keyword, Vwrapper);
+
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+
+                                tableSearchable.addEventListener('click', () => {
+                                    console.log(wordclass);
+                                    searchableTable(wordclass);
+                                });
+                            });
+                        }
+                        break;
+                    default: console.warn('invalid wordclass');
+                        break;
+
+                }/*
+                let combinedGendersObject = '';
+                if (wordclass === 'n') {
+                    combinedGendersObject = WORD_UTILS.combineGenders(entry.genders) // Key-value pairs
+                }
+                if (word === keyword) {
+                    console.log('clean match |', keyword);
+
+                    const html = `
                     <div class="outerdiv">
                         <div id="leftdivdictionary" class="leftdivdictionary">
                             <div class="keyworddiv"></div>
@@ -275,87 +368,108 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             </div>
                         </div>
                     </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                    helperFunctions.standard.createPageById('page97', html);
 
-                            const tableSearchable = document.getElementById('tableSearchBtn');
-
-
-                            // Wait for the page content to load, then setup the table (header table)
-                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
-                                // Create and fill the table
-                                //console.log(NOUNS.SUFFIXES.MAP);
-                                //const table = createTable(keyword, pageContainer);//just copy english table logic??
-                                //console.log(wordclass);
-                                //fillTable(keyword, wordclass, table);
-                                function newFillTable(row, word, declension, definition, forms, usage_notes, type) {
-                                    if (!row) return;
-
-                                    const cells = row.querySelectorAll('td');
-                                    const getCell = index => cells[index] || null;
-
-                                    switch (wordclass) {
-                                        case 'n':
+                    const tableSearchable = document.getElementById('tableSearchBtn');
 
 
-                                            const ncell0 = getCell(0);
-                                            const ncell1 = getCell(1);
-                                            const ncell2 = getCell(2);
-                                            const ncell3 = getCell(3);
-                                            const ncell4 = getCell(4);
-                                            const ncell5 = getCell(5);
+                    // Wait for the page content to load, then setup the table (header table)
+                    helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                        // Create and fill the table
+                        //console.log(NOUNS.SUFFIXES.MAP);
+                        //const table = createTable(keyword, pageContainer);//just copy english table logic??
+                        //console.log(wordclass);
+                        //fillTable(keyword, wordclass, table);
+                        function newFillTable(row, word, declension, definition, forms, usage_notes, type) {
+                            if (!row) return;
 
-                                            if (ncell0) ncell0.innerHTML = word || '...';
-                                            if (ncell1) ncell1.innerHTML = declension || '...';
-                                            if (ncell2) ncell2.innerHTML = definition || '...';
-                                            if (ncell3) ncell3.innerHTML = forms || '...';
-                                            if (ncell4) ncell4.innerHTML = usage_notes || '...';
-                                            if (ncell5) ncell5.innerHTML = type || '...';
+                            const cells = row.querySelectorAll('td');
+                            const getCell = index => cells[index] || null;
 
-                                            break;
-                                        default://case n and then default. or just if n, else.
-                                            const vcell0 = getCell(0);
-                                            const vcell1 = getCell(1);
-                                            const vcell2 = getCell(2);
-                                            const vcell3 = getCell(3);
-                                            const vcell4 = getCell(4);
-                                            const vcell5 = getCell(5);
+                            switch (wordclass) {
+                                case 'n':
 
-                                            if (vcell0) vcell0.innerHTML = word || '...';
-                                            if (vcell1) vcell1.innerHTML = declension || '...';
-                                            if (vcell2) vcell2.innerHTML = definition || '...';
-                                            if (vcell3) vcell3.innerHTML = forms || '...';
-                                            if (vcell4) vcell4.innerHTML = usage_notes || '...';
-                                            if (vcell5) vcell5.innerHTML = type || '...';
 
-                                            break;
-                                    }
-                                }
+                                    const ncell0 = getCell(0);
+                                    const ncell1 = getCell(1);
+                                    const ncell2 = getCell(2);
+                                    const ncell3 = getCell(3);
+                                    const ncell4 = getCell(4);
+                                    const ncell5 = getCell(5);
 
+                                    if (ncell0) ncell0.innerHTML = word || '...';
+                                    if (ncell1) ncell1.innerHTML = declension || '...';
+                                    if (ncell2) ncell2.innerHTML = definition || '...';
+                                    if (ncell3) ncell3.innerHTML = forms || '...';
+                                    if (ncell4) ncell4.innerHTML = usage_notes || '...';
+                                    if (ncell5) ncell5.innerHTML = type || '...';
+
+                                    break;
+                                default://case n and then default. or just if n, else.
+                                    const vcell0 = getCell(0);
+                                    const vcell1 = getCell(1);
+                                    const vcell2 = getCell(2);
+                                    const vcell3 = getCell(3);
+                                    const vcell4 = getCell(4);
+                                    const vcell5 = getCell(5);
+
+                                    if (vcell0) vcell0.innerHTML = word || '...';
+                                    if (vcell1) vcell1.innerHTML = declension || '...';
+                                    if (vcell2) vcell2.innerHTML = definition || '...';
+                                    if (vcell3) vcell3.innerHTML = forms || '...';
+                                    if (vcell4) vcell4.innerHTML = usage_notes || '...';
+                                    if (vcell5) vcell5.innerHTML = type || '...';
+
+                                    break;
+                            }
+                        }
+                        if (wordclass === 'n') {
+
+                            for (const [gender, def] of Object.entries(combinedGendersObject)) {
                                 const row = helperFunctions.matchtype1.type1extraTableRow(
                                     entry.word || '...',
                                     entry.declension || '...',
-                                    entry.forms || '...',
-                                    entry.definition || '...',
+                                    gender || '...',
+                                    def || '...',
                                     entry.usage_notes || '...')
-                                newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
+                                newFillTable(row, entry.word, entry.declension, def, gender, entry.usage_notes, entry.type);
+                            }
+                        } else {
+                            const row = helperFunctions.matchtype1.type1extraTableRow(
+                                entry.word || '...',
+                                entry.declension || '...',
+                                entry.forms || '...',
+                                entry.definition || '...',
+                                entry.usage_notes || '...')
+                            newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
+                        }
+                        switch (wordclass) {
+                            case 'n':
+                                const Nwrapper = document.getElementById('leftleftdivdictionary');
+                                helperFunctions.matchtype1.neoNounTables(entry.declension, 1, Nwrapper, combinedGendersObject);
+                                helperFunctions.matchtype1.neoNounTables(entry.declension, 2, Nwrapper, combinedGendersObject);
+
+                                //const dirTable = document.getElementById('Noun-Table-Directive');
+                                //const recTable = document.getElementById('Noun-Table-Recessive');
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+
+
+
+                                break;
+                            case 'v':
                                 const Vwrapper = document.getElementById('leftleftdivdictionary');
                                 helperFunctions.matchtype1.neoVerbTables(1, keyword, Vwrapper);
                                 helperFunctions.matchtype1.neoVerbTables(2, keyword, Vwrapper);
 
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
-
-
-                                tableSearchable.addEventListener('click', () => {
-                                    console.log(wordclass);
-                                    searchableTable(wordclass);
-                                });
-                            });
+                                break
                         }
-                        break;
-                    default: console.warn('invalid wordclass');
-                        break;
-
-                }
+                        tableSearchable.addEventListener('click', () => {
+                            console.log(wordclass);
+                            searchableTable(wordclass);
+                        });
+                    });
+                }*/
                 openPageOld('page97')
             });
         }
