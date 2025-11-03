@@ -171,7 +171,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     entry.declension || '...',
                                     gndr || '...',
                                     entry.definition || '...',
-                                    entry.usage_notes || '...'); console.log(gndr);//all adjectives take all genders - so no reason to include them in the header table.
+                                    entry.usage_notes || '...'); //console.log(gndr);//all adjectives take all genders - so no reason to include them in the header table.
                                 newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
 
                                 const ADJwrapper = document.getElementById('leftleftdivdictionary');
@@ -191,6 +191,67 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     case 'adv':
                         console.log(wordclass);
+                        if (word === keyword) {
+                            console.log('clean match |', keyword);
+
+                            const html = `
+                                <div class="outerdiv">
+                                    <div id="leftdivdictionary" class="leftdivdictionary">
+                                        <div class="keyworddiv"></div>
+                                        <h2>
+                                            ${keyword}
+                                        </h2>
+                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
+                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
+                                        or read the short outline in here.</p>
+                                        <br><br>
+                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
+
+                                        <div class="tablesContainer"></div>
+
+                                        <div id="includeTarget">
+                                            <div id="leftleftdivdictionary"></div>
+                                            <div id="rightleftdivdictionary"></div>
+                                        </div>
+                                    </div>
+                                    <div id="rightdivdictionary" class="rightdivdictionary">
+                                        <div class="pageSearch">
+                                            <input type="text" id="unusedField" placeholder="Search..." />
+                                            <button id="unusedBtn">Search</button>
+                                            <button id="tableSearchBtn">Table is seachable</button>
+                                            <div id="textBoxContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            helperFunctions.standard.createPageById('page97', html);
+
+                            const tableSearchable = document.getElementById('tableSearchBtn');
+
+
+                            // Wait for the page content to load, then setup the table (header table)
+                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                                // Create and fill the table
+                                //console.log(NOUNS.SUFFIXES.MAP);
+                                //const table = createTable(keyword, pageContainer);//just copy english table logic??
+                                //console.log(wordclass);
+                                //fillTable(keyword, wordclass, table);
+
+                                const ADVwrapper = document.getElementById('leftleftdivdictionary');
+                                const ADVheaderwrapper = document.querySelector('.tablesContainer');
+                                //helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 1, ADVwrapper);
+                                //helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 2, ADVwrapper);
+                                helperFunctions.matchtype1.neoAdverbTables(ADVheaderwrapper, keyword, entry.definition, entry.forms, entry.usage_notes, wordclass);
+
+                                //const dirTable = document.getElementById('Noun-Table-Directive');
+                                //const recTable = document.getElementById('Noun-Table-Recessive');
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Adjective-Table-Directive': false, 'Adjective-Table-Recessive': false });
+
+                                tableSearchable.addEventListener('click', () => {
+                                    console.log(wordclass);
+                                    searchableTable(wordclass);
+                                });
+                            });
+                        }
 
                         break;
                     case 'aux':
