@@ -162,15 +162,18 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     if (adjcell5) adjcell5.innerHTML = type || '...';
 
                                 }
+                                let gndr = '';
                                 GENDERS.FLAT.NAME.forEach(gender => {
-                                    const row = helperFunctions.matchtype1.type1extraTableRow(
-                                        entry.word || '...',
-                                        entry.declension || '...',
-                                        gender || '...',
-                                        entry.definition || '...',
-                                        entry.usage_notes || '...')
-                                    newFillTable(row, entry.word, entry.declension, entry.definition, gender, entry.usage_notes, entry.type);
+                                    gndr = gender + gndr;
                                 });
+                                const row = helperFunctions.matchtype1.type1extraTableRow(
+                                    entry.word || '...',
+                                    entry.declension || '...',
+                                    gndr || '...',
+                                    entry.definition || '...',
+                                    entry.usage_notes || '...'); console.log(gndr);
+                                newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
+
                                 const ADJwrapper = document.getElementById('leftleftdivdictionary');
                                 helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 1, ADJwrapper);
                                 helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 2, ADJwrapper);
