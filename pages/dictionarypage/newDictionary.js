@@ -106,36 +106,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
-                            const html = `
-                                <div class="outerdiv">
-                                    <div id="leftdivdictionary" class="leftdivdictionary">
-                                        <div class="keyworddiv"></div>
-                                        <h2>
-                                            ${keyword}
-                                        </h2>
-                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                                        or read the short outline in here.</p>
-                                        <br><br>
-                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
 
-                                        <div class="tablesContainer"></div>
-
-                                        <div id="includeTarget">
-                                            <div id="leftleftdivdictionary"></div>
-                                            <div id="rightleftdivdictionary"></div>
-                                        </div>
-                                    </div>
-                                    <div id="rightdivdictionary" class="rightdivdictionary">
-                                        <div class="pageSearch">
-                                            <input type="text" id="unusedField" placeholder="Search..." />
-                                            <button id="unusedBtn">Search</button>
-                                            <button id="tableSearchBtn">Table is seachable</button>
-                                            <div id="textBoxContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
                             const tableSearchable = document.getElementById('tableSearchBtn');
 
@@ -201,36 +173,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
-                            const html = `
-                                <div class="outerdiv">
-                                    <div id="leftdivdictionary" class="leftdivdictionary">
-                                        <div class="keyworddiv"></div>
-                                        <h2>
-                                            ${keyword}
-                                        </h2>
-                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                                        or read the short outline in here.</p>
-                                        <br><br>
-                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
 
-                                        <div class="tablesContainer"></div>
-
-                                        <div id="includeTarget">
-                                            <div id="leftleftdivdictionary"></div>
-                                            <div id="rightleftdivdictionary"></div>
-                                        </div>
-                                    </div>
-                                    <div id="rightdivdictionary" class="rightdivdictionary">
-                                        <div class="pageSearch">
-                                            <input type="text" id="unusedField" placeholder="Search..." />
-                                            <button id="unusedBtn">Search</button>
-                                            <button id="tableSearchBtn">Table is seachable</button>
-                                            <div id="textBoxContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
                             // Wait for the page content to load, then setup the table (header table)
                             helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
@@ -246,36 +190,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
-                            const html = `
-                                <div class="outerdiv">
-                                    <div id="leftdivdictionary" class="leftdivdictionary">
-                                        <div class="keyworddiv"></div>
-                                        <h2>
-                                            ${keyword}
-                                        </h2>
-                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                                        or read the short outline in here.</p>
-                                        <br><br>
-                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
 
-                                        <div class="tablesContainer"></div>
-
-                                        <div id="includeTarget">
-                                            <div id="leftleftdivdictionary"></div>
-                                            <div id="rightleftdivdictionary"></div>
-                                        </div>
-                                    </div>
-                                    <div id="rightdivdictionary" class="rightdivdictionary">
-                                        <div class="pageSearch">
-                                            <input type="text" id="unusedField" placeholder="Search..." />
-                                            <button id="unusedBtn">Search</button>
-                                            <button id="tableSearchBtn">Table is seachable</button>
-                                            <div id="textBoxContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
                             const tableSearchable = document.getElementById('tableSearchBtn');
 
@@ -383,36 +299,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
-                            const html = `
-                                <div class="outerdiv">
-                                    <div id="leftdivdictionary" class="leftdivdictionary">
-                                        <div class="keyworddiv"></div>
-                                        <h2>
-                                            ${keyword}
-                                        </h2>
-                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                                        or read the short outline in here.</p>
-                                        <br><br>
-                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
-
-                                        <div class="tablesContainer"></div>
-
-                                        <div id="includeTarget">
-                                            <div id="leftleftdivdictionary"></div>
-                                            <div id="rightleftdivdictionary"></div>
-                                        </div>
-                                    </div>
-                                    <div id="rightdivdictionary" class="rightdivdictionary">
-                                        <div class="pageSearch">
-                                            <input type="text" id="unusedField" placeholder="Search..." />
-                                            <button id="unusedBtn">Search</button>
-                                            <button id="tableSearchBtn">Table is seachable</button>
-                                            <div id="textBoxContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
                             const tableSearchable = document.getElementById('tableSearchBtn');
 
@@ -533,36 +420,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'pp':
                         console.log(wordclass);
                         if (word === keyword) {
-                            const html = `
-                                <div class="outerdiv">
-                                    <div id="leftdivdictionary" class="leftdivdictionary">
-                                        <div class="keyworddiv"></div>
-                                        <h2>
-                                            ${keyword}
-                                        </h2>
-                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                                        or read the short outline in here.</p>
-                                        <br><br>
-                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
 
-                                        <div class="tablesContainer"></div>
-
-                                        <div id="includeTarget">
-                                            <div id="leftleftdivdictionary"></div>
-                                            <div id="rightleftdivdictionary"></div>
-                                        </div>
-                                    </div>
-                                    <div id="rightdivdictionary" class="rightdivdictionary">
-                                        <div class="pageSearch">
-                                            <input type="text" id="unusedField" placeholder="Search..." />
-                                            <button id="unusedBtn">Search</button>
-                                            <button id="tableSearchBtn">Table is seachable</button>
-                                            <div id="textBoxContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
                             helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
                                 const html = `
                             <div>
