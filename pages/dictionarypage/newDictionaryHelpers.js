@@ -574,7 +574,9 @@ const neoAdverbTables = function neoAdverbTables(wrapper, word, definition, elat
                 <td>${wordclass}</td>
             </tr>
         </table>
-        <br>
+    </div>
+    <br>
+    <div>
         <table  id="Adverb-Table style="margin-bottom: 10px;">
         
         </table>
