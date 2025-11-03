@@ -300,9 +300,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
 
                                 const AUXwrapper = document.getElementById('leftleftdivdictionary');
-                                const AUXheaderwrapper = document.querySelector('.tablesContainer'); 
                                 helperFunctions.matchtype1.neoVerbTables(1, keyword, AUXwrapper);
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                                
+                                tableSearchable.addEventListener('click', () => {
+                                    console.log(wordclass);
+                                    searchableTable('v');
+                                });
                             });
                         }
                         break;
