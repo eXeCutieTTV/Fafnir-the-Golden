@@ -483,11 +483,82 @@ const neoNounTables = function neoNounTables(declension, mood, wrapper, combined
 
     wrapper.appendChild(table);
 }
+const neoAdjectiveTables = function neoAdjectiveTables(declension, mood, wrapper) {
+    const table = document.createElement('table');
+
+    const moodMap = {
+        1: 'Directive',
+        2: 'Recessive'
+    }
+    table.id = `Adjective-Table-${moodMap[mood]}`;
+    //th
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = [moodMap[mood], "Singular", "Dual", "Plural"];
+    headers.forEach(text => {
+        const th = document.createElement('th');
+        th.textContent = text;
+        headerRow.appendChild(th);
+        th.id = `neoSummaryHeader-${text}`;
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    //rows
+    GENDERS.FLAT.NAME.forEach(gender => {
+        const trd = document.createElement('tr');
+        const rowth = document.createElement('th');
+        rowth.textContent = gender;
+        trd.appendChild(rowth);
+        const map = {
+            1: 'Singular',
+            2: 'Dual',
+            3: 'Plural'
+        }
+
+        for (let i = 0; i < (headers.length - 1); i++) {
+            const td = document.createElement('td');
+            td.textContent = 'placeholder';
+            if (i === 0) {
+                td.className = `neoSummarytd-${map[1]}`
+            }
+            else if (i === 1) {
+                td.className = `neoSummarytd-${map[2]}`
+            }
+            else if (i === 2) {
+                td.className = `neoSummarytd-${map[3]}`
+            }
+            const mooooood = moodMap[mood];
+            //inner
+            const entry = Object.entries(NOUNS.SUFFIXES.MAP[mooooood]);
+            for (const [gndr, array] of entry) {
+                if (gndr === gender) {
+                    const numberKey = map[i + 1];
+                    const cellValue = array[numberKey] && array[numberKey][declension];
+                    if (cellValue !== undefined) {
+                        td.textContent = cellValue;
+                    }
+                }
+            }
+            trd.appendChild(td);
+
+        }
+        table.appendChild(trd);
+    });
+
+    table.style = "margin-bottom: 10px";
+
+    const tbody = document.createElement('tbody');
+    table.appendChild(tbody);
+
+    wrapper.appendChild(table);
+}
 
 const matchtype1 = {
     type1extraTableRow,
     neoVerbTables,
-    neoNounTables
+    neoNounTables,
+    neoAdjectiveTables
 }
 
 
