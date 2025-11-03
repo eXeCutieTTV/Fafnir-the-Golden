@@ -251,6 +251,60 @@ const matchtype3 = {
 }
 
 
+const page97Base = function page97Base(word, wordclass) {
+    let REGEX = /^[aeiouAEIOU]$/;
+    let wordclass_article = '';
+    const { slice1, slice2 } = helperFunctions.standard.sliceKeywordNegative(wordclass, (wordclass.length - 1));
+    if (REGEX.test(slice1)) { wordclass_article = 'an'; } else { wordclass_article = 'a'; }
+    //console.log(wordclass_article);
+
+    let displayedWordclass = '';
+    for (const key of Object.values(WORDCLASSES)) {
+        if (key.SHORT === wordclass) {
+            displayedWordclass = key.NAME;
+            displayedWordclass = displayedWordclass.toLowerCase();
+        }
+    }
+    const dictionaryPageReference = () => openPageOld('page3', document.querySelector('.tab-bar .tab:nth-child(5)'));
+    const reference = document.getElementById('reference');
+    reference.href = '#';
+    reference.onclick = function (ev) {
+        ev.preventDefault();
+        //openPageOld('page3', document.querySelector('.tab-bar .tab:nth-child(6)'));
+        openPage('pages/nounspage/page3.html', 'page3', { runScripts: true, replace: false}, this);
+        document.querySelector('.tab-bar .tab:nth-child(6)');
+    }
+
+    const html = `
+        <div class="outerdiv">
+            <div id="leftdivdictionary" class="leftdivdictionary">
+                <div class="keyworddiv"></div>
+                <h2>
+                    ${word}
+                </h2>
+                <p>${word} is ${wordclass_article} ${displayedWordclass}. Read more about ${displayedWordclass}s <a id='reference'>abc</a>${reference},
+                or read the short outline in here.</p>
+                <br><br>
+                <p>The declention tables that would be relevant for ${word} can be seen bellow.</p>
+
+                <div class="tablesContainer"></div>
+
+                <div id="includeTarget">
+                    <div id="leftleftdivdictionary"></div>
+                    <div id="rightleftdivdictionary"></div>
+                </div>
+            </div>
+            <div id="rightdivdictionary" class="rightdivdictionary">
+                <div class="pageSearch">
+                    <input type="text" id="unusedField" placeholder="Search..." />
+                    <button id="unusedBtn">Search</button>
+                    <button id="tableSearchBtn">Table is seachable</button>
+                    <div id="textBoxContainer"></div>
+                </div>
+            </div>
+        </div>`;
+    helperFunctions.standard.createPageById('page97', html);
+}
 const type1extraTableRow = function type1extraTableRow(word, declension, forms, definition, notes) {
     let table = document.getElementById('type1TopTable');
     if (!table) {
@@ -590,7 +644,8 @@ const matchtype1 = {
     neoVerbTables,
     neoNounTables,
     neoAdjectiveTables,
-    neoAdverbTables
+    neoAdverbTables,
+    page97Base
 }
 
 

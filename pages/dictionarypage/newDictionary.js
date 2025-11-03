@@ -720,7 +720,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
 
                 let wordclass = '';
-                for (const key of Object.values(WORDCLASS)) {
+                for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === prefixType) { wordclass = key.NAME }
                 }; //console.log(wordclass);
 
@@ -798,7 +798,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         const suffix = array.usedSuffix;
                         const suffixStem = array.Suffixstem;
 
-                        /*console.log(
+                        console.log(
                             suffixDeclension,
                             suffixGender,
                             suffixNumber,
@@ -806,7 +806,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             suffixType,
                             suffix,
                             suffixStem
-                        );*/
+                        );
 
                         if (ALL_WORDS.MAP[suffixStem]) {
                             hasSuffix = true;
@@ -937,7 +937,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         stemNotes
                     )
                     let wordclass = '';
-                    for (const key of Object.values(WORDCLASS)) {
+                    for (const key of Object.values(WORDCLASSES)) {
                         if (key.SHORT === suffixType) { wordclass = key.NAME }
                     }; //console.log(wordclass);
 
