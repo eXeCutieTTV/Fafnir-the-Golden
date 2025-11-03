@@ -302,7 +302,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 const AUXwrapper = document.getElementById('leftleftdivdictionary');
                                 helperFunctions.matchtype1.neoVerbTables(1, keyword, AUXwrapper);
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
-                                
+
                                 tableSearchable.addEventListener('click', () => {
                                     console.log(wordclass);
                                     searchableTable('v');
@@ -310,9 +310,59 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             });
                         }
                         break;
-                    case 'conj':
+                    case 'con':
                         console.log(wordclass);
+                        const html = `
+                                <div class="outerdiv">
+                                    <div id="leftdivdictionary" class="leftdivdictionary">
+                                        <div class="keyworddiv"></div>
+                                        <h2>
+                                            ${keyword}
+                                        </h2>
+                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
+                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
+                                        or read the short outline in here.</p>
+                                        <br><br>
+                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
 
+                                        <div class="tablesContainer"></div>
+
+                                        <div id="includeTarget">
+                                            <div id="leftleftdivdictionary"></div>
+                                            <div id="rightleftdivdictionary"></div>
+                                        </div>
+                                    </div>
+                                    <div id="rightdivdictionary" class="rightdivdictionary">
+                                        <div class="pageSearch">
+                                            <input type="text" id="unusedField" placeholder="Search..." />
+                                            <button id="unusedBtn">Search</button>
+                                            <button id="tableSearchBtn">Table is seachable</button>
+                                            <div id="textBoxContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        helperFunctions.standard.createPageById('page97', html);
+                        helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                            const html = `
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">Word</th>
+                                        <th>Definition</th>
+                                        <th>Usage Notes</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                    <tr>
+                                        <td>${entry.word || '...'}</td>
+                                        <td>${entry.definition || '...'}</td>
+                                        <td>${entry.usage_notes || '...'}</td>
+                                        <td>${wordclass}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            `;
+                            helperFunctions.standard.createDivById('', pageContainer, html);
+                        });
                         break;
                     case 'det':
                         console.log(wordclass);

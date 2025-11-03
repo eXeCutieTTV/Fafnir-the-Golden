@@ -673,5 +673,5 @@ const WORDCLASS = {
     P: { NAME: "Particle", SHORT: "p" },
     PN: { NAME: "Pronoun", SHORT: "pn" },
     DET: { NAME: "Determiner", SHORT: "det" },
-    CONJ: { NAME: "Conjunktion", SHORT: "conj" },
+    CON: { NAME: "Conjunktion", SHORT: "con" },
 }
