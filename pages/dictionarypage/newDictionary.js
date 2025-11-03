@@ -960,7 +960,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
     // usage => for (let i = 0; i < rowAmount; i++) { extraTableRow(keyword or something custom); }
 
     //on-page button toggler
-    function searchableTable(wordclass) {
+    function searchableTable(wordclass) {//turns the tables into paramteres. such that the function becomes global and reusable.
         switch (wordclass) {
             case 'n':
                 const nounTable1 = document.getElementById('Noun-Table-Directive');
