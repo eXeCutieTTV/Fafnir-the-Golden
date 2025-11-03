@@ -265,14 +265,21 @@ const page97Base = function page97Base(word, wordclass) {
             displayedWordclass = displayedWordclass.toLowerCase();
         }
     }
-    const dictionaryPageReference = () => openPageOld('page3', document.querySelector('.tab-bar .tab:nth-child(5)'));
-    const reference = document.getElementById('reference');
-    reference.href = '#';
-    reference.onclick = function (ev) {
-        ev.preventDefault();
-        //openPageOld('page3', document.querySelector('.tab-bar .tab:nth-child(6)'));
-        openPage('pages/nounspage/page3.html', 'page3', { runScripts: true, replace: false}, this);
-        document.querySelector('.tab-bar .tab:nth-child(6)');
+    let usedReferencePath = '';
+    let usedReferencePageIndex = '';
+    const localPageMap = {
+        n: TABBAR_MAP.page3,
+        v: TABBAR_MAP.page4,
+        adv: TABBAR_MAP.page5,
+        aux: TABBAR_MAP.page6,
+        adj: TABBAR_MAP.page7,
+        pp: TABBAR_MAP.page9,
+    }
+    for (const [index, map] of Object.entries(localPageMap)) {
+        if (index === wordclass) {
+            usedReferencePath = map.Path;
+            usedReferencePageIndex = map.Page;
+        }
     }
 
     const html = `
@@ -282,7 +289,7 @@ const page97Base = function page97Base(word, wordclass) {
                 <h2>
                     ${word}
                 </h2>
-                <p>${word} is ${wordclass_article} ${displayedWordclass}. Read more about ${displayedWordclass}s <a id='reference'>abc</a>${reference},
+                <p>${word} is ${wordclass_article} ${displayedWordclass}. Read more about ${displayedWordclass}s <a id='reference'>abc</a>,
                 or read the short outline in here.</p>
                 <br><br>
                 <p>The declention tables that would be relevant for ${word} can be seen bellow.</p>
@@ -304,6 +311,16 @@ const page97Base = function page97Base(word, wordclass) {
             </div>
         </div>`;
     helperFunctions.standard.createPageById('page97', html);
+
+    const reference = document.getElementById('reference');
+    reference.href = '#';
+    reference.onclick = function (ev) {
+        ev.preventDefault();
+        const tabElement = document.querySelector(`.tab-bar .tab:nth-child(${usedReferencePageIndex + 3})`);
+        const elementToHighlight = tabElement || this;
+        openPage(usedReferencePath, 'page' + usedReferencePageIndex, { runScripts: true, replace: false }, elementToHighlight);
+        if (tabElement) tabElement.classList.add('active');
+    }
 }
 const type1extraTableRow = function type1extraTableRow(word, declension, forms, definition, notes) {
     let table = document.getElementById('type1TopTable');
