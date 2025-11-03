@@ -147,24 +147,33 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     const getCell = index => cells[index] || null;
 
 
-                                    const ncell0 = getCell(0);
-                                    const ncell1 = getCell(1);
-                                    const ncell2 = getCell(2);
-                                    const ncell3 = getCell(3);
-                                    const ncell4 = getCell(4);
-                                    const ncell5 = getCell(5);
+                                    const adjcell0 = getCell(0);
+                                    const adjcell1 = getCell(1);
+                                    const adjcell2 = getCell(2);
+                                    const adjcell3 = getCell(3);
+                                    const adjcell4 = getCell(4);
+                                    const adjcell5 = getCell(5);
 
-                                    if (ncell0) ncell0.innerHTML = word || '...';
-                                    if (ncell1) ncell1.innerHTML = declension || '...';
-                                    if (ncell2) ncell2.innerHTML = definition || '...';
-                                    if (ncell3) ncell3.innerHTML = forms || '...';
-                                    if (ncell4) ncell4.innerHTML = usage_notes || '...';
-                                    if (ncell5) ncell5.innerHTML = type || '...';
+                                    if (adjcell0) adjcell0.innerHTML = word || '...';
+                                    if (adjcell1) adjcell1.innerHTML = declension || '...';
+                                    if (adjcell2) adjcell2.innerHTML = definition || '...';
+                                    if (adjcell3) adjcell3.innerHTML = forms || '...';
+                                    if (adjcell4) adjcell4.innerHTML = usage_notes || '...';
+                                    if (adjcell5) adjcell5.innerHTML = type || '...';
 
                                 }
-                                const Nwrapper = document.getElementById('leftleftdivdictionary');
-                                helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 1, Nwrapper);
-                                helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 2, Nwrapper);
+                                GENDERS.FLAT.NAME.forEach(gender => {
+                                    const row = helperFunctions.matchtype1.type1extraTableRow(
+                                        entry.word || '...',
+                                        entry.declension || '...',
+                                        gender || '...',
+                                        entry.definition || '...',
+                                        entry.usage_notes || '...')
+                                    newFillTable(row, entry.word, entry.declension, entry.definition, gender, entry.usage_notes, entry.type);
+                                });
+                                const ADJwrapper = document.getElementById('leftleftdivdictionary');
+                                helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 1, ADJwrapper);
+                                helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 2, ADJwrapper);
 
                                 //const dirTable = document.getElementById('Noun-Table-Directive');
                                 //const recTable = document.getElementById('Noun-Table-Recessive');
