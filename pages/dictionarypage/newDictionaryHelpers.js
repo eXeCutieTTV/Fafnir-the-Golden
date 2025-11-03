@@ -289,7 +289,7 @@ const page97Base = function page97Base(word, wordclass) {
                 <h2>
                     ${word}
                 </h2>
-                <p>${word} is ${wordclass_article} ${displayedWordclass}. Read more about ${displayedWordclass}s <a id='reference'>abc</a>,
+                <p>${word} is ${wordclass_article} ${displayedWordclass}. Read more about ${displayedWordclass}s <a id='reference'>here</a>,
                 or read the short outline in here.</p>
                 <br><br>
                 <p>The declention tables that would be relevant for ${word} can be seen bellow.</p>
