@@ -171,7 +171,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     entry.declension || '...',
                                     gndr || '...',
                                     entry.definition || '...',
-                                    entry.usage_notes || '...'); console.log(gndr);
+                                    entry.usage_notes || '...'); console.log(gndr);//all adjectives take all genders - so no reason to include them in the header table.
                                 newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
 
                                 const ADJwrapper = document.getElementById('leftleftdivdictionary');
