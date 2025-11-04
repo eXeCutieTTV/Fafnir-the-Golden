@@ -11,6 +11,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         let keyword = ((searchFLD && searchFLD.value ? searchFLD.value.trim() : '').toLowerCase()) || word;
 
+
         // for type2
         let suffixData = [];
         let prefixData = [];
@@ -91,7 +92,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             console.log('searchHandler |', searchHandler);
             searchHandler.forEach(entry => { // what for is this search handler 
                 const word = entry.word
-                const wordclass = entry.type || '...';
+                let wordclass = entry.type || '...';
+
+                // fix for case 'i'
+                if (keyword === 'i') {
+                    wordclass = 'part';
+                }
+
                 switch (wordclass) {
                     case 'adj':
                         console.log(wordclass);
@@ -99,36 +106,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
-                            const html = `
-                                <div class="outerdiv">
-                                    <div id="leftdivdictionary" class="leftdivdictionary">
-                                        <div class="keyworddiv"></div>
-                                        <h2>
-                                            ${keyword}
-                                        </h2>
-                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                                        or read the short outline in here.</p>
-                                        <br><br>
-                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
 
-                                        <div class="tablesContainer"></div>
-
-                                        <div id="includeTarget">
-                                            <div id="leftleftdivdictionary"></div>
-                                            <div id="rightleftdivdictionary"></div>
-                                        </div>
-                                    </div>
-                                    <div id="rightdivdictionary" class="rightdivdictionary">
-                                        <div class="pageSearch">
-                                            <input type="text" id="unusedField" placeholder="Search..." />
-                                            <button id="unusedBtn">Search</button>
-                                            <button id="tableSearchBtn">Table is seachable</button>
-                                            <div id="textBoxContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
                             const tableSearchable = document.getElementById('tableSearchBtn');
 
@@ -194,6 +173,69 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
+
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
+
+                            // Wait for the page content to load, then setup the table (header table)
+                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                                const ADVwrapper = document.getElementById('leftleftdivdictionary');
+                                const ADVheaderwrapper = document.querySelector('.tablesContainer'); console.log(entry);
+                                helperFunctions.matchtype1.neoAdverbTables(ADVheaderwrapper, keyword, entry.definition, entry.forms, entry.usage_notes, wordclass);
+                            });
+                        }
+
+                        break;
+                    case 'aux':
+                        console.log(wordclass);
+                        if (word === keyword) {
+                            console.log('clean match |', keyword);
+
+
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
+
+                            const tableSearchable = document.getElementById('tableSearchBtn');
+
+
+                            // Wait for the page content to load, then setup the table (header table)
+                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                                const Headerhtml = `
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th style="width:116px">Word</th>
+                                            <th>Definition</th>
+                                            <th>Forms</th>
+                                            <th>Usage Notes</th>
+                                            <th>Wordclass</th>
+                                        </tr>
+                                        <tr>
+                                            <td>${entry.word || '...'}</td>
+                                            <td>${entry.definition || '...'}</td>
+                                            <td>${entry.forms || '...'}</td>
+                                            <td>${entry.usage_notes || '...'}</td>
+                                            <td>${wordclass}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                `;
+                                helperFunctions.standard.createDivById('', pageContainer, Headerhtml);
+
+
+
+                                const AUXwrapper = document.getElementById('leftleftdivdictionary');
+                                helperFunctions.matchtype1.neoVerbTables(1, keyword, AUXwrapper);
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+
+                                tableSearchable.addEventListener('click', () => {
+                                    console.log(wordclass);
+                                    searchableTable('v');
+                                });
+                            });
+                        }
+                        break;
+                    case 'con':
+                        console.log(wordclass);
+                        if (word === keyword) {
                             const html = `
                                 <div class="outerdiv">
                                     <div id="leftdivdictionary" class="leftdivdictionary">
@@ -224,43 +266,28 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     </div>
                                 </div>`;
                             helperFunctions.standard.createPageById('page97', html);
-
-                            const tableSearchable = document.getElementById('tableSearchBtn');
-
-
-                            // Wait for the page content to load, then setup the table (header table)
                             helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
-                                // Create and fill the table
-                                //console.log(NOUNS.SUFFIXES.MAP);
-                                //const table = createTable(keyword, pageContainer);//just copy english table logic??
-                                //console.log(wordclass);
-                                //fillTable(keyword, wordclass, table);
-
-                                const ADVwrapper = document.getElementById('leftleftdivdictionary');
-                                const ADVheaderwrapper = document.querySelector('.tablesContainer');
-                                //helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 1, ADVwrapper);
-                                //helperFunctions.matchtype1.neoAdjectiveTables(entry.declension, 2, ADVwrapper);
-                                helperFunctions.matchtype1.neoAdverbTables(ADVheaderwrapper, keyword, entry.definition, entry.forms, entry.usage_notes, wordclass);
-
-                                //const dirTable = document.getElementById('Noun-Table-Directive');
-                                //const recTable = document.getElementById('Noun-Table-Recessive');
-                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Adjective-Table-Directive': false, 'Adjective-Table-Recessive': false });
-
-                                tableSearchable.addEventListener('click', () => {
-                                    console.log(wordclass);
-                                    searchableTable(wordclass);
-                                });
+                                const html = `
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">Word</th>
+                                        <th>Definition</th>
+                                        <th>Usage Notes</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                    <tr>
+                                        <td>${entry.word || '...'}</td>
+                                        <td>${entry.definition || '...'}</td>
+                                        <td>${entry.usage_notes || '...'}</td>
+                                        <td>${wordclass}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            `;
+                                helperFunctions.standard.createDivById('', pageContainer, html);
                             });
                         }
-
-                        break;
-                    case 'aux':
-                        console.log(wordclass);
-
-                        break;
-                    case 'conj':
-                        console.log(wordclass);
-
                         break;
                     case 'det':
                         console.log(wordclass);
@@ -272,36 +299,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
-                            const html = `
-                                <div class="outerdiv">
-                                    <div id="leftdivdictionary" class="leftdivdictionary">
-                                        <div class="keyworddiv"></div>
-                                        <h2>
-                                            ${keyword}
-                                        </h2>
-                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                                        or read the short outline in here.</p>
-                                        <br><br>
-                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
-
-                                        <div class="tablesContainer"></div>
-
-                                        <div id="includeTarget">
-                                            <div id="leftleftdivdictionary"></div>
-                                            <div id="rightleftdivdictionary"></div>
-                                        </div>
-                                    </div>
-                                    <div id="rightdivdictionary" class="rightdivdictionary">
-                                        <div class="pageSearch">
-                                            <input type="text" id="unusedField" placeholder="Search..." />
-                                            <button id="unusedBtn">Search</button>
-                                            <button id="tableSearchBtn">Table is seachable</button>
-                                            <div id="textBoxContainer"></div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
                             const tableSearchable = document.getElementById('tableSearchBtn');
 
@@ -359,9 +357,61 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             });
                         }
                         break;
-                    case 'p':
+                    case 'part':
                         console.log(wordclass);
+                        if (word === keyword) {
+                            const html = `
+                                <div class="outerdiv">
+                                    <div id="leftdivdictionary" class="leftdivdictionary">
+                                        <div class="keyworddiv"></div>
+                                        <h2>
+                                            ${keyword}
+                                        </h2>
+                                        <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
+                                            onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
+                                        or read the short outline in here.</p>
+                                        <br><br>
+                                        <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
 
+                                        <div class="tablesContainer"></div>
+
+                                        <div id="includeTarget">
+                                            <div id="leftleftdivdictionary"></div>
+                                            <div id="rightleftdivdictionary"></div>
+                                        </div>
+                                    </div>
+                                    <div id="rightdivdictionary" class="rightdivdictionary">
+                                        <div class="pageSearch">
+                                            <input type="text" id="unusedField" placeholder="Search..." />
+                                            <button id="unusedBtn">Search</button>
+                                            <button id="tableSearchBtn">Table is seachable</button>
+                                            <div id="textBoxContainer"></div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            helperFunctions.standard.createPageById('page97', html);
+                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                                const html = `
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">Word</th>
+                                        <th>Definition</th>
+                                        <th>Usage Notes</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                    <tr>
+                                        <td>${entry.word || '...'}</td>
+                                        <td>${entry.definition || '...'}</td>
+                                        <td>${entry.usage_notes || '...'}</td>
+                                        <td>${wordclass}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            `;
+                                helperFunctions.standard.createDivById('', pageContainer, html);
+                            });
+                        }
                         break;
                     case 'pn':
                         console.log(wordclass);
@@ -369,7 +419,31 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     case 'pp':
                         console.log(wordclass);
+                        if (word === keyword) {
 
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
+                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+                                const html = `
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">Word</th>
+                                        <th>Definition</th>
+                                        <th>Usage Notes</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                    <tr>
+                                        <td>${entry.word || '...'}</td>
+                                        <td>${entry.definition || '...'}</td>
+                                        <td>${entry.usage_notes || '...'}</td>
+                                        <td>${wordclass}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            `;
+                                helperFunctions.standard.createDivById('', pageContainer, html);
+                            });
+                        }
                         break;
                     case 'v':
                         console.log(wordclass);
@@ -460,148 +534,10 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             });
                         }
                         break;
-                    default: console.warn('invalid wordclass');
+                    default: console.warn(`${wordclass} is an invalid wordclass`);
                         break;
 
-                }/*
-                let combinedGendersObject = '';
-                if (wordclass === 'n') {
-                    combinedGendersObject = WORD_UTILS.combineGenders(entry.genders) // Key-value pairs
                 }
-                if (word === keyword) {
-                    console.log('clean match |', keyword);
-
-                    const html = `
-                    <div class="outerdiv">
-                        <div id="leftdivdictionary" class="leftdivdictionary">
-                            <div class="keyworddiv"></div>
-                            <h2>
-                                ${keyword}
-                            </h2>
-                            <p>${keyword} is a ${wordclass} Read more about ${wordclass}s <a href="#"
-                                onclick="event.preventDefault(); dictionaryPageReference()">here</a>,
-                            or read the short outline in here.</p>
-                            <br><br>
-                            <p>The declention tables that would be relevant for ${keyword} can be seen bellow.</p>
-
-                            <div class="tablesContainer"></div>
-
-                            <div id="includeTarget">
-                                <div id="leftleftdivdictionary"></div>
-                                <div id="rightleftdivdictionary"></div>
-                            </div>
-                        </div>
-                        <div id="rightdivdictionary" class="rightdivdictionary">
-                            <div class="pageSearch">
-                                <input type="text" id="unusedField" placeholder="Search..." />
-                                <button id="unusedBtn">Search</button>
-                                <button id="tableSearchBtn">Table is seachable</button>
-                                <div id="textBoxContainer"></div>
-                            </div>
-                        </div>
-                    </div>`;
-                    helperFunctions.standard.createPageById('page97', html);
-
-                    const tableSearchable = document.getElementById('tableSearchBtn');
-
-
-                    // Wait for the page content to load, then setup the table (header table)
-                    helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
-                        // Create and fill the table
-                        //console.log(NOUNS.SUFFIXES.MAP);
-                        //const table = createTable(keyword, pageContainer);//just copy english table logic??
-                        //console.log(wordclass);
-                        //fillTable(keyword, wordclass, table);
-                        function newFillTable(row, word, declension, definition, forms, usage_notes, type) {
-                            if (!row) return;
-
-                            const cells = row.querySelectorAll('td');
-                            const getCell = index => cells[index] || null;
-
-                            switch (wordclass) {
-                                case 'n':
-
-
-                                    const ncell0 = getCell(0);
-                                    const ncell1 = getCell(1);
-                                    const ncell2 = getCell(2);
-                                    const ncell3 = getCell(3);
-                                    const ncell4 = getCell(4);
-                                    const ncell5 = getCell(5);
-
-                                    if (ncell0) ncell0.innerHTML = word || '...';
-                                    if (ncell1) ncell1.innerHTML = declension || '...';
-                                    if (ncell2) ncell2.innerHTML = definition || '...';
-                                    if (ncell3) ncell3.innerHTML = forms || '...';
-                                    if (ncell4) ncell4.innerHTML = usage_notes || '...';
-                                    if (ncell5) ncell5.innerHTML = type || '...';
-
-                                    break;
-                                default://case n and then default. or just if n, else.
-                                    const vcell0 = getCell(0);
-                                    const vcell1 = getCell(1);
-                                    const vcell2 = getCell(2);
-                                    const vcell3 = getCell(3);
-                                    const vcell4 = getCell(4);
-                                    const vcell5 = getCell(5);
-
-                                    if (vcell0) vcell0.innerHTML = word || '...';
-                                    if (vcell1) vcell1.innerHTML = declension || '...';
-                                    if (vcell2) vcell2.innerHTML = definition || '...';
-                                    if (vcell3) vcell3.innerHTML = forms || '...';
-                                    if (vcell4) vcell4.innerHTML = usage_notes || '...';
-                                    if (vcell5) vcell5.innerHTML = type || '...';
-
-                                    break;
-                            }
-                        }
-                        if (wordclass === 'n') {
-
-                            for (const [gender, def] of Object.entries(combinedGendersObject)) {
-                                const row = helperFunctions.matchtype1.type1extraTableRow(
-                                    entry.word || '...',
-                                    entry.declension || '...',
-                                    gender || '...',
-                                    def || '...',
-                                    entry.usage_notes || '...')
-                                newFillTable(row, entry.word, entry.declension, def, gender, entry.usage_notes, entry.type);
-                            }
-                        } else {
-                            const row = helperFunctions.matchtype1.type1extraTableRow(
-                                entry.word || '...',
-                                entry.declension || '...',
-                                entry.forms || '...',
-                                entry.definition || '...',
-                                entry.usage_notes || '...')
-                            newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
-                        }
-                        switch (wordclass) {
-                            case 'n':
-                                const Nwrapper = document.getElementById('leftleftdivdictionary');
-                                helperFunctions.matchtype1.neoNounTables(entry.declension, 1, Nwrapper, combinedGendersObject);
-                                helperFunctions.matchtype1.neoNounTables(entry.declension, 2, Nwrapper, combinedGendersObject);
-
-                                //const dirTable = document.getElementById('Noun-Table-Directive');
-                                //const recTable = document.getElementById('Noun-Table-Recessive');
-                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
-
-
-
-                                break;
-                            case 'v':
-                                const Vwrapper = document.getElementById('leftleftdivdictionary');
-                                helperFunctions.matchtype1.neoVerbTables(1, keyword, Vwrapper);
-                                helperFunctions.matchtype1.neoVerbTables(2, keyword, Vwrapper);
-
-                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
-                                break
-                        }
-                        tableSearchable.addEventListener('click', () => {
-                            console.log(wordclass);
-                            searchableTable(wordclass);
-                        });
-                    });
-                }*/
                 openPageOld('page97')
             });
         }
@@ -643,7 +579,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
 
                 let wordclass = '';
-                for (const key of Object.values(WORDCLASS)) {
+                for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === prefixType) { wordclass = key.NAME }
                 }; //console.log(wordclass);
 
@@ -721,7 +657,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         const suffix = array.usedSuffix;
                         const suffixStem = array.Suffixstem;
 
-                        /*console.log(
+                        console.log(
                             suffixDeclension,
                             suffixGender,
                             suffixNumber,
@@ -729,7 +665,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             suffixType,
                             suffix,
                             suffixStem
-                        );*/
+                        );
 
                         if (ALL_WORDS.MAP[suffixStem]) {
                             hasSuffix = true;
@@ -860,7 +796,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         stemNotes
                     )
                     let wordclass = '';
-                    for (const key of Object.values(WORDCLASS)) {
+                    for (const key of Object.values(WORDCLASSES)) {
                         if (key.SHORT === suffixType) { wordclass = key.NAME }
                     }; //console.log(wordclass);
 
@@ -1024,7 +960,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
     // usage => for (let i = 0; i < rowAmount; i++) { extraTableRow(keyword or something custom); }
 
     //on-page button toggler
-    function searchableTable(wordclass) {
+    function searchableTable(wordclass) {//turns the tables into paramteres. such that the function becomes global and reusable.
         switch (wordclass) {
             case 'n':
                 const nounTable1 = document.getElementById('Noun-Table-Directive');

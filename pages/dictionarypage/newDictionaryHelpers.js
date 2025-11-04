@@ -251,6 +251,77 @@ const matchtype3 = {
 }
 
 
+const page97Base = function page97Base(word, wordclass) {
+    let REGEX = /^[aeiouAEIOU]$/;
+    let wordclass_article = '';
+    const { slice1, slice2 } = helperFunctions.standard.sliceKeywordNegative(wordclass, (wordclass.length - 1));
+    if (REGEX.test(slice1)) { wordclass_article = 'an'; } else { wordclass_article = 'a'; }
+    //console.log(wordclass_article);
+
+    let displayedWordclass = '';
+    for (const key of Object.values(WORDCLASSES)) {
+        if (key.SHORT === wordclass) {
+            displayedWordclass = key.NAME;
+            displayedWordclass = displayedWordclass.toLowerCase();
+        }
+    }
+    let usedReferencePath = '';
+    let usedReferencePageIndex = '';
+    const localPageMap = {
+        n: TABBAR_MAP.page3,
+        v: TABBAR_MAP.page4,
+        adv: TABBAR_MAP.page5,
+        aux: TABBAR_MAP.page6,
+        adj: TABBAR_MAP.page7,
+        pp: TABBAR_MAP.page9,
+    }
+    for (const [index, map] of Object.entries(localPageMap)) {
+        if (index === wordclass) {
+            usedReferencePath = map.Path;
+            usedReferencePageIndex = map.Page;
+        }
+    }
+
+    const html = `
+        <div class="outerdiv">
+            <div id="leftdivdictionary" class="leftdivdictionary">
+                <div class="keyworddiv"></div>
+                <h2>
+                    ${word}
+                </h2>
+                <p>${word} is ${wordclass_article} ${displayedWordclass}. Read more about ${displayedWordclass}s <a id='reference'>here</a>,
+                or read the short outline in here.</p>
+                <br><br>
+                <p>The declention tables that would be relevant for ${word} can be seen bellow.</p>
+
+                <div class="tablesContainer"></div>
+
+                <div id="includeTarget">
+                    <div id="leftleftdivdictionary"></div>
+                    <div id="rightleftdivdictionary"></div>
+                </div>
+            </div>
+            <div id="rightdivdictionary" class="rightdivdictionary">
+                <div class="pageSearch">
+                    <input type="text" id="unusedField" placeholder="Search..." />
+                    <button id="unusedBtn">Search</button>
+                    <button id="tableSearchBtn">Table is seachable</button>
+                    <div id="textBoxContainer"></div>
+                </div>
+            </div>
+        </div>`;
+    helperFunctions.standard.createPageById('page97', html);
+
+    const reference = document.getElementById('reference');
+    reference.href = '#';
+    reference.onclick = function (ev) {
+        ev.preventDefault();
+        const tabElement = document.querySelector(`.tab-bar .tab:nth-child(${usedReferencePageIndex + 3})`);
+        const elementToHighlight = tabElement || this;
+        openPage(usedReferencePath, 'page' + usedReferencePageIndex, { runScripts: true, replace: false }, elementToHighlight);
+        if (tabElement) tabElement.classList.add('active');
+    }
+}
 const type1extraTableRow = function type1extraTableRow(word, declension, forms, definition, notes) {
     let table = document.getElementById('type1TopTable');
     if (!table) {
@@ -569,78 +640,15 @@ const neoAdverbTables = function neoAdverbTables(wrapper, word, definition, elat
             <tr>
                 <td>${word}</td>
                 <td>${definition}</td>
-                <td>${elative}</td>
+                <td>${elative || '...'}</td>
                 <td>${notes}</td>
                 <td>${wordclass}</td>
             </tr>
         </table>
     </div>
-    <br>
-    <div>
-        <table  id="Adverb-Table style="margin-bottom: 10px;">
-        
-        </table>
-    </div>
     `;
 
     helperFunctions.standard.createDivById('', wrapper, html);
-    /*table.id = `Adverb-Table`;
-     //th
-     const thead = document.createElement('thead');
-     const headerRow = document.createElement('tr');
-     const headers = [moodMap[mood], "Singular", "Dual", "Plural"];
-     headers.forEach(text => {
-         const th = document.createElement('th');
-         th.textContent = text;
-         headerRow.appendChild(th);
-         th.id = `neoSummaryHeader-${text}`;
-     });
-     thead.appendChild(headerRow);
-     table.appendChild(thead);
- 
-     //rows
-     GENDERS.FLAT.NAME.forEach(gender => {
-         const trd = document.createElement('tr');
-         const rowth = document.createElement('th');
-         rowth.textContent = gender;
-         trd.appendChild(rowth);
-         const map = {
-             1: 'Singular',
-             2: 'Dual',
-             3: 'Plural'
-         }
- 
-         for (let i = 0; i < (headers.length - 1); i++) {
-             const td = document.createElement('td');
-             td.textContent = 'placeholder';
-             if (i === 0) {
-                 td.className = `neoSummarytd-${map[1]}`
-             }
-             else if (i === 1) {
-                 td.className = `neoSummarytd-${map[2]}`
-             }
-             else if (i === 2) {
-                 td.className = `neoSummarytd-${map[3]}`
-             }
-             const mooooood = moodMap[mood];
-             //inner
-             const entry = Object.entries(NOUNS.SUFFIXES.MAP[mooooood]);
-             for (const [gndr, array] of entry) {
-                 if (gndr === gender) {
-                     const numberKey = map[i + 1];
-                     const cellValue = array[numberKey] && array[numberKey][declension];
-                     if (cellValue !== undefined) {
-                         td.textContent = cellValue;
-                     }
-                 }
-             }
-             trd.appendChild(td);
- 
-         }
-         table.appendChild(trd);
-     });
- 
-     table.style = "margin-bottom: 10px";*/
 
     const tbody = document.createElement('tbody');
     table.appendChild(tbody);
@@ -653,7 +661,8 @@ const matchtype1 = {
     neoVerbTables,
     neoNounTables,
     neoAdjectiveTables,
-    neoAdverbTables
+    neoAdverbTables,
+    page97Base
 }
 
 
@@ -724,17 +733,4 @@ const helperFunctions =
     matchtype1,
     tablegen,
     formatting
-}
-
-const WORDCLASS = {
-    N: { NAME: "Noun", SHORT: "n" },
-    V: { NAME: "Verb", SHORT: "v" },
-    ADJ: { NAME: "Adjective", SHORT: "adj" },
-    ADV: { NAME: "Adverb", SHORT: "adv" },
-    AUX: { NAME: "Auxilary", SHORT: "aux" },
-    PP: { NAME: "Preposition", SHORT: "pp" },
-    P: { NAME: "Particle", SHORT: "p" },
-    PN: { NAME: "Pronoun", SHORT: "pn" },
-    DET: { NAME: "Determiner", SHORT: "det" },
-    CONJ: { NAME: "Conjunktion", SHORT: "conj" },
 }
