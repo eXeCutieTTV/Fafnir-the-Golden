@@ -105,7 +105,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     if (!array) {
         return;
     }
-    const affixType = 'v';
+    const affixType = array[2];
     let affix = '';
     let affixPerson = '';
     let affixNumber = '';
@@ -125,10 +125,10 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             console.log(affix);
             if (isPrefix === true) {
                 const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
-                affixStem = V1;
+                affixStem = V2;
             } else if (isPrefix === false) {
                 const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                affixStem = V2;
+                affixStem = V1;
             }
             console.log(affix, affixStem);
             break;
@@ -173,9 +173,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
         affixCase,
         affix,
     };
-    // push into provided array if it is a real array
-    if (Array.isArray(resultArray)) resultArray.push(result);
 
+    if (Array.isArray(resultArray)) resultArray.push(result);
     return result;
 }
 const neoSuffixChecker = function neoSuffixChecker(keyword, map, resultArray) {
