@@ -541,8 +541,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 openPageOld('page97')
             });
         }
-
-        else if (helperFunctions.affixHelpers.neoPrefixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, prefixData) || (helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {//type 2
+        else if (
+            helperFunctions.affixHelpers.neoPrefixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, prefixData) ||
+            (
+                helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) ||
+                helperFunctions.affixHelpers.neoSuffixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData)
+            ) || '...'
+        ) {//type 2
             console.log('-----type2-----');
 
 

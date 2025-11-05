@@ -98,7 +98,86 @@ const standard = {
     reverseSearchIdsOnSearch
 }
 
+const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
+    resultArray.length = 0; // clear array first
+    const array = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0];
+    console.log(array);
+    if (!array) {
+        return;
+    }
+    const affixType = 'v';
+    let affix = '';
+    let affixPerson = '';
+    let affixNumber = '';
+    let affixGender = '';
+    let affixDeclension = '';
+    let affixCase = '';
 
+    let affixStem = '';
+
+    switch (affixType) {
+        case 'v':
+            affix = array[0][0];
+            affixPerson = array[1];
+            affixNumber = array[2];
+            affixGender = array[3];
+
+            console.log(affix);
+            if (isPrefix === true) {
+                const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
+                affixStem = V1;
+            } else if (isPrefix === false) {
+                const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+                affixStem = V2;
+            }
+            console.log(affix, affixStem);
+            break;
+        case 'n':
+            //decide if applied or unapplied suffix is used
+            const appliedSuffix = array[0][0] || '';
+            const unappliedSuffix = array[0][1] || '';
+            let usedSuffix = '';
+
+            if (appliedSuffix && unappliedSuffix) {
+                if (word.endsWith(appliedSuffix) && word.endsWith(unappliedSuffix)) {
+                    usedSuffix = appliedSuffix;
+                } else if (word.endsWith(unappliedSuffix)) {
+                    usedSuffix = unappliedSuffix;
+                } else return null;
+            } else if (appliedSuffix) usedSuffix = appliedSuffix;
+            else if (unappliedSuffix) usedSuffix = unappliedSuffix;
+            if (!usedSuffix) { return null; } else {
+                affix = usedSuffix;
+            }
+            affixDeclension = array[1][0];
+            affixCase = array[3];
+            affixGender = array[4];
+            affixNumber = array[5];
+
+            console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
+            const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+            affixStem = N1;
+            console.log(affix, affixStem);
+
+            break;
+        default:
+            console.warn(`${affixType} is not a valid affix type`);
+    }
+    const result = {
+        affixType,
+        affixPerson,
+        affixGender,
+        affixNumber,
+        affixDeclension,
+        affixStem,
+        affixCase,
+        affix,
+    };
+    // push into provided array if it is a real array
+    if (Array.isArray(resultArray)) resultArray.push(result);
+
+    return result;
+}
 const neoSuffixChecker = function neoSuffixChecker(keyword, map, resultArray) {
     resultArray.length = 0; // clear array first
     const array = WORD_UTILS.matchSuffix(keyword, map);
@@ -198,7 +277,8 @@ const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
 
 const affixHelpers = {
     neoSuffixChecker,
-    neoPrefixChecker
+    neoPrefixChecker,
+    affixChecker
 }
 
 
