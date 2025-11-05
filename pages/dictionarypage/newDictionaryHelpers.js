@@ -125,10 +125,18 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                 affixUsed = applied;
             } else if (word.endsWith(unapplied)) {
                 affixUsed = unapplied;
-            } else return null;
-        } else if (applied) affixUsed = applied;
-        else if (unapplied) affixUsed = unapplied;
-        if (!affixUsed) { return null; } else {
+            } else {
+                return null;
+            }
+        } else if (applied) {
+            affixUsed = applied;
+        }
+        else if (unapplied) {
+            affixUsed = unapplied;
+        }
+        if (!affixUsed) {
+            return null;
+        } else {
             affix = affixUsed;
         }
     }
