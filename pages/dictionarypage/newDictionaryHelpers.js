@@ -99,6 +99,8 @@ const standard = {
 }
 
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
+
+
     resultArray.length = 0; // clear array first
     const array = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0];
     console.log(array);
@@ -115,75 +117,59 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
 
     let affixStem = '';
 
+    function appliedOrUnapplied(applied, unapplied) {
+        if (applied && unapplied) {
+            if (word.endsWith(applied) && word.endsWith(unapplied)) {
+                affixUsed = applied;
+            } else if (word.endsWith(unapplied)) {
+                affixUsed = unapplied;
+            } else return null;
+        } else if (applied) affixUsed = applied;
+        else if (unapplied) affixUsed = unapplied;
+        if (!affixUsed) { return null; } else {
+            affix = affixUsed;
+        }
+    }
+
     switch (affixType) {
         case 'v':
             if (isPrefix === true) {
-                const affixApplied = array[1][0];
-                const affixUnapplied = array[1][1];
+                const affixApplied = array[1][0] || '';
+                const affixUnapplied = array[1][1] || '';
 
                 affixPerson = array[2][0];
                 affixGender = array[2][2];
                 affixNumber = array[2][1][0];
 
-                if (affixApplied && affixUnapplied) {
-                    if (word.endsWith(affixApplied) && word.endsWith(affixUnapplied)) {
-                        affixUsed = affixApplied;
-                    } else if (word.endsWith(affixUnapplied)) {
-                        affixUsed = affixUnapplied;
-                    } else return null;
-                } else if (affixApplied) affixUsed = affixApplied;
-                else if (affixUnapplied) affixUsed = affixUnapplied;
-                if (!affixUsed) { return null; } else {
-                    affix = affixUsed;
-                }
-            } else if (isPrefix === false) {
-                const affixApplied = array[1][0];
-                const affixUnapplied = array[1][1];
+                appliedOrUnapplied(affixApplied, affixUnapplied);
 
-                affixPerson = array[2][0];
-                affixGender = array[2][2];
-                affixNumber = array[2][1][0];
-
-                if (affixApplied && affixUnapplied) {
-                    if (word.endsWith(affixApplied) && word.endsWith(affixUnapplied)) {
-                        affixUsed = affixApplied;
-                    } else if (word.endsWith(affixUnapplied)) {
-                        affixUsed = affixUnapplied;
-                    } else return null;
-                } else if (affixApplied) affixUsed = affixApplied;
-                else if (affixUnapplied) affixUsed = affixUnapplied;
-                if (!affixUsed) { return null; } else {
-                    affix = affixUsed;
-                }
-            }
-
-            console.log(affix);
-            if (isPrefix === true) {
                 const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
                 affixStem = V2;
             } else if (isPrefix === false) {
+                const affixApplied = array[1][0] || '';
+                const affixUnapplied = array[1][1] || '';
+
+                affixPerson = array[2][0];
+                affixGender = array[2][2];
+                affixNumber = array[2][1][0];
+
+                appliedOrUnapplied(affixApplied, affixUnapplied);
+
                 const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
                 affixStem = V1;
             }
+
+            console.log(affix);
+
             console.log(affix, affixStem);
             break;
         case 'n':
             //decide if applied or unapplied suffix is used
-            const appliedSuffix = array[1][0] || '';
-            const unappliedSuffix = array[1][1] || '';
-            let usedSuffix = '';
+            const affixApplied = array[1][0] || '';
+            const affixUnapplied = array[1][1] || '';
 
-            if (appliedSuffix && unappliedSuffix) {
-                if (word.endsWith(appliedSuffix) && word.endsWith(unappliedSuffix)) {
-                    usedSuffix = appliedSuffix;
-                } else if (word.endsWith(unappliedSuffix)) {
-                    usedSuffix = unappliedSuffix;
-                } else return null;
-            } else if (appliedSuffix) usedSuffix = appliedSuffix;
-            else if (unappliedSuffix) usedSuffix = unappliedSuffix;
-            if (!usedSuffix) { return null; } else {
-                affix = usedSuffix;
-            }
+            appliedOrUnapplied(affixApplied, affixUnapplied);
+
             affixDeclension = array[2][3][0];
             affixCase = array[2][0];
             affixGender = array[2][1];
