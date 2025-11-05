@@ -185,8 +185,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
             const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
             affixStem = N1;
-            console.log(affix, affixStem);
 
+            console.log(affix, affixStem);
             break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
