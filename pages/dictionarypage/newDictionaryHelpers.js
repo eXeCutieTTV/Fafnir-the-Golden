@@ -105,7 +105,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     if (!array) {
         return;
     }
-    const affixType = array[2];
+    const affixType = array[3];
     let affix = '';
     let affixPerson = '';
     let affixNumber = '';
@@ -117,10 +117,45 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
 
     switch (affixType) {
         case 'v':
-            affix = array[0][0];
-            affixPerson = array[1];
-            affixNumber = array[2];
-            affixGender = array[3];
+            if (isPrefix === true) {
+                const affixApplied = array[1][0];
+                const affixUnapplied = array[1][1];
+
+                affixPerson = array[2][0];
+                affixGender = array[2][2];
+                affixNumber = array[2][1][0];
+
+                if (affixApplied && affixUnapplied) {
+                    if (word.endsWith(affixApplied) && word.endsWith(affixUnapplied)) {
+                        affixUsed = affixApplied;
+                    } else if (word.endsWith(affixUnapplied)) {
+                        affixUsed = affixUnapplied;
+                    } else return null;
+                } else if (affixApplied) affixUsed = affixApplied;
+                else if (affixUnapplied) affixUsed = affixUnapplied;
+                if (!affixUsed) { return null; } else {
+                    affix = affixUsed;
+                }
+            } else if (isPrefix === false) {
+                const affixApplied = array[1][0];
+                const affixUnapplied = array[1][1];
+
+                affixPerson = array[2][0];
+                affixGender = array[2][2];
+                affixNumber = array[2][1][0];
+
+                if (affixApplied && affixUnapplied) {
+                    if (word.endsWith(affixApplied) && word.endsWith(affixUnapplied)) {
+                        affixUsed = affixApplied;
+                    } else if (word.endsWith(affixUnapplied)) {
+                        affixUsed = affixUnapplied;
+                    } else return null;
+                } else if (affixApplied) affixUsed = affixApplied;
+                else if (affixUnapplied) affixUsed = affixUnapplied;
+                if (!affixUsed) { return null; } else {
+                    affix = affixUsed;
+                }
+            }
 
             console.log(affix);
             if (isPrefix === true) {
@@ -134,8 +169,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             break;
         case 'n':
             //decide if applied or unapplied suffix is used
-            const appliedSuffix = array[0][0] || '';
-            const unappliedSuffix = array[0][1] || '';
+            const appliedSuffix = array[1][0] || '';
+            const unappliedSuffix = array[1][1] || '';
             let usedSuffix = '';
 
             if (appliedSuffix && unappliedSuffix) {
@@ -149,10 +184,10 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             if (!usedSuffix) { return null; } else {
                 affix = usedSuffix;
             }
-            affixDeclension = array[1][0];
-            affixCase = array[3];
-            affixGender = array[4];
-            affixNumber = array[5];
+            affixDeclension = array[2][3][0];
+            affixCase = array[2][0];
+            affixGender = array[2][1];
+            affixNumber = array[2][2][0];
 
             console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
             const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
