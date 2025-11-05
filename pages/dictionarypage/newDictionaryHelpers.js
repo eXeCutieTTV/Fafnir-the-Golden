@@ -117,7 +117,9 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
 
     let affixStem = '';
 
+    //decide if applied or unapplied suffix is used
     function appliedOrUnapplied(applied, unapplied) {
+        let affixUsed = '';
         if (applied && unapplied) {
             if (word.endsWith(applied) && word.endsWith(unapplied)) {
                 affixUsed = applied;
@@ -159,12 +161,9 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                 affixStem = V1;
             }
 
-            console.log(affix);
-
             console.log(affix, affixStem);
             break;
         case 'n':
-            //decide if applied or unapplied suffix is used
             const affixApplied = array[1][0] || '';
             const affixUnapplied = array[1][1] || '';
 
@@ -175,7 +174,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             affixGender = array[2][1];
             affixNumber = array[2][2][0];
 
-            console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
+            //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
             const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
             affixStem = N1;
             console.log(affix, affixStem);
