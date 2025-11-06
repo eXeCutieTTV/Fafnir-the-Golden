@@ -107,7 +107,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     if (!array) {
         return;
     }
-    const affixType = array[3];
+    const affixType = array[3] || array.type;
     let affix = '';
     let affixPerson = '';
     let affixNumber = '';
@@ -187,6 +187,9 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             affixStem = N1;
 
             console.log(affix, affixStem);
+            break;
+        case 'pp':
+            console.log('is pp');
             break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
