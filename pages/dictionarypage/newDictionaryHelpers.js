@@ -98,7 +98,113 @@ const standard = {
     reverseSearchIdsOnSearch
 }
 
+const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
 
+
+    resultArray.length = 0; // clear array first
+    const array = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0];
+    console.log(array);
+    if (!array) {
+        return;
+    }
+    const affixType = array[3];
+    let affix = '';
+    let affixPerson = '';
+    let affixNumber = '';
+    let affixGender = '';
+    let affixDeclension = '';
+    let affixCase = '';
+
+    let affixStem = '';
+
+    //decide if applied or unapplied suffix is used
+    function appliedOrUnapplied(applied, unapplied) {
+        let affixUsed = '';
+        if (applied && unapplied) {
+            if (word.endsWith(applied) && word.endsWith(unapplied)) {
+                affixUsed = applied;
+            } else if (word.endsWith(unapplied)) {
+                affixUsed = unapplied;
+            } else {
+                return null;
+            }
+        } else if (applied) {
+            affixUsed = applied;
+        }
+        else if (unapplied) {
+            affixUsed = unapplied;
+        }
+        if (!affixUsed) {
+            return null;
+        } else {
+            affix = affixUsed;
+        }
+    }
+
+    switch (affixType) {
+        case 'v':
+            if (isPrefix === true) {
+                const affixApplied = array[1][0] || '';
+                const affixUnapplied = array[1][1] || '';
+
+                affixPerson = array[2][0];
+                affixGender = array[2][2];
+                affixNumber = array[2][1][0];
+
+                appliedOrUnapplied(affixApplied, affixUnapplied);
+
+                const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
+                affixStem = V2;
+            } else if (isPrefix === false) {
+                const affixApplied = array[1][0] || '';
+                const affixUnapplied = array[1][1] || '';
+
+                affixPerson = array[2][0];
+                affixGender = array[2][2];
+                affixNumber = array[2][1][0];
+
+                appliedOrUnapplied(affixApplied, affixUnapplied);
+
+                const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+                affixStem = V1;
+            }
+
+            console.log(affix, affixStem);
+            break;
+        case 'n':
+            const affixApplied = array[1][0] || '';
+            const affixUnapplied = array[1][1] || '';
+
+            appliedOrUnapplied(affixApplied, affixUnapplied);
+
+            affixDeclension = array[2][3][0];
+            affixCase = array[2][0];
+            affixGender = array[2][1];
+            affixNumber = array[2][2][0];
+
+            //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
+            const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+            affixStem = N1;
+
+            console.log(affix, affixStem);
+            break;
+        default:
+            console.warn(`${affixType} is not a valid affix type`);
+    }
+    const result = {
+        affixType,
+        affixPerson,
+        affixGender,
+        affixNumber,
+        affixDeclension,
+        affixStem,
+        affixCase,
+        affix,
+    };
+
+    if (Array.isArray(resultArray)) resultArray.push(result);
+    return result;
+}
 const neoSuffixChecker = function neoSuffixChecker(keyword, map, resultArray) {
     resultArray.length = 0; // clear array first
     const array = WORD_UTILS.matchSuffix(keyword, map);
@@ -195,10 +301,14 @@ const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
     return result;
     //neoPrefixChecker('xenæf', VERBS.PREFIXES.FLAT_MATCHES);
 }
+const matchtype2 = {
+    affixChecker,
+}//replaces affixHelpers
 
 const affixHelpers = {
     neoSuffixChecker,
-    neoPrefixChecker
+    neoPrefixChecker,
+    affixChecker
 }
 
 
