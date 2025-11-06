@@ -101,7 +101,8 @@ const standard = {
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
 
     resultArray.length = 0; // clear array first
-    const array = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0];
+    console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll))
+    let array = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0] || WORD_UTILS.matchAffix(word, map, isPrefix, returnAll) || [];
     console.log(array);
     if (!array) {
         return;
@@ -188,23 +189,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             console.log(affix, affixStem);
             break;
         case 'pp':
-            if (Array.isArray(array[1])) {
-                const affixApplied = array[1][0] || '';
-                const affixUnapplied = array[1][1] || '';
-                appliedOrUnapplied(affixApplied, affixUnapplied);
-            } else if (typeof array[0] === 'string') {
-                affix = array[0];
-            }
-
-            if (affix) {
-                if (isPrefix === true) {
-                    const { slice2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
-                    affixStem = slice2;
-                } else {
-                    const { slice1 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                    affixStem = slice1;
-                }
-            }
+            console.log('is pp');
             break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
