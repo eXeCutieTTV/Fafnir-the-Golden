@@ -562,17 +562,16 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
             if (hasPrefix) {
 
-                const array = prefixData[0].Prefixdeclension;
-                const parrentArray = prefixData[0];
-                const prefixGender = array[3];
-                const prefixNumber = array[2];
-                const prefixPerson = array[1];
-                const prefix = parrentArray.usedPrefix;
-                const prefixStem = parrentArray.Prefixstem;
+                const prefixInfo = prefixData[0] || {};
                 const prefixKeyword = keyword;
-                const prefixType = 'v'; //can soft code later, when we add more prefixes than just v
+                const prefixType = prefixInfo.affixType || prefixInfo.Prefixtype || 'v';
+                const prefix = prefixInfo.affix || prefixInfo.usedPrefix || '...';
+                const prefixStem = prefixInfo.affixStem || prefixInfo.Prefixstem || '';
+                const prefixGender = prefixInfo.affixGender || prefixInfo.Prefixgender || '...';
+                const prefixNumber = prefixInfo.affixNumber || prefixInfo.Prefixnumber || '...';
+                const prefixPerson = prefixInfo.affixPerson || prefixInfo.Prefixperson || '...';
 
-                const stemMap = ALL_WORDS.MAP[prefixStem] || [];
+                const stemMap = ALL_WORDS.MAP[prefixStem] || {};
                 const stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
@@ -591,6 +590,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === prefixType) { wordclass = key.NAME }
                 }; //console.log(wordclass);
+                if (!wordclass && typeof prefixType === 'string') {
+                    wordclass = prefixType.toUpperCase();
+                }
 
                 const Phtml = `
                     <div>
@@ -606,7 +608,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             <tr>
                                 <th>Info</th>
                                 <td>${prefixKeyword}</td>
-                                <td id="type2PrefixONLYStem">${prefixStem}</td>
+                                <td id="type2PrefixONLYStem">${prefixStem || '...'}</td>
                                 <td>${wordclass}</td>
                                 <td>${stemDifinition}</td>
                                 <td>${stemNotes || '...'}</td>
@@ -637,7 +639,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.createPageById('page96', Phtml);
 
                 const stemPTd = document.querySelector('#type2PrefixONLYStem');
-                if (stemPTd) {
+                if (stemPTd && prefixStem) {
                     stemPTd.style.cursor = 'pointer';
                     stemPTd.addEventListener('click', () => {
                         search(prefixStem);
@@ -645,13 +647,15 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
 
                 const prefixONLYSuffixtableWrapper = document.getElementById('prefixONLYSuffixtable');
-                if (prefixONLYSuffixtableWrapper) {
+                if (prefixONLYSuffixtableWrapper && prefixType === 'v') {
                     helperFunctions.matchtype1.neoVerbTables(2, keyword, prefixONLYSuffixtableWrapper);
 
                     helperFunctions.tablegen.populateSummaryTables(prefixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
                 //console.log(prefixData, suffixData);
-                if ((helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) || helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
+                if (prefixStem &&
+                    (helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) ||
+                        helperFunctions.affixHelpers.neoSuffixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData))) {
 
                     //console.log(prefixData, suffixData);
 

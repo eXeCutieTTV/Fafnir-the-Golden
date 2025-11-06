@@ -188,7 +188,23 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             console.log(affix, affixStem);
             break;
         case 'pp':
-            console.log('is pp');
+            if (Array.isArray(array[1])) {
+                const affixApplied = array[1][0] || '';
+                const affixUnapplied = array[1][1] || '';
+                appliedOrUnapplied(affixApplied, affixUnapplied);
+            } else if (typeof array[0] === 'string') {
+                affix = array[0];
+            }
+
+            if (affix) {
+                if (isPrefix === true) {
+                    const { slice2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
+                    affixStem = slice2;
+                } else {
+                    const { slice1 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+                    affixStem = slice1;
+                }
+            }
             break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
