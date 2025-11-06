@@ -13,8 +13,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
 
         // for type2
-        let suffixData = [];
         let prefixData = [];
+        let suffixData = [];
 
 
         function bkjlcdfkjbacsfksjbsdkabjc() {
@@ -542,11 +542,15 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
         }
         else if (
-            helperFunctions.affixHelpers.neoPrefixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, prefixData) ||
             (
-                helperFunctions.affixHelpers.neoSuffixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, suffixData) ||
-                helperFunctions.affixHelpers.neoSuffixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, suffixData)
-            ) || '...'
+                helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, prefixData) ||
+                helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, prefixData)
+            ) ||
+            (
+                helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, suffixData) ||
+                helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, suffixData)
+            )
+
         ) {//type 2
             console.log('-----type2-----');
 

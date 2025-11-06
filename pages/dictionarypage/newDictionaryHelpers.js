@@ -100,7 +100,6 @@ const standard = {
 
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
 
-
     resultArray.length = 0; // clear array first
     const array = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0];
     console.log(array);
@@ -304,6 +303,7 @@ const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
     return result;
     //neoPrefixChecker('xenæf', VERBS.PREFIXES.FLAT_MATCHES);
 }
+
 const matchtype2 = {
     affixChecker,
 }//replaces affixHelpers
@@ -841,8 +841,8 @@ const formatting = {
 const helperFunctions =
 {
     standard,
-    affixHelpers,
     matchtype3,
+    matchtype2,
     matchtype1,
     tablegen,
     formatting
