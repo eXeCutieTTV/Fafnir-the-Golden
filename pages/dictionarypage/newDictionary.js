@@ -848,11 +848,94 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (hasNounSuffix) {
                 console.log('has noun suffix');
+                const array = nounSuffixData[0]; console.log(array);
+                const suffixDeclension = array.affixDeclension;
+                const suffixGender = array.affixGender;
+                const suffixNumber = array.affixNumber;
+                const suffixCase = array.affixCase;
+                const suffixType = array.affixType;
+                const suffix = array.affix;
+                const suffixStem = array.affixStem;
+
+                const stemMap = ALL_WORDS.MAP[suffixStem] || []; console.log(stemMap);
+                let stemDifinition = stemMap.definition || '...';
+                const stemNotes = stemMap.usage_notes || '...';
+
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === suffixType) { wordclass = key.NAME }
+                }; //console.log(wordclass);
+
+
+
+
+                const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                for (const [gndr, def] of Object.entries(combinedGendersObject)) {
+                    if (gndr === suffixGender) {
+                        stemDifinition = def; 
+                        console.log(combinedGendersObject);
+                        console.log(gndr, def);
+
+                        const SNhtml = `
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">...</th>
+                                        <th>Word</th>
+                                        <th>Stem</th>
+                                        <th>Wordclass</th>
+                                        <th>Case</th>
+                                        <th>Usage Notes</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Info</th>
+                                        <td>${keyword}</td>
+                                        <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                        <td>${wordclass}</td>
+                                        <td>${suffixCase}</td>
+                                        <td>${stemNotes || '...'}</td>
+                                    </tr>
+                                </table>
+                                <br>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">...</th>
+                                        <th>Suffix</th>
+                                        <th>Declension</th>
+                                        <th>Gender</th>
+                                        <th>Number</th>
+                                        <th>Definition</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Info</th>
+                                        <td>${suffix}</td>
+                                        <td>${suffixDeclension}</td>
+                                        <td>${suffixGender}</td>
+                                        <td>${suffixNumber}</td>
+                                        <td>${stemDifinition}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            `;
+
+                        helperFunctions.standard.createPageById('page96', SNhtml);
+
+                        helperFunctions.standard.createPageById('page96', SNhtml);
+                        const stemTd = document.querySelector('#type2SuffixONLYStem');
+                        if (stemTd) {
+                            stemTd.style.cursor = 'pointer';
+                            stemTd.addEventListener('click', () => {
+                                keyword = suffixStem;
+                                search(keyword);
+                            });
+
+                        }
+                    }
+                }
             }
             if (hasPpPrefix) {
                 console.log('has pp prefix');
             }
-
 
             /*
             
@@ -1089,7 +1172,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             const stemMap = ALL_WORDS.MAP[suffixStem] || [];
             let stemDifinition = stemMap.definition || '...';
             const stemNotes = stemMap.usage_notes || '...';
-
+ 
             console.log(
                 suffixDeclension,
                 suffixGender,
@@ -1109,17 +1192,17 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             for (const key of Object.values(WORDCLASSES)) {
                 if (key.SHORT === suffixType) { wordclass = key.NAME }
             }; //console.log(wordclass);
-
-
+ 
+ 
             if (suffixType === 'n' || suffixType === 'adj') {//TODO due to how keywords populate suffix tables, ie theres symbols in parenthesis', it sometimes fails to find the correct stem.
-
+ 
                 const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
                 for (const [gndr, def] of Object.entries(combinedGendersObject)) {
                     if (gndr === suffixGender) {
                         stemDifinition = def;
                     }
                 }
-
+ 
                 const SNhtml = `
                 <div>
                     <table>
@@ -1161,7 +1244,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     </table>
                 </div>
                 `;
-
+ 
                 helperFunctions.standard.createPageById('page96', SNhtml);
             } else {
                 const Shtml = `
@@ -1205,7 +1288,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     <br>
                     <div id="suffixONLYPrefixtable">
                     </div>`;
-
+ 
                 // Inject the content first, then attach listeners
                 helperFunctions.standard.createPageById('page96', Shtml);
                 const stemTd = document.querySelector('#type2SuffixONLYStem');
@@ -1217,14 +1300,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     });
                 }
             }
-
+ 
             const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
             if (suffixONLYPrefixtableWrapper) {
                 helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
-
+ 
                 helperFunctions.tablegen.populateSummaryTables(suffixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
             }
-
+ 
         }
         //console.log(array);
     }
