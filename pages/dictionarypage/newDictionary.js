@@ -561,7 +561,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             let hasNounSuffix = (nounSuffixData[0] ? true : false);
             let hasPpPrefix = (ppPrefixData[0] ? true : false);
 
-
+            //add to EVERY if statements beginning, a check if the stem exists - to fix type3
             if (hasVerbPrefix) {
                 console.log('has verb prefix');
                 console.log(verbPrefixData);
