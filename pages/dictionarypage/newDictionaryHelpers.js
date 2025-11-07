@@ -117,6 +117,9 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
 
     let affixStem = '';
 
+    let definition = '';//if pp
+    let usage_notes = '';//if pp
+
     //decide if applied or unapplied suffix is used
     function appliedOrUnapplied(applied, unapplied) {
         let affixUsed = '';
@@ -189,7 +192,13 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             console.log(affix, affixStem);
             break;
         case 'pp':
-            console.log('is pp');
+            affix = array.word || '';
+            definition = array.definition || '';
+            usage_notes = array.usage_notes || '';
+            const { slice1: PP1, slice2: PP2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
+            affixStem = PP2;
+
+            console.log(affix, affixStem);
             break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
@@ -203,6 +212,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
         affixStem,
         affixCase,
         affix,
+        definition,//if pp
+        usage_notes,//if pp
     };
 
     if (Array.isArray(resultArray)) resultArray.push(result);
