@@ -101,8 +101,19 @@ const standard = {
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
 
     resultArray.length = 0; // clear array first
-    console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll))
-    let array = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0] || WORD_UTILS.matchAffix(word, map, isPrefix, returnAll) || [];
+    //console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll));
+
+    let array = [];
+    const match = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll);
+
+    if (Array.isArray(match)) {
+        array = match[0] || {};
+    } else if (match && typeof match === 'object') {
+        array = match;
+    } else {
+        return;
+    }
+    //let xarray = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0] || WORD_UTILS.matchAffix(word, map, isPrefix, returnAll) || [];
     console.log(array);
     if (!array) {
         return;
