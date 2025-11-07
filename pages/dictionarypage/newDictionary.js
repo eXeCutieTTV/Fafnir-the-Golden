@@ -864,7 +864,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === suffixType) { wordclass = key.NAME }
-                }; //console.log(wordclass);
+                }; 
 
 
 
