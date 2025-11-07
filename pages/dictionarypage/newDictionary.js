@@ -754,6 +754,97 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (hasVerbSuffix) {
                 console.log('has verb suffix');
+                if (verbSuffixData[0]) {
+                    const array = verbSuffixData[0];
+                    const suffixGender = array.affixGender;
+                    const suffixNumber = array.affixNumber;
+                    const suffixPerson = array.affixPerson;
+                    const suffixType = array.affixType;
+                    const suffix = array.affix;
+                    const suffixStem = array.affixStem;
+
+                    console.log(
+                        suffixGender,
+                        suffixNumber,
+                        suffixPerson,
+                        suffixType,
+                        suffix,
+                        suffixStem
+                    );
+
+                    if (ALL_WORDS.MAP[suffixStem]) {
+                        hasVerbSuffix = true;
+                        const stemMap = ALL_WORDS.MAP[suffixStem] || [];
+                        const stemDifinition = stemMap.definition || '...';
+                        const stemNotes = stemMap.usage_notes || '...';
+
+                        console.log(suffixType);
+
+                        let wordclass = '';
+                        for (const key of Object.values(WORDCLASSES)) {
+                            if (key.SHORT === suffixType) { wordclass = key.NAME }
+                        }; //console.log(wordclass);
+
+                        if (suffixType === 'n' || suffixType === 'adj') {
+                            console.log('hello world')
+                        } else {
+                            const PShtml = `
+                    <div>
+                        <table>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Word</th>
+                                <th>Stem</th>
+                                <th>Wordclass</th>
+                                <th>Definition</th>
+                                <th>Usage Notes</th>
+                            </tr>
+                            <tr>
+                                <th>Info</th>
+                                <td>${keyword}</td>
+                                <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                <td>${wordclass}</td>
+                                <td>${stemDifinition}</td>
+                                <td>${stemNotes || '...'}</td>
+                            </tr>
+                        </table>
+                        <br>
+                        <table>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Suffix</th>
+                                <th>Gender</th>
+                                <th>Number</th>
+                                <th>Person</th>
+                            </tr>
+                            <tr>
+                                <th>Suffix</th>
+                                <td>${suffix}</td>
+                                <td>${suffixGender}</td>
+                                <td>${suffixNumber}</td>
+                                <td>${suffixPerson}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <div id="suffixONLYPrefixtable">
+                    </div>`;
+
+                            //const wrapper = document.getElementById('page96');
+                            //console.log(wrapper);
+                            helperFunctions.standard.createPageById('page96', PShtml);
+
+                            const stemSTd = document.querySelector('#type2SuffixONLYStem');
+                            if (stemSTd) {
+                                stemSTd.style.cursor = 'pointer';
+                                stemSTd.addEventListener('click', () => {
+                                    keyword = suffixStem;
+                                    search(keyword);
+                                });
+                            }
+                        }
+                    }
+                }
             }
             if (hasNounSuffix) {
                 console.log('has noun suffix');
