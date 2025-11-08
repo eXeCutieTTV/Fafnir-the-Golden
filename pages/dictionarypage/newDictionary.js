@@ -790,7 +790,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     <td>${stemNotes || '...'}</td>
                                 </tr>
                             </table>
-                            <br>
                         </div>
                         <br>
                         <div id="affixTablesContainer">
@@ -808,6 +807,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             </table>
                         </div>
                         <br>
+                        <br>
+                        <br>
                         <div id="suffixONLYPrefixtable"></div>
                     `;
                     helperFunctions.standard.createPageById('page96', html);
@@ -818,13 +819,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         const suffixGender = arr.affixGender;
                         const suffixNumber = arr.affixNumber;
                         const suffixPerson = arr.affixPerson;
-                        const suffixType = arr.affixType;
                         const suffix = arr.affix;
                         const suffixStem = arr.affixStem;
 
 
                         if (ALL_WORDS.MAP[suffixStem]) {
-
                             const PShtml = `
                                 <tbody>
                                     <tr>
@@ -837,13 +836,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 <tbody>
                             `;
 
-                            //const wrapper = document.getElementById('page96');
-                            //console.log(wrapper);
-                            helperFunctions.standard.insertTrIntoTableById('affixTablesTbody',PShtml);
-                            //helperFunctions.standard.createPageById('page96', PShtml);
-
-
-
+                            helperFunctions.standard.insertTrIntoTableById('affixTablesTbody', PShtml);
                         }
                     });
                     const stemSTd = document.querySelector('#type2SuffixONLYStem');
@@ -854,10 +847,12 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             search(keyword);
                         });
                     }
-                    const prefixTableHtml = `
-                        <div id="suffixONLYPrefixtable">
-                        </div>
-                    `;
+                    const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
+                    if (suffixONLYPrefixtableWrapper) {
+                        helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
+
+                        helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                    }
                     openPageOld('page96');
                     return;
                 } else { return; }//temp return.
