@@ -226,7 +226,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                         matchResult = {
                             affixStem,
                         }
-                        verbSuffResult.push(matchResult);
+                        verbPrefResult.push(matchResult);
                     }
                 });
                 //console.log('verbPrefResult | ', verbPrefResult);
