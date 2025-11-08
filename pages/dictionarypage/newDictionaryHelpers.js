@@ -225,6 +225,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     } else {
                         matchResult = {
                             affixStem,
+                            affix,
                         }
                         verbPrefResult.push(matchResult);
                     }
@@ -263,6 +264,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     } else {
                         matchResult = {
                             affixStem,
+                            affix,
                         }
                         verbSuffResult.push(matchResult);
                     }
