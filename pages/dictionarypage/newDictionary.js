@@ -569,7 +569,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         console.log('has both verb prefix & suffix');
                         hasVerbSuffix = true;
 
-                        const fixedKeyword = `${verbPrefixData[0].affix}${verbSuffixData[0].affixStem}`; console.log(fixedKeyword);
+                        if (verbSuffixData.length > 1) {// TODO fix when length is not above1.
+                            console.log('above 1');
+                        } else {
+                            console.log('not above 1');
+                        }
+
+                        const fixedKeyword = `${verbPrefixData[0].affix}${verbSuffixData[0].affixStem}`; console.log(fixedKeyword);//need to reconstruct the prefix+stem word to repopulate the array:q
                         helperFunctions.matchtype2.affixChecker(fixedKeyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData);
 
                         const stemMap = ALL_WORDS.MAP[verbPrefixData[0].affixStem] || [];
@@ -762,7 +768,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         helperFunctions.standard.insertTrIntoTableById('tbody', html);
                     });
 
-                    const stemSTd = document.querySelector('#prefixONLYSuffixtable');
+                    const stemSTd = document.querySelector('#type2PrefixONLYStem');
                     if (stemSTd) {
                         stemSTd.style.cursor = 'pointer';
                         stemSTd.addEventListener('click', () => {
