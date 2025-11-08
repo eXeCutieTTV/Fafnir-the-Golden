@@ -853,42 +853,38 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     }
                     openPageOld('page96');
                     return;
-                } else { return; }//temp return.
+                } else {
+                    if (verbSuffixData[0]) {
+                        const array = verbSuffixData[0];
+                        const suffixGender = array.affixGender;
+                        const suffixNumber = array.affixNumber;
+                        const suffixPerson = array.affixPerson;
+                        const suffixType = array.affixType;
+                        const suffix = array.affix;
+                        const suffixStem = array.affixStem;
 
-                if (verbSuffixData[0]) {
-                    const array = verbSuffixData[0];
-                    const suffixGender = array.affixGender;
-                    const suffixNumber = array.affixNumber;
-                    const suffixPerson = array.affixPerson;
-                    const suffixType = array.affixType;
-                    const suffix = array.affix;
-                    const suffixStem = array.affixStem;
+                        console.log(
+                            suffixGender,
+                            suffixNumber,
+                            suffixPerson,
+                            suffixType,
+                            suffix,
+                            suffixStem
+                        );
 
-                    console.log(
-                        suffixGender,
-                        suffixNumber,
-                        suffixPerson,
-                        suffixType,
-                        suffix,
-                        suffixStem
-                    );
+                        if (ALL_WORDS.MAP[suffixStem]) {
+                            hasVerbSuffix = true;
+                            const stemMap = ALL_WORDS.MAP[suffixStem] || [];
+                            const stemDifinition = stemMap.definition || '...';
+                            const stemNotes = stemMap.usage_notes || '...';
 
-                    if (ALL_WORDS.MAP[suffixStem]) {
-                        hasVerbSuffix = true;
-                        const stemMap = ALL_WORDS.MAP[suffixStem] || [];
-                        const stemDifinition = stemMap.definition || '...';
-                        const stemNotes = stemMap.usage_notes || '...';
+                            console.log(suffixType);
 
-                        console.log(suffixType);
+                            let wordclass = '';
+                            for (const key of Object.values(WORDCLASSES)) {
+                                if (key.SHORT === suffixType) { wordclass = key.NAME }
+                            }; //console.log(wordclass);
 
-                        let wordclass = '';
-                        for (const key of Object.values(WORDCLASSES)) {
-                            if (key.SHORT === suffixType) { wordclass = key.NAME }
-                        }; //console.log(wordclass);
-
-                        if (suffixType === 'n' || suffixType === 'adj') {
-                            console.log('hello world')
-                        } else {
                             const PShtml = `
                                 <div>
                                     <table>
@@ -943,8 +939,16 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     search(keyword);
                                 });
                             }
+                            const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
+                            if (suffixONLYPrefixtableWrapper) {
+                                helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
+
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                            }
                         }
                     }
+                    openPageOld('page96');
+                    return;
                 }
             }
             if (hasNounSuffix) {
