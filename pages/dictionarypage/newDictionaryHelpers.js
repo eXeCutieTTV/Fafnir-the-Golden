@@ -180,9 +180,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                 const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
                 affixStem = V2;
             } else if (isPrefix === false) {
-                verbSuffResult = [
-
-                ];
+                verbSuffResult = [];
                 match.forEach(arr => {
                     //console.log('arr | ', arr);
 
@@ -203,9 +201,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                         affixPerson,
                         affixGender,
                         affixNumber,
-                        affixDeclension,
                         affixStem,
-                        affixCase,
                         affix,
                     }
                     if (ALL_WORDS.MAP[affixStem]) {//checks if the stem exists (doesnt return array for æfon for affix 'n' ex - æfu isnt a stemword)
@@ -234,21 +230,63 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             console.log(affix, affixStem);
             break;
         case 'n':
-            const affixApplied = array[1][0] || '';
-            const affixUnapplied = array[1][1] || '';
 
-            appliedOrUnapplied(affixApplied, affixUnapplied);
 
-            affixDeclension = array[2][3][0];
-            affixCase = array[2][0];
-            affixGender = array[2][1];
-            affixNumber = array[2][2][0];
+            if (isPrefix === false) {
+                nounSuffResult = [];
+                match.forEach(arr => {
+                    //console.log('arr | ', arr);
 
-            //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
-            const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-            affixStem = N1;
+                    const affixApplied = arr[1][0] || '';
+                    const affixUnapplied = arr[1][1] || '';
 
-            console.log(affix, affixStem);
+                    appliedOrUnapplied(affixApplied, affixUnapplied);
+
+                    affixDeclension = arr[2][3][0];
+                    affixCase = arr[2][0];
+                    affixGender = arr[2][1];
+                    affixNumber = arr[2][2][0];
+
+                    //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
+                    const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+                    affixStem = N1;
+
+                    const matchResult = {
+                        affixType,
+                        affixGender,
+                        affixNumber,
+                        affixDeclension,
+                        affixStem,
+                        affixCase,
+                        affix,
+                    }
+                    if (ALL_WORDS.MAP[affixStem]) {//checks if the stem exists (doesnt return array for æfon for affix 'n' ex - æfu isnt a stemword)
+                        nounSuffResult.push(matchResult);
+                        return matchResult;
+                    } else { return; }
+                });
+                console.log('nounSuffResult | ', nounSuffResult);
+                resultArray.push(...nounSuffResult); console.log(resultArray, resultArray.length);
+                return nounSuffResult;
+            }
+
+
+
+            /* const affixApplied = array[1][0] || '';
+             const affixUnapplied = array[1][1] || '';
+ 
+             appliedOrUnapplied(affixApplied, affixUnapplied);
+ 
+             affixDeclension = array[2][3][0];
+             affixCase = array[2][0];
+             affixGender = array[2][1];
+             affixNumber = array[2][2][0];
+ 
+             //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
+             const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+             affixStem = N1;
+ 
+             console.log(affix, affixStem);*/
             break;
         case 'pp':
             affix = array.word || '';

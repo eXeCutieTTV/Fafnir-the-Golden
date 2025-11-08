@@ -953,90 +953,180 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (hasNounSuffix) {
                 console.log('has noun suffix');
-                const array = nounSuffixData[0]; console.log(array);
-                const suffixDeclension = array.affixDeclension;
-                const suffixGender = array.affixGender;
-                const suffixNumber = array.affixNumber;
-                const suffixCase = array.affixCase;
-                const suffixType = array.affixType;
-                const suffix = array.affix;
-                const suffixStem = array.affixStem;
 
-                const stemMap = ALL_WORDS.MAP[suffixStem] || []; console.log(stemMap);
-                let stemDifinition = stemMap.definition || '...';
-                const stemNotes = stemMap.usage_notes || '...';
+                if (nounSuffixData.length > 1) {
+                    console.log('has multiple noun suffixes');
 
-                let wordclass = '';
-                for (const key of Object.values(WORDCLASSES)) {
-                    if (key.SHORT === suffixType) { wordclass = key.NAME }
-                };
+                    const stemMap = ALL_WORDS.MAP[nounSuffixData[0].affixStem] || []; console.log(stemMap);
+                    let stemDifinition = stemMap.definition || '...';
+                    const stemNotes = stemMap.usage_notes || '...';
+
+                    let wordclass = '';
+                    for (const key of Object.values(WORDCLASSES)) {
+                        if (key.SHORT === 'n') { wordclass = key.NAME }
+                    };
+
+                    const html = `
+                    <div>
+                        <table>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Word</th>
+                                <th>Stem</th>
+                                <th>Wordclass</th>
+                                <th>Usage Notes</th>
+                            </tr>
+                            <tr>
+                                <th>Info</th>
+                                <td>${keyword}</td>
+                                <td id="type2SuffixONLYStem">${nounSuffixData[0].affixStem}</td>
+                                <td>${wordclass}</td>
+                                <td>${stemNotes || '...'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <div id=tablesContainer>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Suffix</th>
+                                    <th>Declension</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                    <th>Case</th>
+                                    <th>Definition</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+                    `;
+                    helperFunctions.standard.createPageById('page96', html);
+                    nounSuffixData.forEach(arr => {
+                        const suffixDeclension = arr.affixDeclension;
+                        const suffixGender = arr.affixGender;
+                        const suffixNumber = arr.affixNumber;
+                        const suffixCase = arr.affixCase;
+                        const suffix = arr.affix;
+
+                        const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                        for (const [gndr, def] of Object.entries(combinedGendersObject)) {
+                            if (gndr === suffixGender) {
+                                stemDifinition = def;
+                                console.log(combinedGendersObject);
+                                console.log(gndr, def);
+
+                                const html = `
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${suffix}</td>
+                                    <td>${suffixDeclension}</td>
+                                    <td>${suffixGender}</td>
+                                    <td>${suffixNumber}</td>
+                                    <td>${suffixCase}</td>
+                                    <td>${stemDifinition}</td>
+                                </tr>
+                                `;
+                                helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                            }
+                        }
+                    });
+                    openPageOld('page96');
+                    return;
+                } else {
+                    const array = nounSuffixData[0]; console.log(array);
+                    const suffixDeclension = array.affixDeclension;
+                    const suffixGender = array.affixGender;
+                    const suffixNumber = array.affixNumber;
+                    const suffixCase = array.affixCase;
+                    const suffixType = array.affixType;
+                    const suffix = array.affix;
+                    const suffixStem = array.affixStem;
+
+                    const stemMap = ALL_WORDS.MAP[suffixStem] || []; console.log(stemMap);
+                    let stemDifinition = stemMap.definition || '...';
+                    const stemNotes = stemMap.usage_notes || '...';
+
+                    let wordclass = '';
+                    for (const key of Object.values(WORDCLASSES)) {
+                        if (key.SHORT === suffixType) { wordclass = key.NAME }
+                    };
 
 
 
 
-                const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
-                for (const [gndr, def] of Object.entries(combinedGendersObject)) {
-                    if (gndr === suffixGender) {
-                        stemDifinition = def;
-                        console.log(combinedGendersObject);
-                        console.log(gndr, def);
+                    const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                    for (const [gndr, def] of Object.entries(combinedGendersObject)) {
+                        if (gndr === suffixGender) {
+                            stemDifinition = def;
+                            console.log(combinedGendersObject);
+                            console.log(gndr, def);
 
-                        const SNhtml = `
-                            <div>
-                                <table>
-                                    <tr>
-                                        <th style="width:116px">...</th>
-                                        <th>Word</th>
-                                        <th>Stem</th>
-                                        <th>Wordclass</th>
-                                        <th>Case</th>
-                                        <th>Usage Notes</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Info</th>
-                                        <td>${keyword}</td>
-                                        <td id="type2SuffixONLYStem">${suffixStem}</td>
-                                        <td>${wordclass}</td>
-                                        <td>${suffixCase}</td>
-                                        <td>${stemNotes || '...'}</td>
-                                    </tr>
-                                </table>
-                                <br>
-                                <table>
-                                    <tr>
-                                        <th style="width:116px">...</th>
-                                        <th>Suffix</th>
-                                        <th>Declension</th>
-                                        <th>Gender</th>
-                                        <th>Number</th>
-                                        <th>Definition</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Info</th>
-                                        <td>${suffix}</td>
-                                        <td>${suffixDeclension}</td>
-                                        <td>${suffixGender}</td>
-                                        <td>${suffixNumber}</td>
-                                        <td>${stemDifinition}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            `;
+                            const SNhtml = `
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th style="width:116px">...</th>
+                                            <th>Word</th>
+                                            <th>Stem</th>
+                                            <th>Wordclass</th>
+                                            <th>Case</th>
+                                            <th>Usage Notes</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${keyword}</td>
+                                            <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                            <td>${wordclass}</td>
+                                            <td>${suffixCase}</td>
+                                            <td>${stemNotes || '...'}</td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <table>
+                                        <tr>
+                                            <th style="width:116px">...</th>
+                                            <th>Suffix</th>
+                                            <th>Declension</th>
+                                            <th>Gender</th>
+                                            <th>Number</th>
+                                            <th>Definition</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${suffix}</td>
+                                            <td>${suffixDeclension}</td>
+                                            <td>${suffixGender}</td>
+                                            <td>${suffixNumber}</td>
+                                            <td>${stemDifinition}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                `;
 
-                        helperFunctions.standard.createPageById('page96', SNhtml);
+                            helperFunctions.standard.createPageById('page96', SNhtml);
 
-                        helperFunctions.standard.createPageById('page96', SNhtml);
-                        const stemTd = document.querySelector('#type2SuffixONLYStem');
-                        if (stemTd) {
-                            stemTd.style.cursor = 'pointer';
-                            stemTd.addEventListener('click', () => {
-                                keyword = suffixStem;
-                                search(keyword);
-                            });
+                            helperFunctions.standard.createPageById('page96', SNhtml);
+                            const stemTd = document.querySelector('#type2SuffixONLYStem');
+                            if (stemTd) {
+                                stemTd.style.cursor = 'pointer';
+                                stemTd.addEventListener('click', () => {
+                                    keyword = suffixStem;
+                                    search(keyword);
+                                });
 
+                            }
                         }
                     }
+                    openPageOld('page96');
+                    return;
                 }
+
+
             }
             if (hasPpPrefix) {
                 console.log('has pp prefix');
