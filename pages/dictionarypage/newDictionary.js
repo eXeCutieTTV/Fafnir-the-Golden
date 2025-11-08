@@ -555,7 +555,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         ) {//type 2
             console.log('-----type2-----');
-            console.log(verbSuffixData);
+
             let hasVerbPrefix = (verbPrefixData[0] ? true : false);//get from array.type instead? need to know which affix it is though.
             let hasVerbSuffix = (verbSuffixData[0] ? true : false);
             let hasNounSuffix = (nounSuffixData[0] ? true : false);
@@ -567,11 +567,20 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 console.log(verbPrefixData);
 
                 const array = verbPrefixData[0];
+                const prefixStem = array.affixStem;
+
+                if (helperFunctions.matchtype2.affixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData)) {
+                    if (ALL_WORDS.MAP[verbSuffixData[0].affixStem]) {
+                        console.log('has both');
+                        return;
+                    }
+                }
+
+
                 const prefixGender = array.affixGender;
                 const prefixNumber = array.affixNumber;
                 const prefixPerson = array.affixPerson;
                 const prefix = array.affix;
-                const prefixStem = array.affixStem;
                 const prefixKeyword = keyword;
                 const prefixType = array.affixType;
 
@@ -751,6 +760,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         }
                     }
                 }
+                return;
             }
             if (hasVerbSuffix) {
                 console.log('has verb suffix');
@@ -1074,7 +1084,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             <th>Word</th>
                                             <th>Stem</th>
                                             <th>Wordclass</th>
-                                            <th>Case</th>
                                             <th>Usage Notes</th>
                                         </tr>
                                         <tr>
@@ -1082,7 +1091,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             <td>${keyword}</td>
                                             <td id="type2SuffixONLYStem">${suffixStem}</td>
                                             <td>${wordclass}</td>
-                                            <td>${suffixCase}</td>
                                             <td>${stemNotes || '...'}</td>
                                         </tr>
                                     </table>
@@ -1094,6 +1102,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             <th>Declension</th>
                                             <th>Gender</th>
                                             <th>Number</th>
+                                            <th>Case</th>
                                             <th>Definition</th>
                                         </tr>
                                         <tr>
@@ -1102,6 +1111,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             <td>${suffixDeclension}</td>
                                             <td>${suffixGender}</td>
                                             <td>${suffixNumber}</td>
+                                            <td>${suffixCase}</td>
                                             <td>${stemDifinition}</td>
                                         </tr>
                                     </table>
