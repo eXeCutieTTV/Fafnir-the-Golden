@@ -87,6 +87,15 @@ const reverseSearchIdsOnSearch = function reverseSearchIdsOnSearch() {
         swapSearchIds('search_field', 'unusedField');
     }
 }
+const insertTrIntoTableById = function insertTrIntoTableById(id, html) {
+    let table = document.getElementById(id);
+    if (!table) {
+        console.warn(`no table by id ${id}`);
+    }
+
+    table.innerHTML = table.innerHTML + html;
+
+}
 
 const standard = {
     test,
@@ -95,7 +104,8 @@ const standard = {
     createDivById,
     sliceKeywordNegative,
     sliceKeywordPositive,
-    reverseSearchIdsOnSearch
+    reverseSearchIdsOnSearch,
+    insertTrIntoTableById
 }
 
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {

@@ -555,7 +555,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         ) {//type 2
             console.log('-----type2-----');
-
+            console.log(verbSuffixData);
             let hasVerbPrefix = (verbPrefixData[0] ? true : false);//get from array.type instead? need to know which affix it is though.
             let hasVerbSuffix = (verbSuffixData[0] ? true : false);
             let hasNounSuffix = (nounSuffixData[0] ? true : false);
@@ -754,6 +754,114 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (hasVerbSuffix) {
                 console.log('has verb suffix');
+
+                if (verbSuffixData.length > 1) {
+                    console.log('has multiple verb suffixes');
+
+
+                    const stemMap = ALL_WORDS.MAP[verbSuffixData[0].affixStem] || [];
+                    const stemDifinition = stemMap.definition || '...';
+                    const stemNotes = stemMap.usage_notes || '...';
+
+
+
+                    let wordclass = '';
+                    for (const key of Object.values(WORDCLASSES)) {
+                        if (key.SHORT === 'v') { wordclass = key.NAME }
+                    }; //console.log(wordclass);
+
+                    const html = `
+                        <div>
+                            <table>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
+                                    <th>Wordclass</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                </tr>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${keyword}</td>
+                                    <td id="type2SuffixONLYStem">${verbSuffixData[0].affixStem}</td>
+                                    <td>${wordclass}</td>
+                                    <td>${stemDifinition}</td>
+                                    <td>${stemNotes || '...'}</td>
+                                </tr>
+                            </table>
+                            <br>
+                        </div>
+                        <br>
+                        <div id="affixTablesContainer">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:116px">...</th>
+                                        <th>Suffix</th>
+                                        <th>Gender</th>
+                                        <th>Number</th>
+                                        <th>Person</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="affixTablesTbody"></tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div id="suffixONLYPrefixtable"></div>
+                    `;
+                    helperFunctions.standard.createPageById('page96', html);
+                    verbSuffixData.forEach(arr => {
+                        console.log('arr | ', arr);
+
+
+                        const suffixGender = arr.affixGender;
+                        const suffixNumber = arr.affixNumber;
+                        const suffixPerson = arr.affixPerson;
+                        const suffixType = arr.affixType;
+                        const suffix = arr.affix;
+                        const suffixStem = arr.affixStem;
+
+
+                        if (ALL_WORDS.MAP[suffixStem]) {
+
+                            const PShtml = `
+                                <tbody>
+                                    <tr>
+                                        <th>Suffix</th>
+                                        <td>${suffix}</td>
+                                        <td>${suffixGender}</td>
+                                        <td>${suffixNumber}</td>
+                                        <td>${suffixPerson}</td>
+                                    </tr>
+                                <tbody>
+                            `;
+
+                            //const wrapper = document.getElementById('page96');
+                            //console.log(wrapper);
+                            helperFunctions.standard.insertTrIntoTableById('affixTablesTbody',PShtml);
+                            //helperFunctions.standard.createPageById('page96', PShtml);
+
+
+
+                        }
+                    });
+                    const stemSTd = document.querySelector('#type2SuffixONLYStem');
+                    if (stemSTd) {
+                        stemSTd.style.cursor = 'pointer';
+                        stemSTd.addEventListener('click', () => {
+                            keyword = verbSuffixData[0].affixStem;
+                            search(keyword);
+                        });
+                    }
+                    const prefixTableHtml = `
+                        <div id="suffixONLYPrefixtable">
+                        </div>
+                    `;
+                    openPageOld('page96');
+                    return;
+                } else { return; }//temp return.
+
                 if (verbSuffixData[0]) {
                     const array = verbSuffixData[0];
                     const suffixGender = array.affixGender;
@@ -789,46 +897,46 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             console.log('hello world')
                         } else {
                             const PShtml = `
-                    <div>
-                        <table>
-                            <tr>
-                                <th style="width:116px">...</th>
-                                <th>Word</th>
-                                <th>Stem</th>
-                                <th>Wordclass</th>
-                                <th>Definition</th>
-                                <th>Usage Notes</th>
-                            </tr>
-                            <tr>
-                                <th>Info</th>
-                                <td>${keyword}</td>
-                                <td id="type2SuffixONLYStem">${suffixStem}</td>
-                                <td>${wordclass}</td>
-                                <td>${stemDifinition}</td>
-                                <td>${stemNotes || '...'}</td>
-                            </tr>
-                        </table>
-                        <br>
-                        <table>
-                            <tr>
-                                <th style="width:116px">...</th>
-                                <th>Suffix</th>
-                                <th>Gender</th>
-                                <th>Number</th>
-                                <th>Person</th>
-                            </tr>
-                            <tr>
-                                <th>Suffix</th>
-                                <td>${suffix}</td>
-                                <td>${suffixGender}</td>
-                                <td>${suffixNumber}</td>
-                                <td>${suffixPerson}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <br>
-                    <div id="suffixONLYPrefixtable">
-                    </div>`;
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th style="width:116px">...</th>
+                                            <th>Word</th>
+                                            <th>Stem</th>
+                                            <th>Wordclass</th>
+                                            <th>Definition</th>
+                                            <th>Usage Notes</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${keyword}</td>
+                                            <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                            <td>${wordclass}</td>
+                                            <td>${stemDifinition}</td>
+                                            <td>${stemNotes || '...'}</td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <table>
+                                        <tr>
+                                            <th style="width:116px">...</th>
+                                            <th>Suffix</th>
+                                            <th>Gender</th>
+                                            <th>Number</th>
+                                            <th>Person</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Suffix</th>
+                                            <td>${suffix}</td>
+                                            <td>${suffixGender}</td>
+                                            <td>${suffixNumber}</td>
+                                            <td>${suffixPerson}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br>
+                                <div id="suffixONLYPrefixtable">
+                                </div>`;
 
                             //const wrapper = document.getElementById('page96');
                             //console.log(wrapper);
@@ -864,7 +972,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === suffixType) { wordclass = key.NAME }
-                }; 
+                };
 
 
 
@@ -872,7 +980,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
                 for (const [gndr, def] of Object.entries(combinedGendersObject)) {
                     if (gndr === suffixGender) {
-                        stemDifinition = def; 
+                        stemDifinition = def;
                         console.log(combinedGendersObject);
                         console.log(gndr, def);
 
