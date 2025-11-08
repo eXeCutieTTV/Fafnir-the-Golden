@@ -825,15 +825,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                         if (ALL_WORDS.MAP[suffixStem]) {
                             const PShtml = `
-                                <tbody>
-                                    <tr>
-                                        <th>Suffix</th>
-                                        <td>${suffix}</td>
-                                        <td>${suffixGender}</td>
-                                        <td>${suffixNumber}</td>
-                                        <td>${suffixPerson}</td>
-                                    </tr>
-                                <tbody>
+                                <tr>
+                                    <th>Suffix</th>
+                                    <td>${suffix}</td>
+                                    <td>${suffixGender}</td>
+                                    <td>${suffixNumber}</td>
+                                    <td>${suffixPerson}</td>
+                                </tr>
                             `;
 
                             helperFunctions.standard.insertTrIntoTableById('affixTablesTbody', PShtml);
