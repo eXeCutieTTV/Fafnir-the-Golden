@@ -350,8 +350,6 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             break;
         case 'pp':
             affix = array.word || '';
-            definition = array.definition || '';
-            usage_notes = array.usage_notes || '';
             const { slice1: PP1, slice2: PP2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
             affixStem = PP2;
 
@@ -369,8 +367,6 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
         affixStem,
         affixCase,
         affix,
-        definition,//if pp
-        usage_notes,//if pp
     };
 
     if (Array.isArray(resultArray)) resultArray.push(result);

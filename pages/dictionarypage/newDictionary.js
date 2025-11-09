@@ -315,37 +315,39 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 //const table = createTable(keyword, pageContainer);//just copy english table logic??
                                 //console.log(wordclass);
                                 //fillTable(keyword, wordclass, table);
-                                function newFillTable(row, word, declension, definition, forms, usage_notes, type) {
-                                    if (!row) return;
 
-                                    const cells = row.querySelectorAll('td');
-                                    const getCell = index => cells[index] || null;
-
-
-                                    const ncell0 = getCell(0);
-                                    const ncell1 = getCell(1);
-                                    const ncell2 = getCell(2);
-                                    const ncell3 = getCell(3);
-                                    const ncell4 = getCell(4);
-                                    const ncell5 = getCell(5);
-
-                                    if (ncell0) ncell0.innerHTML = word || '...';
-                                    if (ncell1) ncell1.innerHTML = declension || '...';
-                                    if (ncell2) ncell2.innerHTML = definition || '...';
-                                    if (ncell3) ncell3.innerHTML = forms || '...';
-                                    if (ncell4) ncell4.innerHTML = usage_notes || '...';
-                                    if (ncell5) ncell5.innerHTML = type || '...';
-
-                                }
+                                const html = `
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Word</th>
+                                                <th>Declension</th>
+                                                <th>Definition</th>
+                                                <th>Gender</th>
+                                                <th>Usage Notes</th>
+                                                <th>Case</th>
+                                                <th>Wordclass</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody"></tbody>
+                                    </table>
+                                `;
+                                helperFunctions.standard.createDivById('', pageContainer, html);
                                 for (const [gender, def] of Object.entries(NcombinedGendersObject)) {
-                                    const row = helperFunctions.matchtype1.type1extraTableRow(
-                                        entry.word || '...',
-                                        entry.declension || '...',
-                                        gender || '...',
-                                        def || '...',
-                                        entry.usage_notes || '...')
-                                    newFillTable(row, entry.word, entry.declension, def, gender, entry.usage_notes, entry.type);
+                                    const html = `
+                                    <tr>
+                                        <td>${keyword}</td>
+                                        <td>${entry.declension}</td>
+                                        <td>${def}</td>
+                                        <td>${gender}</td>
+                                        <td>${entry.usage_notes}</td>
+                                        <td>${entry.case || 'Directive'}</td>
+                                        <td>${entry.type}</td>
+                                    </tr>
+                                    `;
+                                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
                                 }
+
                                 const Nwrapper = document.getElementById('leftleftdivdictionary');
                                 helperFunctions.matchtype1.neoNounTables(entry.declension, 1, Nwrapper, NcombinedGendersObject);
                                 helperFunctions.matchtype1.neoNounTables(entry.declension, 2, Nwrapper, NcombinedGendersObject);
@@ -545,12 +547,12 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 openPageOld('page97')
             });
         }
-        else if (
+        else if (//type 2
             helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData) ||
             helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData) ||
             helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) ||
             helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData)
-        ) {//type 2
+        ) {
             console.log('-----type2-----');
 
             let hasVerbPrefix = (verbPrefixData[0] ? true : false);//get from array.type instead? need to know which affix it is though.
@@ -569,7 +571,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         console.log('has both verb prefix & suffix');
                         hasVerbSuffix = true;
 
-                        if (verbSuffixData.length > 1) {// TODO fix when length is not above1.
+                        if (verbSuffixData.length > 1) {// TODO fix when length is not above1. // actually - prob dont need to xd.
                             console.log('above 1');
                         } else {
                             console.log('not above 1');
@@ -1164,43 +1166,113 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (hasPpPrefix) {
                 console.log('has pp prefix');
-            }
+                console.log(ppPrefixData);
 
-            /*
-            
-                        if (hasPrefix) {
-                            console.log(prefixData);
-            
-                            const array = prefixData[0];
-                            const prefixGender = array.affixGender;
-                            const prefixNumber = array.affixNumber;
-                            const prefixPerson = array.affixPerson;
-                            const prefix = array.affix;
-                            const prefixStem = array.affixStem;
-                            const prefixKeyword = keyword;
-                            const prefixType = array.affixType;
-            
-                            const stemMap = ALL_WORDS.MAP[prefixStem] || [];
-                            const stemDifinition = stemMap.definition || '...';
+                const array = ppPrefixData[0];
+                const prefix = array.affix;
+                const prefixStem = array.affixStem;
+
+                const ppArray = ALL_WORDS.MAP[prefix];
+                const ppDefinition = ppArray.definition;
+                const ppUsage_notes = ppArray.usage_notes;
+                console.log(ppArray);
+
+                if (ALL_WORDS.MAP[prefixStem]) {
+                    console.log('clean match');
+
+                    const arr = ALL_WORDS.MAP[prefixStem];
+                    console.log(arr);
+                    const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
+                    console.log(NcombinedGendersObject);
+
+
+                    const html = `
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>...</th>
+                                        <th>Stem</th>
+                                        <th>Declension</th>
+                                        <th>Definition</th>
+                                        <th>Gender</th>
+                                        <th>Usage_Notes</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyPP"></tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top:35px">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>...</th>
+                                        <th style="width:116px">Prefix</th>
+                                        <th>Definition</th>
+                                        <th>Usage Notes</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Info</th>
+                                        <td>${prefix || '...'}</td>
+                                        <td>${ppDefinition || '...'}</td>
+                                        <td>${ppUsage_notes || '...'}</td>
+                                        <td>${'preposition'}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top:50px" id="ppNounTable"></div>
+                    `;
+                    helperFunctions.standard.createPageById('page96', html);
+                    for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
+                        console.log(gndr, def);
+                        const htmlPP = `
+                            <tr>
+                                <th>Info</th>
+                                <td>${prefixStem}</td>
+                                <td>${arr.declension}</td>
+                                <td>${def}</td>
+                                <td>${gndr}</td>
+                                <td>${arr.usage_notes || '...'}</td>
+                                <td>${'noun'}</td>
+                            </tr>
+                        `;
+                        helperFunctions.standard.insertTrIntoTableById('tbodyPP', htmlPP);
+                    }
+
+                    const nounTblDiv = document.getElementById('ppNounTable');
+                    helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
+                    helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
+                    helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+
+                    openPageOld('page96');
+                    return;
+                } else if (helperFunctions.matchtype2.affixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData)) {
+                    console.log(nounSuffixData);
+                    console.log(ppPrefixData);
+
+                    hasNounSuffix = true;
+                    // flat copy xd vv
+                    if (hasNounSuffix) {
+                        console.log('has noun suffix');
+
+                        if (nounSuffixData.length > 1) {
+                            console.log('has multiple noun suffixes');
+
+                            const stemMap = ALL_WORDS.MAP[nounSuffixData[0].affixStem] || []; console.log(stemMap);
+                            let stemDifinition = stemMap.definition || '...';
                             const stemNotes = stemMap.usage_notes || '...';
-            */
-            /*console.log(
-                prefixGender,
-                prefixNumber,
-                prefixPerson,
-                prefix,
-                array,
-                prefixData[0],
-                prefixStem
-            );*/
 
-            /*
                             let wordclass = '';
                             for (const key of Object.values(WORDCLASSES)) {
-                                if (key.SHORT === prefixType) { wordclass = key.NAME }
-                            }; //console.log(wordclass);
-            
-                            const Phtml = `
+                                if (key.SHORT === 'n') { wordclass = key.NAME }
+                            };
+
+                            const html = `
                                 <div>
                                     <table>
                                         <tr>
@@ -1208,15 +1280,141 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             <th>Word</th>
                                             <th>Stem</th>
                                             <th>Wordclass</th>
-                                            <th>Definition</th>
                                             <th>Usage Notes</th>
                                         </tr>
                                         <tr>
                                             <th>Info</th>
-                                            <td>${prefixKeyword}</td>
-                                            <td id="type2PrefixONLYStem">${prefixStem}</td>
+                                            <td>${keyword}</td>
+                                            <td id="type2SuffixONLYStem">${nounSuffixData[0].affixStem}</td>
                                             <td>${wordclass}</td>
-                                            <td>${stemDifinition}</td>
+                                            <td>${stemNotes || '...'}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <br>
+                                <br>
+                                <br>
+                                <div id=tablesContainer>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th style="width:116px">...</th>
+                                                <th>Suffix</th>
+                                                <th>Declension</th>
+                                                <th>Gender</th>
+                                                <th>Number</th>
+                                                <th>Case</th>
+                                                <th>Definition</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody"></tbody>
+                                    </table>
+                                </div>
+                                `;
+                            helperFunctions.standard.createPageById('page96', html);
+                            nounSuffixData.forEach(arr => {
+                                const suffixDeclension = arr.affixDeclension;
+                                const suffixGender = arr.affixGender;
+                                const suffixNumber = arr.affixNumber;
+                                const suffixCase = arr.affixCase;
+                                const suffix = arr.affix;
+
+                                const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                                for (const [gndr, def] of Object.entries(combinedGendersObject)) {
+                                    if (gndr === suffixGender) {
+                                        stemDifinition = def;
+                                        console.log(combinedGendersObject);
+                                        console.log(gndr, def);
+
+                                        const html = `
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${suffix}</td>
+                                    <td>${suffixDeclension}</td>
+                                    <td>${suffixGender}</td>
+                                    <td>${suffixNumber}</td>
+                                    <td>${suffixCase}</td>
+                                    <td>${stemDifinition}</td>
+                                </tr>
+                                `;
+                                        helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                                    }
+                                }
+                            });
+
+                            //added div vv
+                            const ppHtml = `
+                                <table style="margin-top:35px">
+                                    <thead>
+                                        <tr>
+                                            <th>...</th>
+                                            <th style="width:116px">Prefix</th>
+                                            <th>Definition</th>
+                                            <th>Usage Notes</th>
+                                            <th>Wordclass</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${prefix || '...'}</td>
+                                            <td>${ppDefinition || '...'}</td>
+                                            <td>${ppUsage_notes || '...'}</td>
+                                            <td>${'preposition'}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `;
+
+                            const wrapper = document.getElementById('tablesContainer');
+                            helperFunctions.standard.createDivById('', wrapper, ppHtml);
+
+                            openPageOld('page96');
+                            return;
+                        } else {//if length not above 1
+                            const array = nounSuffixData[0]; console.log(array);
+                            const suffixDeclension = array.affixDeclension;
+                            const suffixGender = array.affixGender;
+                            const suffixNumber = array.affixNumber;
+                            const suffixCase = array.affixCase;
+                            const suffixType = array.affixType;
+                            const suffix = array.affix;
+                            const suffixStem = array.affixStem;
+
+                            const stemMap = ALL_WORDS.MAP[suffixStem] || []; console.log(stemMap);
+                            let stemDifinition = stemMap.definition || '...';
+                            const stemNotes = stemMap.usage_notes || '...';
+
+                            let wordclass = '';
+                            for (const key of Object.values(WORDCLASSES)) {
+                                if (key.SHORT === suffixType) { wordclass = key.NAME }
+                            };
+
+
+
+
+                            const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                            for (const [gndr, def] of Object.entries(combinedGendersObject)) {
+                                if (gndr === suffixGender) {
+                                    stemDifinition = def;
+                                    console.log(combinedGendersObject);
+                                    console.log(gndr, def);
+
+                                    const SNhtml = `
+                                <div>
+                                    <table>
+                                        <tr>
+                                            <th style="width:116px">...</th>
+                                            <th>Word</th>
+                                            <th>Stem</th>
+                                            <th>Wordclass</th>
+                                            <th>Usage Notes</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${keyword}</td>
+                                            <td id="type2SuffixONLYStem">${suffixStem}</td>
+                                            <td>${wordclass}</td>
                                             <td>${stemNotes || '...'}</td>
                                         </tr>
                                     </table>
@@ -1224,325 +1422,78 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     <table>
                                         <tr>
                                             <th style="width:116px">...</th>
-                                            <th>Prefix</th>
+                                            <th>Suffix</th>
+                                            <th>Declension</th>
                                             <th>Gender</th>
                                             <th>Number</th>
-                                            <th>Person</th>
+                                            <th>Case</th>
+                                            <th>Definition</th>
                                         </tr>
                                         <tr>
-                                            <th>Prefix</th>
-                                            <td>${prefix}</td>
-                                            <td>${prefixGender}</td>
-                                            <td>${prefixNumber}</td>
-                                            <td>${prefixPerson}</td>
+                                            <th>Info</th>
+                                            <td>${suffix}</td>
+                                            <td>${suffixDeclension}</td>
+                                            <td>${suffixGender}</td>
+                                            <td>${suffixNumber}</td>
+                                            <td>${suffixCase}</td>
+                                            <td>${stemDifinition}</td>
                                         </tr>
                                     </table>
                                 </div>
-                                <br>
-                                <div id="prefixONLYSuffixtable">
-                                </div>`;
-            
-                            helperFunctions.standard.createPageById('page96', Phtml);
-            
-                            const stemPTd = document.querySelector('#type2PrefixONLYStem');
-                            if (stemPTd) {
-                                stemPTd.style.cursor = 'pointer';
-                                stemPTd.addEventListener('click', () => {
-                                    search(prefixStem);
-                                });
-                            }
-            
-                            const prefixONLYSuffixtableWrapper = document.getElementById('prefixONLYSuffixtable');
-                            if (prefixONLYSuffixtableWrapper) {
-                                helperFunctions.matchtype1.neoVerbTables(2, keyword, prefixONLYSuffixtableWrapper);
-            
-                                helperFunctions.tablegen.populateSummaryTables(prefixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
-                            }
-                            //console.log(prefixData, suffixData);
-                            if (
-                                (helperFunctions.matchtype2.affixChecker(prefixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, suffixData) ||
-                                    helperFunctions.matchtype2.affixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, suffixData))
-                            ) {
-            
-                                //console.log(prefixData, suffixData);
-                                if (suffixData[0].length > 0) {
-                                    const array = suffixData[0];
-                                    const suffixDeclensions = array.Suffixdeclensions;
-                                    for (declension of Object.values(suffixDeclensions)) {
-                                        const suffixDeclension = declension;
-                                        const suffixGender = array.Suffixgender;
-                                        const suffixNumber = array.Suffixnumber;
-                                        const suffixPerson = array.Suffixperson;
-                                        const suffixType = array.Suffixtype;
-                                        const suffix = array.usedSuffix;
-                                        const suffixStem = array.Suffixstem;
-            
-                                        console.log(
-                                            suffixDeclension,
-                                            suffixGender,
-                                            suffixNumber,
-                                            suffixPerson,
-                                            suffixType,
-                                            suffix,
-                                            suffixStem
-                                        );
-            
-                                        if (ALL_WORDS.MAP[suffixStem]) {
-                                            hasSuffix = true;
-                                            const stemMap = ALL_WORDS.MAP[suffixStem] || [];
-                                            const stemDifinition = stemMap.definition || '...';
-                                            const stemNotes = stemMap.usage_notes || '...';
-            
-                                            console.log(suffixType);
-            
-                                            let wordclass = '';
-                                            for (const key of Object.values(WORDCLASS)) {
-                                                if (key.SHORT === suffixType) { wordclass = key.NAME }
-                                            }; //console.log(wordclass);
-            
-                                            if (suffixType === 'n' || suffixType === 'adj') {
-                                                console.log('hello world')
-                                            } else {
-                                                const PShtml = `
-                                                <div>
-                                                    <table>
-                                                        <tr>
-                                                            <th style="width:116px">...</th>
-                                                            <th>Word</th>
-                                                            <th>Stem</th>
-                                                            <th>Wordclass</th>
-                                                            <th>Definition</th>
-                                                            <th>Usage Notes</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Info</th>
-                                                            <td>${keyword}</td>
-                                                            <td id="type2SuffixBOTHStem">${suffixStem}</td>
-                                                            <td>${wordclass}</td>
-                                                            <td>${stemDifinition}</td>
-                                                            <td>${stemNotes || '...'}</td>
-                                                        </tr>
-                                                    </table>
-                                                    <br>
-                                                    <table>
-                                                        <tr>
-                                                            <th style="width:116px">...</th>
-                                                            <th>Affix</th>
-                                                            <th>Gender</th>
-                                                            <th>Number</th>
-                                                            <th>Person</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Prefix</th>
-                                                            <td>${prefix}</td>
-                                                            <td>${prefixGender}</td>
-                                                            <td>${prefixNumber}</td>
-                                                            <td>${prefixPerson}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Suffix</th>
-                                                            <td>${suffix}</td>
-                                                            <td>${suffixGender}</td>
-                                                            <td>${suffixNumber}</td>
-                                                            <td>${suffixPerson}</td>
-                                                        </tr>
-                                                    </table>
-                                                </div>`;
-            
-                                                //const wrapper = document.getElementById('page96');
-                                                //console.log(wrapper);
-                                                helperFunctions.standard.createPageById('page96', PShtml);
-            
-                                                const stemPTd = document.querySelector('#type2PrefixBOTHStem');
-                                                if (stemPTd) {
-                                                    stemPTd.style.cursor = 'pointer';
-                                                    stemPTd.addEventListener('click', () => {
-                                                        keyword = suffixStem;
-                                                        search(keyword);
-                                                    });
-                                                }
-                                                const stemSTd = document.querySelector('#type2SuffixBOTHStem');
-                                                if (stemSTd) {
-                                                    stemSTd.style.cursor = 'pointer';
-                                                    stemSTd.addEventListener('click', () => {
-                                                        keyword = suffixStem;
-                                                        search(keyword);
-                                                    });
-                                                }
-                                            }
-                                        }
+                                `;
+
+                                    helperFunctions.standard.createPageById('page96', SNhtml);
+
+                                    helperFunctions.standard.createPageById('page96', SNhtml);
+                                    const stemTd = document.querySelector('#type2SuffixONLYStem');
+                                    if (stemTd) {
+                                        stemTd.style.cursor = 'pointer';
+                                        stemTd.addEventListener('click', () => {
+                                            keyword = suffixStem;
+                                            search(keyword);
+                                        });
+
                                     }
                                 }
                             }
+
+                            //added div vv
+                            const ppHtml = `
+                                <table style="margin-top:35px">
+                                    <thead>
+                                        <tr>
+                                            <th>...</th>
+                                            <th style="width:116px">Prefix</th>
+                                            <th>Definition</th>
+                                            <th>Usage Notes</th>
+                                            <th>Wordclass</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${prefix || '...'}</td>
+                                            <td>${ppDefinition || '...'}</td>
+                                            <td>${ppUsage_notes || '...'}</td>
+                                            <td>${'preposition'}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `;
+
+                            const wrapper = document.getElementById('tablesContainer');
+                            helperFunctions.standard.createDivById('', wrapper, ppHtml);
+
+                            openPageOld('page96');
+                            return;
                         }
-                        else if (hasSuffix) {
-                            hasPrefix = false;
-                            const array = suffixData[0];
-                            const suffixDeclensions = array.Suffixdeclensions;
-                            for (declension of Object.values(suffixDeclensions)) {
-                                const suffixDeclension = declension;
-                                const suffixGender = array.Suffixgender;
-                                const suffixNumber = array.Suffixnumber;
-                                const suffixPerson = array.Suffixperson;
-                                const suffixType = array.Suffixtype;
-                                const suffix = array.usedSuffix;
-                                const suffixStem = array.Suffixstem;
-                                const suffixKeyword = keyword;*/
-            /*console.log(
-                suffixDeclension,
-                suffixGender,
-                suffixNumber,
-                suffixPerson,
-                suffixType,
-                suffix,
-                suffixStem
-            );*/
-            /*
-            const stemMap = ALL_WORDS.MAP[suffixStem] || [];
-            let stemDifinition = stemMap.definition || '...';
-            const stemNotes = stemMap.usage_notes || '...';
- 
-            console.log(
-                suffixDeclension,
-                suffixGender,
-                suffixNumber,
-                suffixPerson,
-                suffixType,
-                suffix,
-                suffixStem
-            );
-            console.log(
-                stemMap,
-                stemMap.genders,
-                stemDifinition,
-                stemNotes
-            );
-            let wordclass = '';
-            for (const key of Object.values(WORDCLASSES)) {
-                if (key.SHORT === suffixType) { wordclass = key.NAME }
-            }; //console.log(wordclass);
- 
- 
-            if (suffixType === 'n' || suffixType === 'adj') {//TODO due to how keywords populate suffix tables, ie theres symbols in parenthesis', it sometimes fails to find the correct stem.
- 
-                const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
-                for (const [gndr, def] of Object.entries(combinedGendersObject)) {
-                    if (gndr === suffixGender) {
-                        stemDifinition = def;
+
+
                     }
-                }
- 
-                const SNhtml = `
-                <div>
-                    <table>
-                        <tr>
-                            <th style="width:116px">...</th>
-                            <th>Word</th>
-                            <th>Stem</th>
-                            <th>Wordclass</th>
-                            <th>Definition</th>
-                            <th>Usage Notes</th>
-                        </tr>
-                        <tr>
-                            <th>Info</th>
-                            <td>${suffixKeyword}</td>
-                            <td id="type2SuffixONLYStem">${suffixStem}</td>
-                            <td>${wordclass}</td>
-                            <td>${stemDifinition}</td>
-                            <td>${stemNotes || '...'}</td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table>
-                        <tr>
-                            <th style="width:116px">...</th>
-                            <th>Suffix</th>
-                            <th>Declension</th>
-                            <th>Case</th>
-                            <th>Gender</th>
-                            <th>Number</th>
-                        </tr>
-                        <tr>
-                            <th>Info</th>
-                            <td>${suffix}</td>
-                            <td>${suffixDeclension}</td>
-                            <td>${suffixPerson}</td>
-                            <td>${suffixGender}</td>
-                            <td>${suffixNumber}</td>
-                        </tr>
-                    </table>
-                </div>
-                `;
- 
-                helperFunctions.standard.createPageById('page96', SNhtml);
-            } else {
-                const Shtml = `
-                    <div>
-                        <table>
-                            <tr>
-                                <th style="width:116px">...</th>
-                                <th>Word</th>
-                                <th>Stem</th>
-                                <th>Wordclass</th>
-                                <th>Definition</th>
-                                <th>Usage Notes</th>
-                            </tr>
-                            <tr>
-                                <th>Info</th>
-                                <td>${suffixKeyword}</td>
-                                <td id="type2SuffixONLYStem">${suffixStem}</td>
-                                <td>${wordclass}</td>
-                                <td>${stemDifinition}</td>
-                                <td>${stemNotes || '...'}</td>
-                            </tr>
-                        </table>
-                        <br>
-                        <table>
-                            <tr>
-                                <th style="width:116px">...</th>
-                                <th>Suffix</th>
-                                <th>Gender</th>
-                                <th>Number</th>
-                                <th>Person</th>
-                            </tr>
-                            <tr>
-                                <th>Suffix</th>
-                                <td>${suffix}</td>
-                                <td>${suffixGender}</td>
-                                <td>${suffixNumber}</td>
-                                <td>${suffixPerson}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <br>
-                    <div id="suffixONLYPrefixtable">
-                    </div>`;
- 
-                // Inject the content first, then attach listeners
-                helperFunctions.standard.createPageById('page96', Shtml);
-                const stemTd = document.querySelector('#type2SuffixONLYStem');
-                if (stemTd) {
-                    stemTd.style.cursor = 'pointer';
-                    stemTd.addEventListener('click', () => {
-                        keyword = suffixStem;
-                        search(keyword);
-                    });
+
                 }
             }
- 
-            const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
-            if (suffixONLYPrefixtableWrapper) {
-                helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
- 
-                helperFunctions.tablegen.populateSummaryTables(suffixKeyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
-            }
- 
-        }
-        //console.log(array);
-    }
-    console.log('has prefix | ', hasPrefix);
-    console.log('has suffix | ', hasSuffix);
-*/
+
             openPageOld('page96');
         }
         else {//type 3
