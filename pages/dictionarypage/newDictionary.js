@@ -19,7 +19,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         let verbPrefixData = [];
         let nounSuffixData = [];
         let ppPrefixData = [];
+        let adjSuffixData = [];
 
+        const verbPrefix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData);
+        const ppPrefix = helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData);
+        const verbSuffix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData);
+        const nounSuffix = helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData);
+        const adjSuffix = helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData);
 
         function bkjlcdfkjbacsfksjbsdkabjc() {
             /*  
@@ -548,10 +554,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
         }
         else if (//type 2
-            helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData) ||
-            helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData) ||
-            helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) ||
-            helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData)
+            verbPrefix || verbSuffix || nounSuffix || ppPrefix || adjSuffix
         ) {
             console.log('-----type2-----');
 
@@ -559,6 +562,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             let hasVerbSuffix = (verbSuffixData[0] ? true : false);
             let hasNounSuffix = (nounSuffixData[0] ? true : false);
             let hasPpPrefix = (ppPrefixData[0] ? true : false);
+            let hasAdjSuffix = (adjSuffixData[0] ? true : false); console.log(hasAdjSuffix)
 
             //add to EVERY if statements beginning, a check if the stem exists - to fix type3
             if (hasVerbPrefix) {
@@ -794,7 +798,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 if (verbSuffixData.length > 1) {
                     console.log('has multiple verb suffixes');
 
-
                     const stemMap = ALL_WORDS.MAP[verbSuffixData[0].affixStem] || [];
                     const stemDifinition = stemMap.definition || '...';
                     const stemNotes = stemMap.usage_notes || '...';
@@ -871,24 +874,26 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             `;
 
                             helperFunctions.standard.insertTrIntoTableById('tbody', PShtml);
-                        }
+                        } else { return; }
                     });
-                    const stemSTd = document.querySelector('#type2SuffixONLYStem');
-                    if (stemSTd) {
-                        stemSTd.style.cursor = 'pointer';
-                        stemSTd.addEventListener('click', () => {
-                            keyword = verbSuffixData[0].affixStem;
-                            search(keyword);
-                        });
-                    }
-                    const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
-                    if (suffixONLYPrefixtableWrapper) {
-                        helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
+                    if (document.getElementById('tbody').rows.length > 0) { //only openpage etc if the tbody has shit in it.
+                        const stemSTd = document.querySelector('#type2SuffixONLYStem');
+                        if (stemSTd) {
+                            stemSTd.style.cursor = 'pointer';
+                            stemSTd.addEventListener('click', () => {
+                                keyword = verbSuffixData[0].affixStem;
+                                search(keyword);
+                            });
+                        }
+                        const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
+                        if (suffixONLYPrefixtableWrapper) {
+                            helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
 
-                        helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                            helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                        }
+                        openPageOld('page96');
+                        return;
                     }
-                    openPageOld('page96');
-                    return;
                 } else {
                     if (verbSuffixData[0]) {
                         const array = verbSuffixData[0];
@@ -981,7 +986,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                             }
-                        }
+                        } else { return; }
                     }
                     openPageOld('page96');
                     return;
@@ -1452,7 +1457,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             keyword = suffixStem;
                                             search(keyword);
                                         });
-
                                     }
                                 }
                             }
@@ -1487,14 +1491,10 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             openPageOld('page96');
                             return;
                         }
-
-
                     }
-
                 }
             }
 
-            openPageOld('page96');
         }
         else {//type 3
             console.log('-----type3-----');
