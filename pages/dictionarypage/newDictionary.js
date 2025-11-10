@@ -554,7 +554,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
         }
         else if (//type 2
-            verbPrefix || verbSuffix || nounSuffix || ppPrefix || adjSuffix
+            helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData) ||
+            helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData) ||
+            helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) ||
+            helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) ||
+            helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData)
         ) {
             console.log('-----type2-----');
 
@@ -1604,3 +1608,4 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 dictionaryPage(); // so constants arent redefined.
 // this works as a wrapper function essentially^^
 
+//maybe add a 4th type? if number, then use lirioz' NUMBERS.numberToText.
