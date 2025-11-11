@@ -652,113 +652,22 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
             }
             console.log(affixTypesMap);
-            return;
 
 
-            for (obj of Object.values(affixTypesMap)) {
-                obj.map.forEach(el => {
-
-                    const verbPrefix = helperFunctions.matchtype2.affixChecker(el.affixStem, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData);
-                    const ppPrefix = helperFunctions.matchtype2.affixChecker(el.affixStem, PREPOSITIONS.MAP, true, true, ppPrefixData);
-                    const verbSuffix = helperFunctions.matchtype2.affixChecker(el.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData);
-                    const nounSuffix = helperFunctions.matchtype2.affixChecker(el.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData);
-                    const adjSuffix = helperFunctions.matchtype2.affixChecker(el.affixStem, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData);
-
-                    console.log(
-                        verbPrefix || 'vp empty',
-                        ppPrefix || 'ppp empty',
-                        verbSuffix || 'vs empty',
-                        nounSuffix || 'ns empty',
-                        adjSuffix || 'as empty',
-                    );
-                    if (ALL_WORDS.MAP[el.affixStem]) {//matchtype = 2 should be in here?? vv
-                        obj.state = true;
-                        console.log(el, el.affixStem);
-                        console.log(obj.state);
-                        console.log(affixTypesMap);
-                        cache.push(el);
-
-
-                    } else
-                        if (
-                            verbPrefix
-                        ) {
-                            console.log('multi affix1');
-                            console.log(obj, '1');
-
-                            for (obj of Object.values(affixTypesMap)) {
-                                obj.map.forEach(el => {
-                                    if (ALL_WORDS.MAP[el.affixStem]) {//matchtype = 2 should be in here?? vv
-                                        obj.state = true;
-                                        console.log(el, el.affixStem);
-                                        console.log(obj.state);
-                                        //console.log(affixTypesMap);
-                                        cache.push(el);
-                                    }
-                                });
-                            }
-                        }
-                    if (
-                        verbSuffix
-                    ) {
-                        console.log('multi affix2');
-                        console.log(obj, '2');
-
-                        for (obj of Object.values(affixTypesMap)) {
-                            obj.map.forEach(el => {
-                                if (ALL_WORDS.MAP[el.affixStem]) {//matchtype = 2 should be in here?? vv
-                                    obj.state = true;
-                                    console.log(el, el.affixStem);
-                                    console.log(obj.state);
-                                    //console.log(affixTypesMap);
-                                    cache.push(el);
-                                }
-                            });
-                        }
-                    }
-                });
-
-                console.log(
-                    verbPrefix || 'vp empty',
-                    ppPrefix || 'ppp empty',
-                    verbSuffix || 'vs empty',
-                    nounSuffix || 'ns empty',
-                    adjSuffix || 'as empty',
-                );
-            }
-            console.log('cache |', cache);
-            //console.log(affixTypesMap.verbPrefix.state);
-
-            //add to EVERY if statements beginning, a check if the stem exists - to fix type3
             if (affixTypesMap.verbPrefix.state) {
-                console.log(verbPrefixData);
+                console.log('--verb prefix--');
 
-                if (helperFunctions.matchtype2.affixChecker(verbPrefixData[0].affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData)) {
 
-                    verbSuffixData.forEach(el => console.log(el));
-                    if (ALL_WORDS.MAP[verbSuffixData[0].affixStem]) {
-                        console.log('has both verb prefix & suffix');
-                        hasVerbSuffix = true;
+                const stemMap = ALL_WORDS.MAP[affixTypesMap.verbPrefix.resultMap[0].affixStem] || [];
+                const stemDifinition = stemMap.definition || '...';
+                const stemNotes = stemMap.usage_notes || '...';
 
-                        if (verbSuffixData.length > 1) {// TODO fix when length is not above1. // actually - prob dont need to xd.
-                            console.log('above 1');
-                        } else {
-                            console.log('not above 1');
-                        }
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'v') { wordclass = key.NAME }
+                };
 
-                        const fixedKeyword = `${verbPrefixData[0].affix}${verbSuffixData[0].affixStem}`; console.log(fixedKeyword);//need to reconstruct the prefix+stem word to repopulate the array:q
-                        helperFunctions.matchtype2.affixChecker(fixedKeyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData);
-
-                        const stemMap = ALL_WORDS.MAP[verbPrefixData[0].affixStem] || [];
-                        const stemDifinition = stemMap.definition || '...';
-                        const stemNotes = stemMap.usage_notes || '...';
-
-                        let wordclass = '';
-                        for (const key of Object.values(WORDCLASSES)) {
-                            if (key.SHORT === 'v') { wordclass = key.NAME }
-                        };
-
-                        const html = `
+                const html = `
                             <div>
                                 <table>
                                     <tr>
@@ -772,7 +681,205 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     <tr>
                                         <th>Info</th>
                                         <td>${keyword}</td>
-                                        <td id="type2PrefixONLYStem">${verbPrefixData[0].affixStem}</td>
+                                        <td id="type2PrefixONLYStem">${affixTypesMap.verbPrefix.resultMap[0].affixStem}</td>
+                                        <td>${wordclass}</td>
+                                        <td>${stemDifinition}</td>
+                                        <td>${stemNotes || '...'}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <br>
+                            <div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:116px">...</th>
+                                            <th>Prefix</th>
+                                            <th>Gender</th>
+                                            <th>Number</th>
+                                            <th>Person</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody"></tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <div id="prefixONLYSuffixtable"></div>
+                        `;
+                helperFunctions.standard.createPageById('page96', html);
+                affixTypesMap.verbPrefix.resultMap.forEach(arr => {
+
+
+                    const prefixGender = arr.affixGender;
+                    const prefixNumber = arr.affixNumber;
+                    const prefixPerson = arr.affixPerson;
+                    const prefix = arr.affix;
+
+                    const html = `
+                            <tr>
+                                <th>Prefix</th>
+                                <td>${prefix}</td>
+                                <td>${prefixGender}</td>
+                                <td>${prefixNumber}</td>
+                                <td>${prefixPerson}</td>
+                            </tr>`
+
+                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                });
+
+                const stemSTd = document.querySelector('#type2PrefixONLYStem');
+                if (stemSTd) {
+                    stemSTd.style.cursor = 'pointer';
+                    stemSTd.addEventListener('click', () => {
+                        keyword = affixTypesMap.verbPrefix.resultMap[0].affixStem;
+                        search(keyword);
+                    });
+                }
+                const wrapper = document.getElementById('prefixONLYSuffixtable');
+                if (wrapper) {
+                    helperFunctions.matchtype1.neoVerbTables(2, keyword, wrapper);
+
+                    helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                }
+
+                matchType = 2;
+                openPageOld('page96');
+                return;
+            }
+            if (affixTypesMap.verbSuffix.state) {
+                console.log('--verb suffix--');
+
+
+                const stemMap = ALL_WORDS.MAP[affixTypesMap.verbSuffix.resultMap[0].affixStem] || [];
+                const stemDifinition = stemMap.definition || '...';
+                const stemNotes = stemMap.usage_notes || '...';
+
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'v') { wordclass = key.NAME }
+                }; //console.log(wordclass);
+
+                const html = `
+                        <div>
+                            <table>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
+                                    <th>Wordclass</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                </tr>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${keyword}</td>
+                                    <td id="type2SuffixONLYStem">${affixTypesMap.verbSuffix.resultMap[0].affixStem}</td>
+                                    <td>${wordclass}</td>
+                                    <td>${stemDifinition}</td>
+                                    <td>${stemNotes || '...'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br>
+                        <div id="affixTablesContainer">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:116px">...</th>
+                                        <th>Suffix</th>
+                                        <th>Gender</th>
+                                        <th>Number</th>
+                                        <th>Person</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody"></tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <div id="suffixONLYPrefixtable"></div>
+                    `;
+                helperFunctions.standard.createPageById('page96', html);
+                affixTypesMap.verbSuffix.resultMap.forEach(arr => {
+                    //console.log('arr | ', arr);
+
+
+                    const suffixGender = arr.affixGender;
+                    const suffixNumber = arr.affixNumber;
+                    const suffixPerson = arr.affixPerson;
+                    const suffix = arr.affix;
+                    const suffixStem = arr.affixStem;
+
+
+                    if (ALL_WORDS.MAP[suffixStem]) {
+                        const PShtml = `
+                                <tr>
+                                    <th>Suffix</th>
+                                    <td>${suffix}</td>
+                                    <td>${suffixGender}</td>
+                                    <td>${suffixNumber}</td>
+                                    <td>${suffixPerson}</td>
+                                </tr>
+                            `;
+
+                        helperFunctions.standard.insertTrIntoTableById('tbody', PShtml);
+                    } else { return; }
+                });
+                if (document.getElementById('tbody').rows.length > 0) { //only openpage etc if the tbody has shit in it.
+                    const stemSTd = document.querySelector('#type2SuffixONLYStem');
+                    if (stemSTd) {
+                        stemSTd.style.cursor = 'pointer';
+                        stemSTd.addEventListener('click', () => {
+                            keyword = affixTypesMap.verbSuffix.resultMap[0].affixStem;
+                            search(keyword);
+                        });
+                    }
+                    const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
+                    if (suffixONLYPrefixtableWrapper) {
+                        helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
+
+                        helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                    }
+
+                    matchType = 2;
+                    openPageOld('page96');
+                    return;
+                }
+
+                matchType = 2;
+                openPageOld('page96');
+                return;
+            }
+            if (affixTypesMap.verbBothAffixes.state) {
+                console.log('--both verb affixes--');
+
+                const stemMap = ALL_WORDS.MAP[affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem] || [];
+                const stemDifinition = stemMap.definition || '...';
+                const stemNotes = stemMap.usage_notes || '...';
+
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'v') { wordclass = key.NAME }
+                };
+
+                const html = `
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th style="width:116px">...</th>
+                                        <th>Word</th>
+                                        <th>Stem</th>
+                                        <th>Wordclass</th>
+                                        <th>Definition</th>
+                                        <th>Usage Notes</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Info</th>
+                                        <td>${keyword}</td>
+                                        <td id="type2PrefixONLYStem">${affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem}</td>
                                         <td>${wordclass}</td>
                                         <td>${stemDifinition}</td>
                                         <td>${stemNotes || '...'}</td>
@@ -810,16 +917,16 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 </table>
                             </div>
                         `;
-                        helperFunctions.standard.createPageById('page96', html);
-                        verbPrefixData.forEach(arr => {
+                helperFunctions.standard.createPageById('page96', html);
+                affixTypesMap.verbBothAffixes.resultMap.prefix.forEach(arr => {
 
-                            if (ALL_WORDS.MAP[arr.affixStem]) {
-                                const prefixGender = arr.affixGender;
-                                const prefixNumber = arr.affixNumber;
-                                const prefixPerson = arr.affixPerson;
-                                const prefix = arr.affix;
+                    if (ALL_WORDS.MAP[arr.affixStem]) {
+                        const prefixGender = arr.affixGender;
+                        const prefixNumber = arr.affixNumber;
+                        const prefixPerson = arr.affixPerson;
+                        const prefix = arr.affix;
 
-                                const html = `
+                        const html = `
                                 <tr>
                                     <th>Prefix</th>
                                     <td>${prefix}</td>
@@ -828,18 +935,18 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     <td>${prefixPerson}</td>
                                 </tr>`
 
-                                helperFunctions.standard.insertTrIntoTableById('tbodyPrefix', html);
-                            }
-                        });
-                        verbSuffixData.forEach(arr => {
+                        helperFunctions.standard.insertTrIntoTableById('tbodyPrefix', html);
+                    }
+                });
+                affixTypesMap.verbBothAffixes.resultMap.suffix.forEach(arr => {
 
-                            if (ALL_WORDS.MAP[arr.affixStem]) {
-                                const suffixGender = arr.affixGender;
-                                const suffixNumber = arr.affixNumber;
-                                const suffixPerson = arr.affixPerson;
-                                const suffix = arr.affix;
+                    if (ALL_WORDS.MAP[arr.affixStem]) {
+                        const suffixGender = arr.affixGender;
+                        const suffixNumber = arr.affixNumber;
+                        const suffixPerson = arr.affixPerson;
+                        const suffix = arr.affix;
 
-                                const html = `
+                        const html = `
                                 <tr>
                                     <th>Suffix</th>
                                     <td>${suffix}</td>
@@ -848,117 +955,33 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     <td>${suffixPerson}</td>
                                 </tr>`
 
-                                helperFunctions.standard.insertTrIntoTableById('tbodySuffix', html);
-                            }
-                        });
-
-                        const stemSTd = document.querySelector('#prefixONLYSuffixtable');
-                        if (stemSTd) {
-                            stemSTd.style.cursor = 'pointer';
-                            stemSTd.addEventListener('click', () => {
-                                keyword = verbSuffixData[0].affixStem;
-                                search(keyword);
-                            });
-                        }
-
-                        openPageOld('page96');
-                        return;
+                        helperFunctions.standard.insertTrIntoTableById('tbodySuffix', html);
                     }
-                } if (hasVerbSuffix === false) {
-                    console.log('has verb prefix');
+                });
 
-
-                    const stemMap = ALL_WORDS.MAP[verbPrefixData[0].affixStem] || [];
-                    const stemDifinition = stemMap.definition || '...';
-                    const stemNotes = stemMap.usage_notes || '...';
-
-                    let wordclass = '';
-                    for (const key of Object.values(WORDCLASSES)) {
-                        if (key.SHORT === 'v') { wordclass = key.NAME }
-                    };
-
-                    const html = `
-                            <div>
-                                <table>
-                                    <tr>
-                                        <th style="width:116px">...</th>
-                                        <th>Word</th>
-                                        <th>Stem</th>
-                                        <th>Wordclass</th>
-                                        <th>Definition</th>
-                                        <th>Usage Notes</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Info</th>
-                                        <td>${keyword}</td>
-                                        <td id="type2PrefixONLYStem">${verbPrefixData[0].affixStem}</td>
-                                        <td>${wordclass}</td>
-                                        <td>${stemDifinition}</td>
-                                        <td>${stemNotes || '...'}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <br>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th style="width:116px">...</th>
-                                            <th>Prefix</th>
-                                            <th>Gender</th>
-                                            <th>Number</th>
-                                            <th>Person</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody"></tbody>
-                                </table>
-                            </div>
-                            <br>
-                            <br>
-                            <br>
-                            <div id="prefixONLYSuffixtable"></div>
-                        `;
-                    helperFunctions.standard.createPageById('page96', html);
-                    verbPrefixData.forEach(arr => {
-
-
-                        const prefixGender = arr.affixGender;
-                        const prefixNumber = arr.affixNumber;
-                        const prefixPerson = arr.affixPerson;
-                        const prefix = arr.affix;
-
-                        const html = `
-                            <tr>
-                                <th>Prefix</th>
-                                <td>${prefix}</td>
-                                <td>${prefixGender}</td>
-                                <td>${prefixNumber}</td>
-                                <td>${prefixPerson}</td>
-                            </tr>`
-
-                        helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                const stemSTd = document.querySelector('#type2PrefixONLYStem');
+                if (stemSTd) {
+                    stemSTd.style.cursor = 'pointer';
+                    stemSTd.addEventListener('click', () => {
+                        keyword = affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem; //console.log(keyword);
+                        search(keyword);
                     });
-
-                    const stemSTd = document.querySelector('#type2PrefixONLYStem');
-                    if (stemSTd) {
-                        stemSTd.style.cursor = 'pointer';
-                        stemSTd.addEventListener('click', () => {
-                            keyword = verbSuffixData[0].affixStem;
-                            search(keyword);
-                        });
-                    }
-                    const wrapper = document.getElementById('prefixONLYSuffixtable');
-                    if (wrapper) {
-                        helperFunctions.matchtype1.neoVerbTables(2, keyword, wrapper);
-
-                        helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
-                    }
-
-                    matchType = 2;
-                    openPageOld('page96');
-                    return;
                 }
+
+                openPageOld('page96');
+                return;
             }
+
+            if (affixTypesMap.nounSuffix.state) {
+                console.log('--noun suffix--');
+            }
+            if (affixTypesMap.ppPrefix.state) {
+                console.log('--prepositional prefix--');
+            }
+            return;
+
+            //add to EVERY if statements beginning, a check if the stem exists - to fix type3
+
             if (affixTypesMap.verbSuffix.state) {
                 console.log('has verb suffix');
 
