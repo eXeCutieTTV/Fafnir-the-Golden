@@ -1273,7 +1273,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 openPageOld('page96');
                 return;
             }
-        }
+        }//TODO. make affixchecker not need array for argument. more type2 logic - particles, determiners, pronouns etc.
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
             const searchHandler = ALL_WORDS.fetchByDefinition(keyword); // Array[]
