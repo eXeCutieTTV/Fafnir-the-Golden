@@ -1210,7 +1210,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 </div>
                                 `;
                 helperFunctions.standard.createPageById('page96', html);
-                nounSuffixData.forEach(arr => {
+                affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.forEach(arr => {
                     const suffixDeclension = arr.affixDeclension;
                     const suffixGender = arr.affixGender;
                     const suffixNumber = arr.affixNumber;
@@ -1221,8 +1221,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     for (const [gndr, def] of Object.entries(combinedGendersObject)) {
                         if (gndr === suffixGender) {
                             stemDifinition = def;
-                            console.log(combinedGendersObject);
-                            console.log(gndr, def);
+                            //console.log(combinedGendersObject);
+                            //console.log(gndr, def);
 
                             const html = `
                                 <tr>
