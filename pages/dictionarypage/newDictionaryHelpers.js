@@ -167,7 +167,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     //console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll));
 
     let array = [];
-    const match = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll); 
+    const match = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll);
     //console.log(match);
     if (Array.isArray(match)) {
         array = match[0] || {};
@@ -336,10 +336,10 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
                     const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
                     affixStem = N1;
-                    //console.log(affixStem, ALL_WORDS.MAP[affixStem]);
                     const MAP = ALL_WORDS.MAP[affixStem];
+                    //console.log(affixStem, MAP);
 
-                    if (MAP && MAP.type === 'adj') { affixType = 'adj' } else { return }//check if adj
+                    if (MAP && MAP.type === 'adj') { affixType = 'adj' }//check if adj
                     const matchResult = {
                         affixType,
                         affixGender,
@@ -349,13 +349,14 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                         affixCase,
                         affix,
                     }
-                    if (ALL_WORDS.MAP[affixStem]) {//checks if the stem exists (doesnt return array for æfon for affix 'n' ex - æfu isnt a stemword)
+                    if (MAP) {//checks if the stem exists (doesnt return array for æfon for affix 'n' ex - æfu isnt a stemword)
                         nounSuffResult.push(matchResult);
                         return matchResult;
                     } else { return; }
                 });
                 //console.log('nounSuffResult | ', nounSuffResult);
-                resultArray.push(...nounSuffResult); //console.log(resultArray, resultArray.length);
+                resultArray.push(...nounSuffResult);
+                //console.log(resultArray, resultArray.length);
                 return nounSuffResult;
             }
             break;

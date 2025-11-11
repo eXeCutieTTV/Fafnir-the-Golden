@@ -632,6 +632,25 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     }
                 }
             }
+            if (affixTypesMap.nounSuffix.rawMap) {
+                for (entry of Object.values(affixTypesMap.nounSuffix.rawMap)) {
+                    //console.log(entry);
+                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                        affixTypesMap.nounSuffix.resultMap.push(entry);
+                        affixTypesMap.nounSuffix.state = true;
+                    }
+                }
+            }
+            if (affixTypesMap.ppPrefix.rawMap) {
+
+                const entry = affixTypesMap.ppPrefix.rawMap;
+                //console.log(entry);
+
+                if (ALL_WORDS.MAP[entry.affixStem]) {
+                    affixTypesMap.ppPrefix.resultMap.push(entry);
+                    affixTypesMap.ppPrefix.state = true;
+                }
+            }
             console.log(affixTypesMap);
             return;
 
