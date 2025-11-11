@@ -26,12 +26,16 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         let ppPrefixData = [];
         let adjSuffixData = [];
 
-        const verbPrefix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData);
-        const ppPrefix = helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData);
-        const verbSuffix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData);
-        const nounSuffix = helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData);
-        const adjSuffix = helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData);
+        let verbPrefix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData) || [];
+        let ppPrefix = helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData) || [];
+        let verbSuffix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) || [];
+        let nounSuffix = helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) || [];
+        let adjSuffix = helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData) || [];
 
+        let verbBothAffixes = {
+            prefix: [],
+            suffix: [],
+        }
         console.log(
             verbPrefix || 'vp empty',
             ppPrefix || 'ppp empty',
@@ -109,7 +113,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         helperFunctions.standard.clearPageById('page96'); //type 2
         helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
 
-        if (ALL_WORDS.fetch(keyword) && ALL_WORDS.fetch(keyword).length > 0) {//type 1
+        if (//type 1
+            ALL_WORDS.fetch(keyword) && ALL_WORDS.fetch(keyword).length > 0
+        ) {
             matchType = 1;
             console.log('-----type1-----');
             const searchHandler = ALL_WORDS.fetch(keyword);
@@ -568,32 +574,140 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
         }
         else if (//type 2
-            helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData) ||
-            helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData) ||
-            helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) ||
-            helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) ||
-            helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData)
+            verbPrefix || ppPrefix || verbSuffix || nounSuffix || adjSuffix
         ) {
             console.log('-----type2-----');
 
+            console.log(
+                verbPrefix || 'vp empty',
+                ppPrefix || 'ppp empty',
+                verbSuffix || 'vs empty',
+                nounSuffix || 'ns empty',
+                adjSuffix || 'as empty',
+            );
+
             const affixTypesMap = {
-                verbPrefix: { map: verbPrefixData, state: hasVerbPrefix = false },
-                verbSuffix: { map: verbSuffixData, state: hasVerbSuffix = false },
-                nounSuffix: { map: nounSuffixData, state: hasNounSuffix = false },
-                ppPrefix: { map: ppPrefixData, state: hasPpPrefix = false },
-                adjSuffix: { map: adjSuffixData, state: hasAdjSuffix = false },
+                verbPrefix: { rawMap: verbPrefix, resultMap: [], state: false },
+                verbSuffix: { rawMap: verbSuffix, resultMap: [], state: false },
+                nounSuffix: { rawMap: nounSuffix, resultMap: [], state: false },
+                ppPrefix: { rawMap: ppPrefix, resultMap: [], state: false },
+                adjSuffix: { rawMap: adjSuffix, resultMap: [], state: false },
+                verbBothAffixes: { resultMap: verbBothAffixes, state: false },
             }
             console.log(affixTypesMap);
 
+            if (affixTypesMap.verbPrefix.rawMap) {
+                for (entry of Object.values(affixTypesMap.verbPrefix.rawMap)) {
+                    //console.log(entry);
+                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                        affixTypesMap.verbPrefix.resultMap.push(entry);
+                        affixTypesMap.verbPrefix.state = true;
+                    } else {
+                        verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) || [];
+                        if (verbSuffix) {
+                            for (entry2 of Object.values(verbSuffix)) {
+                                if (ALL_WORDS.MAP[entry2.affixStem]) {
+                                    console.log(entry);
+                                    console.log(entry2);
+
+                                    entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
+
+                                    verbBothAffixes.prefix.push(entry);
+                                    verbBothAffixes.suffix.push(entry2);
+                                    affixTypesMap.verbBothAffixes.state = true;
+                                }
+                            }
+                        }
+                        //console.log(verbSuffix);
+                    }
+                }
+                //console.log(verbPrefix);
+            }
+            if (affixTypesMap.verbSuffix.rawMap) {
+                for (entry of Object.values(affixTypesMap.verbSuffix.rawMap)) {
+                    //console.log(entry);
+                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                        affixTypesMap.verbSuffix.resultMap.push(entry);
+                        affixTypesMap.verbSuffix.state = true;
+                    }
+                }
+            }
+            console.log(affixTypesMap);
+            return;
+
+
             for (obj of Object.values(affixTypesMap)) {
                 obj.map.forEach(el => {
-                    if (ALL_WORDS.MAP[el.affixStem]) {
-                        console.log(el, el.affixStem);
+
+                    const verbPrefix = helperFunctions.matchtype2.affixChecker(el.affixStem, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData);
+                    const ppPrefix = helperFunctions.matchtype2.affixChecker(el.affixStem, PREPOSITIONS.MAP, true, true, ppPrefixData);
+                    const verbSuffix = helperFunctions.matchtype2.affixChecker(el.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData);
+                    const nounSuffix = helperFunctions.matchtype2.affixChecker(el.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData);
+                    const adjSuffix = helperFunctions.matchtype2.affixChecker(el.affixStem, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData);
+
+                    console.log(
+                        verbPrefix || 'vp empty',
+                        ppPrefix || 'ppp empty',
+                        verbSuffix || 'vs empty',
+                        nounSuffix || 'ns empty',
+                        adjSuffix || 'as empty',
+                    );
+                    if (ALL_WORDS.MAP[el.affixStem]) {//matchtype = 2 should be in here?? vv
                         obj.state = true;
+                        console.log(el, el.affixStem);
                         console.log(obj.state);
+                        console.log(affixTypesMap);
+                        cache.push(el);
+
+
+                    } else
+                        if (
+                            verbPrefix
+                        ) {
+                            console.log('multi affix1');
+                            console.log(obj, '1');
+
+                            for (obj of Object.values(affixTypesMap)) {
+                                obj.map.forEach(el => {
+                                    if (ALL_WORDS.MAP[el.affixStem]) {//matchtype = 2 should be in here?? vv
+                                        obj.state = true;
+                                        console.log(el, el.affixStem);
+                                        console.log(obj.state);
+                                        //console.log(affixTypesMap);
+                                        cache.push(el);
+                                    }
+                                });
+                            }
+                        }
+                    if (
+                        verbSuffix
+                    ) {
+                        console.log('multi affix2');
+                        console.log(obj, '2');
+
+                        for (obj of Object.values(affixTypesMap)) {
+                            obj.map.forEach(el => {
+                                if (ALL_WORDS.MAP[el.affixStem]) {//matchtype = 2 should be in here?? vv
+                                    obj.state = true;
+                                    console.log(el, el.affixStem);
+                                    console.log(obj.state);
+                                    //console.log(affixTypesMap);
+                                    cache.push(el);
+                                }
+                            });
+                        }
                     }
                 });
+
+                console.log(
+                    verbPrefix || 'vp empty',
+                    ppPrefix || 'ppp empty',
+                    verbSuffix || 'vs empty',
+                    nounSuffix || 'ns empty',
+                    adjSuffix || 'as empty',
+                );
             }
+            console.log('cache |', cache);
             //console.log(affixTypesMap.verbPrefix.state);
 
             //add to EVERY if statements beginning, a check if the stem exists - to fix type3
