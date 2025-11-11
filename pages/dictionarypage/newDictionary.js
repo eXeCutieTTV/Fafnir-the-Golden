@@ -632,7 +632,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     }
                 }
             }
-            if (affixTypesMap.ppPrefix.rawMap) {
+            if (affixTypesMap.ppPrefix.rawMap && affixTypesMap.ppPrefix.rawMap.affixStem) {
 
                 const entry = affixTypesMap.ppPrefix.rawMap;
                 //console.log(entry);
@@ -641,13 +641,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     affixTypesMap.ppPrefix.resultMap.push(entry);
                     affixTypesMap.ppPrefix.state = true;
                 } else {
-                    affixTypesMap.nounSuffixANDppPrefix.state = true;
-
                     nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) || [];
-                    affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix.push(entry);
-                    for (obj of Object.values(nounSuffix)) {
-                        entry.affixStem = obj.affixStem; //fix stem.
-                        affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
+                    if (nounSuffix.length > 0) {
+                        affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix.push(entry);
+                        for (obj of Object.values(nounSuffix)) {
+                            entry.affixStem = obj.affixStem; //fix stem.
+                            affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
+                        }
+                        affixTypesMap.nounSuffixANDppPrefix.state = true;
                     }
                 }
             }
@@ -655,6 +656,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             //page logic vv
             if (affixTypesMap.verbPrefix.state) {
                 console.log('--verb prefix--');
+                matchType = 2;
 
 
                 const stemMap = ALL_WORDS.MAP[affixTypesMap.verbPrefix.resultMap[0].affixStem] || [];
@@ -743,12 +745,12 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
 
-                matchType = 2;
                 openPageOld('page96');
                 return;
             }
             if (affixTypesMap.verbSuffix.state) {
                 console.log('--verb suffix--');
+                matchType = 2;
 
 
                 const stemMap = ALL_WORDS.MAP[affixTypesMap.verbSuffix.resultMap[0].affixStem] || [];
@@ -843,17 +845,17 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                     }
 
-                    matchType = 2;
                     openPageOld('page96');
                     return;
                 }
 
-                matchType = 2;
                 openPageOld('page96');
                 return;
             }
             if (affixTypesMap.verbBothAffixes.state) {
                 console.log('--both verb affixes--');
+                matchType = 2;
+
 
                 const stemMap = ALL_WORDS.MAP[affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem] || [];
                 const stemDifinition = stemMap.definition || '...';
@@ -972,6 +974,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.nounSuffix.state) {
                 console.log('--noun suffix--');
+                matchType = 2;
 
 
                 const stemMap = ALL_WORDS.MAP[affixTypesMap.nounSuffix.resultMap[0].affixStem] || []; console.log(stemMap);
@@ -1061,12 +1064,12 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     });
                 }
 
-                matchType = 2;
                 openPageOld('page96');
                 return;
             }
             if (affixTypesMap.ppPrefix.state) {
                 console.log('--prepositional prefix--');
+                matchType = 2;
 
 
                 const array = affixTypesMap.ppPrefix.resultMap[0];
@@ -1150,16 +1153,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
-                    matchType = 2;
                     openPageOld('page96');
                     return;
                 }
             }
             if (affixTypesMap.nounSuffixANDppPrefix.state) {
                 console.log('--noun with pp and suffix--');
+                matchType = 2;
 
-
-                console.log('has multiple noun suffixes');
 
                 const stemMap = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
                 let stemDifinition = stemMap.definition || '...';
@@ -1269,12 +1270,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const wrapper = document.getElementById('tablesContainer');
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
-                matchType = 2;
                 openPageOld('page96');
                 return;
             }
-
-
         }
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
