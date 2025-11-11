@@ -128,7 +128,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                 switch (wordclass) {
                     case 'adj':
-                        console.log(wordclass);
 
                         if (word === keyword) {
                             console.log('clean match |', keyword);
@@ -196,7 +195,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         }
                         break;
                     case 'adv':
-                        console.log(wordclass);
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
@@ -213,7 +211,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                         break;
                     case 'aux':
-                        console.log(wordclass);
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
@@ -261,7 +258,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         }
                         break;
                     case 'con':
-                        console.log(wordclass);
                         if (word === keyword) {
                             const html = `
                                 <div class="outerdiv">
@@ -321,7 +317,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                         break;
                     case 'n':
-                        console.log(wordclass);
                         const NcombinedGendersObject = WORD_UTILS.combineGenders(entry.genders) // Key-value pairs
                         if (word === keyword) {
                             console.log('clean match |', keyword);
@@ -387,7 +382,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         }
                         break;
                     case 'part':
-                        console.log(wordclass);
                         if (word === keyword) {
                             const html = `
                                 <div class="outerdiv">
@@ -447,7 +441,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                         break;
                     case 'pp':
-                        console.log(wordclass);
                         if (word === keyword) {
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -475,7 +468,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         }
                         break;
                     case 'v':
-                        console.log(wordclass);
                         if (word === keyword) {
                             console.log('clean match |', keyword);
 
@@ -565,9 +557,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     default: console.warn(`${wordclass} is an invalid wordclass`);
                         break;
-
                 }
-                openPageOld('page97')
+                if (document.getElementById('page97')) {
+                    console.log(wordclass);
+                    openPageOld('page97');
+                } else { return; }
             });
         }
         else if (//type 2
