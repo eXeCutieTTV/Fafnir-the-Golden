@@ -576,18 +576,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         ) {
             console.log('-----type2-----');
 
-            /*
-            let hasVerbPrefix = (verbPrefixData[0] ? true : false);//get from array.type instead? need to know which affix it is though.
-            let hasVerbSuffix = (verbSuffixData[0] ? true : false);
-            let hasNounSuffix = (nounSuffixData[0] ? true : false);
-            let hasPpPrefix = (ppPrefixData[0] ? true : false);
-            let hasAdjSuffix = (adjSuffixData[0] ? true : false); console.log(hasAdjSuffix)
-            
-            let hasVerbPrefix = false;
-            let hasVerbSuffix = false;
-            let hasNounSuffix = false;
-            let hasPpPrefix = false;
-            let hasAdjSuffix = false;*/
             const affixTypesMap = {
                 verbPrefix: { map: verbPrefixData, state: hasVerbPrefix = false },
                 verbSuffix: { map: verbSuffixData, state: hasVerbSuffix = false },
@@ -600,8 +588,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             for (obj of Object.values(affixTypesMap)) {
                 obj.map.forEach(el => {
                     if (ALL_WORDS.MAP[el.affixStem]) {
-                        console.log(el, typeof (el));
-                        console.log(el.affixStem);
+                        console.log(el, el.affixStem);
                         obj.state = true;
                         console.log(obj.state);
                     }
@@ -610,7 +597,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             //console.log(affixTypesMap.verbPrefix.state);
 
             //add to EVERY if statements beginning, a check if the stem exists - to fix type3
-            if (hasVerbPrefix) {
+            if (affixTypesMap.verbPrefix.state) {
                 console.log(verbPrefixData);
 
                 if (helperFunctions.matchtype2.affixChecker(verbPrefixData[0].affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData)) {
@@ -839,7 +826,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     return;
                 }
             }
-            if (hasVerbSuffix) {
+            if (affixTypesMap.verbSuffix.state) {
                 console.log('has verb suffix');
 
                 if (verbSuffixData.length > 1) {
@@ -1043,7 +1030,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     return;
                 }
             }
-            if (hasNounSuffix) {
+            if (affixTypesMap.nounSuffix.state) {
                 console.log('has noun suffix');
 
                 if (nounSuffixData.length > 1) {
@@ -1224,7 +1211,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
 
             }
-            if (hasPpPrefix) {
+            if (affixTypesMap.ppPrefix.state) {
                 console.log('has pp prefix');
                 console.log(ppPrefixData);
 

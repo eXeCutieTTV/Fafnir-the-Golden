@@ -336,7 +336,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
                     const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
                     affixStem = N1;
-                    console.log(affixStem, ALL_WORDS.MAP[affixStem]);
+                    //console.log(affixStem, ALL_WORDS.MAP[affixStem]);
                     const MAP = ALL_WORDS.MAP[affixStem];
 
                     if (MAP && MAP.type === 'adj') { affixType = 'adj' } else { return }//check if adj
@@ -354,8 +354,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                         return matchResult;
                     } else { return; }
                 });
-                console.log('nounSuffResult | ', nounSuffResult);
-                resultArray.push(...nounSuffResult); console.log(resultArray, resultArray.length);
+                //console.log('nounSuffResult | ', nounSuffResult);
+                resultArray.push(...nounSuffResult); //console.log(resultArray, resultArray.length);
                 return nounSuffResult;
             }
             break;
