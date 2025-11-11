@@ -6,8 +6,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
     // main search function
     function search(word) {
+
+        let matchType = 3 //asume its type3, if its not then we change it - type3 detection is if(matchType === 3).
+
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
+
+        if (searchFLD.value.length === 0) { return; }//doesnt search if searchFLD is empty
 
         let keyword = ((searchFLD && searchFLD.value ? searchFLD.value.trim() : '').toLowerCase()) || word;
         console.log('keyword |', keyword);
@@ -26,6 +31,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         const verbSuffix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData);
         const nounSuffix = helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData);
         const adjSuffix = helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData);
+
+        console.log(
+            verbPrefix || 'vp empty',
+            ppPrefix || 'ppp empty',
+            verbSuffix || 'vs empty',
+            nounSuffix || 'ns empty',
+            adjSuffix || 'as empty',
+        );
 
         function bkjlcdfkjbacsfksjbsdkabjc() {
             /*  
@@ -97,6 +110,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
 
         if (ALL_WORDS.fetch(keyword) && ALL_WORDS.fetch(keyword).length > 0) {//type 1
+            matchType = 1;
             console.log('-----type1-----');
             const searchHandler = ALL_WORDS.fetch(keyword);
             console.log('searchHandler |', searchHandler);
@@ -173,7 +187,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                                 tableSearchable.addEventListener('click', () => {
                                     console.log(wordclass);
-                                    searchableTable(wordclass);
+                                    helperFunctions.standard.searchableTable(wordclass);
                                 });
                             });
                         }
@@ -238,7 +252,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                                 tableSearchable.addEventListener('click', () => {
                                     console.log(wordclass);
-                                    searchableTable('v');
+                                    helperFunctions.standard.searchableTable('v');
                                 });
                             });
                         }
@@ -364,7 +378,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                                 tableSearchable.addEventListener('click', () => {
                                     console.log(wordclass);
-                                    searchableTable(wordclass);
+                                    helperFunctions.standard.searchableTable(wordclass);
                                 });
                             });
                         }
@@ -541,7 +555,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                                 tableSearchable.addEventListener('click', () => {
                                     console.log(wordclass);
-                                    searchableTable(wordclass);
+                                    helperFunctions.standard.searchableTable(wordclass);
                                 });
                             });
                         }
@@ -562,11 +576,38 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         ) {
             console.log('-----type2-----');
 
+            /*
             let hasVerbPrefix = (verbPrefixData[0] ? true : false);//get from array.type instead? need to know which affix it is though.
             let hasVerbSuffix = (verbSuffixData[0] ? true : false);
             let hasNounSuffix = (nounSuffixData[0] ? true : false);
             let hasPpPrefix = (ppPrefixData[0] ? true : false);
             let hasAdjSuffix = (adjSuffixData[0] ? true : false); console.log(hasAdjSuffix)
+            
+            let hasVerbPrefix = false;
+            let hasVerbSuffix = false;
+            let hasNounSuffix = false;
+            let hasPpPrefix = false;
+            let hasAdjSuffix = false;*/
+            const affixTypesMap = {
+                verbPrefix: { map: verbPrefixData, state: hasVerbPrefix = false },
+                verbSuffix: { map: verbSuffixData, state: hasVerbSuffix = false },
+                nounSuffix: { map: nounSuffixData, state: hasNounSuffix = false },
+                ppPrefix: { map: ppPrefixData, state: hasPpPrefix = false },
+                adjSuffix: { map: adjSuffixData, state: hasAdjSuffix = false },
+            }
+            console.log(affixTypesMap);
+
+            for (obj of Object.values(affixTypesMap)) {
+                obj.map.forEach(el => {
+                    if (ALL_WORDS.MAP[el.affixStem]) {
+                        console.log(el, typeof (el));
+                        console.log(el.affixStem);
+                        obj.state = true;
+                        console.log(obj.state);
+                    }
+                });
+            }
+            //console.log(affixTypesMap.verbPrefix.state);
 
             //add to EVERY if statements beginning, a check if the stem exists - to fix type3
             if (hasVerbPrefix) {
@@ -792,6 +833,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                         helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                     }
+
+                    matchType = 2;
                     openPageOld('page96');
                     return;
                 }
@@ -895,6 +938,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                             helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                         }
+
+                        matchType = 2;
                         openPageOld('page96');
                         return;
                     }
@@ -992,6 +1037,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             }
                         } else { return; }
                     }
+
+                    matchType = 2;
                     openPageOld('page96');
                     return;
                 }
@@ -1080,6 +1127,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             }
                         }
                     });
+
+                    matchType = 2;
                     openPageOld('page96');
                     return;
                 } else {
@@ -1167,6 +1216,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             }
                         }
                     }
+
+                    matchType = 2;
                     openPageOld('page96');
                     return;
                 }
@@ -1258,6 +1309,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
+                    matchType = 2;
                     openPageOld('page96');
                     return;
                 } else if (helperFunctions.matchtype2.affixChecker(prefixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData)) {
@@ -1378,6 +1430,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             const wrapper = document.getElementById('tablesContainer');
                             helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
+                            matchType = 2;
                             openPageOld('page96');
                             return;
                         } else {//if length not above 1
@@ -1492,6 +1545,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             const wrapper = document.getElementById('tablesContainer');
                             helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
+                            matchType = 2;
                             openPageOld('page96');
                             return;
                         }
@@ -1500,7 +1554,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
 
         }
-        else {//type 3
+        if (matchType === 3) {//type 3
             console.log('-----type3-----');
             const searchHandler = ALL_WORDS.fetchByDefinition(keyword); // Array[]
             console.log('3', 'searchHandler |', searchHandler);
@@ -1537,58 +1591,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
     // usage => for (let i = 0; i < rowAmount; i++) { extraTableRow(keyword or something custom); }
 
     //on-page button toggler
-    function searchableTable(wordclass) {//turns the tables into paramteres. such that the function becomes global and reusable.
-        switch (wordclass) {
-            case 'n':
-                const nounTable1 = document.getElementById('Noun-Table-Directive');
-                const nounTable2 = document.getElementById('Noun-Table-Recessive');
 
-                nounTable1.querySelectorAll('td').forEach(td => {
-                    td.style.cursor = 'pointer';
-                    const tdWord = td.textContent;
-                    //console.log(keyword, td);
-                    td.addEventListener('click', () => {
-                        // Use the clicked cell's word, not a shared variable
-                        search(tdWord);
-                    });
-                });
-                nounTable2.querySelectorAll('td').forEach(td => {
-                    td.style.cursor = 'pointer';
-                    const tdWord = td.textContent;
-                    //console.log(keyword, td);
-                    td.addEventListener('click', () => {
-                        // console.log(keyword);
-                        search(tdWord);
-                    });
-                });
-                break;
-            case 'v':
-                const verbTable1 = document.getElementById('Verb-Table-Prefix');
-                const verbTable2 = document.getElementById('Verb-Table-Suffix');
-                //console.log(verbTable1, verbTable2);
-
-                verbTable1.querySelectorAll('td').forEach(td => {
-                    td.style.cursor = 'pointer';
-                    const tdWord = td.textContent;
-                    //console.log(td, keyword);
-
-                    td.addEventListener('click', () => {
-                        search(tdWord);
-                    });
-                });
-                verbTable2.querySelectorAll('td').forEach(td => {
-                    td.style.cursor = 'pointer';
-                    const tdWord = td.textContent;
-                    //console.log(td, keyword);
-
-                    td.addEventListener('click', () => {
-                        search(tdWord);
-                    });
-                });
-                break;
-            default: console.warn('no wordclass');
-        }
-    }
 
 
     //evenlisteners vv

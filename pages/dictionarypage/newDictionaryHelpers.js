@@ -96,6 +96,58 @@ const insertTrIntoTableById = function insertTrIntoTableById(id, html) {
     table.innerHTML = table.innerHTML + html;
 
 }
+const searchableTable = function searchableTable(wordclass) {//turns the tables into paramteres. such that the function becomes global and reusable.
+    switch (wordclass) {
+        case 'n':
+            const nounTable1 = document.getElementById('Noun-Table-Directive');
+            const nounTable2 = document.getElementById('Noun-Table-Recessive');
+
+            nounTable1.querySelectorAll('td').forEach(td => {
+                td.style.cursor = 'pointer';
+                const tdWord = td.textContent;
+                //console.log(keyword, td);
+                td.addEventListener('click', () => {
+                    // Use the clicked cell's word, not a shared variable
+                    search(tdWord);
+                });
+            });
+            nounTable2.querySelectorAll('td').forEach(td => {
+                td.style.cursor = 'pointer';
+                const tdWord = td.textContent;
+                //console.log(keyword, td);
+                td.addEventListener('click', () => {
+                    // console.log(keyword);
+                    search(tdWord);
+                });
+            });
+            break;
+        case 'v':
+            const verbTable1 = document.getElementById('Verb-Table-Prefix');
+            const verbTable2 = document.getElementById('Verb-Table-Suffix');
+            //console.log(verbTable1, verbTable2);
+
+            verbTable1.querySelectorAll('td').forEach(td => {
+                td.style.cursor = 'pointer';
+                const tdWord = td.textContent;
+                //console.log(td, keyword);
+
+                td.addEventListener('click', () => {
+                    search(tdWord);
+                });
+            });
+            verbTable2.querySelectorAll('td').forEach(td => {
+                td.style.cursor = 'pointer';
+                const tdWord = td.textContent;
+                //console.log(td, keyword);
+
+                td.addEventListener('click', () => {
+                    search(tdWord);
+                });
+            });
+            break;
+        default: console.warn('no wordclass');
+    }
+}
 
 const standard = {
     test,
@@ -105,7 +157,8 @@ const standard = {
     sliceKeywordNegative,
     sliceKeywordPositive,
     reverseSearchIdsOnSearch,
-    insertTrIntoTableById
+    insertTrIntoTableById,
+    searchableTable
 }
 
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
@@ -114,7 +167,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     //console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll));
 
     let array = [];
-    const match = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll); console.log(match);
+    const match = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll); 
+    //console.log(match);
     if (Array.isArray(match)) {
         array = match[0] || {};
     } else if (match && typeof match === 'object') {
@@ -124,7 +178,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     }
 
     //let xarray = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0] || WORD_UTILS.matchAffix(word, map, isPrefix, returnAll) || [];
-    console.log(array);
+    //console.log(array);
     if (!array) {
         return;
     }
@@ -219,16 +273,9 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                         affix,
                     }
                     //console.log(matchResult);
-                    if (ALL_WORDS.MAP[affixStem]) {//checks if the stem exists (doesnt return array for æfon for affix 'n' ex - æfu isnt a stemword)
-                        verbPrefResult.push(matchResult);
-                        return matchResult;
-                    } else {
-                        matchResult = {
-                            affixStem,
-                            affix,
-                        }
-                        verbPrefResult.push(matchResult);
-                    }
+                    verbPrefResult.push(matchResult);
+                    //console.log(matchResult);
+                    return matchResult;
                 });
                 //console.log('verbPrefResult | ', verbPrefResult);
                 resultArray.push(...verbPrefResult); //console.log(resultArray, resultArray.length);
@@ -258,23 +305,17 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                         affixStem,
                         affix,
                     }
-                    if (ALL_WORDS.MAP[affixStem]) {//checks if the stem exists (doesnt return array for æfon for affix 'n' ex - æfu isnt a stemword)
-                        verbSuffResult.push(matchResult);
-                        return matchResult;
-                    } else {
-                        matchResult = {
-                            affixStem,
-                            affix,
-                        }
-                        verbSuffResult.push(matchResult);
-                    }
+
+                    verbSuffResult.push(matchResult);
+                    //console.log(matchResult);
+                    return matchResult;
                 });
                 //console.log('verbSuffResult | ', verbSuffResult);
                 resultArray.push(...verbSuffResult); //console.log(resultArray, resultArray.length);
                 return verbSuffResult;
             }
 
-            console.log(affix, affixStem);
+            //console.log(affix, affixStem);
             break;
         case 'n':
             if (isPrefix === false) {
@@ -323,7 +364,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             const { slice1: PP1, slice2: PP2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
             affixStem = PP2;
 
-            console.log(affix, affixStem);
+            //console.log(affix, affixStem);
             break;
         case 'adj'://unused
             if (isPrefix === false) {
@@ -428,7 +469,7 @@ const neoSuffixChecker = function neoSuffixChecker(keyword, map, resultArray) {
 
     // also return the result so caller can use it immediately
     return result;
-};
+}
 const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
     resultArray.length = 0; // clear array first
     const array = WORD_UTILS.matchPrefix(keyword, map);
@@ -480,12 +521,6 @@ const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
 
 const matchtype2 = {
     affixChecker,
-}//replaces affixHelpers
-
-const affixHelpers = {
-    neoSuffixChecker,
-    neoPrefixChecker,
-    affixChecker
 }
 
 
