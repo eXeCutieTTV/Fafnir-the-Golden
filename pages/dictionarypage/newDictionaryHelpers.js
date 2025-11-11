@@ -406,6 +406,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                 return adjSuffResult;
             }
             break;
+        case 'part': console.log(affixType);
+            break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
     }
