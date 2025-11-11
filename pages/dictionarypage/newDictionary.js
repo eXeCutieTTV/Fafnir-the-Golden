@@ -559,7 +559,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                 }
                 if (document.getElementById('page97')) {
-                    console.log(wordclass);
+                    //console.log(wordclass);
                     openPageOld('page97');
                 } else { return; }
             });
