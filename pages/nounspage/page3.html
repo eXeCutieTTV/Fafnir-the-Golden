@@ -207,9 +207,21 @@
         first in the sentence, placing the dragon in the Recessive indicates that the word has less agency than would be
         expected, so the man is presumed to be the subject instead. </p>
 
+    <p>This is a tough concept to wrap your head around. It's similar to Direct-Inverse alignment, where you mark a
+        sentence that violates expected word order, but it only marks individual nouns that are out of hierarchical
+        order. Below are a few examples of sentences in English with two possible strategies for translation: the first
+        using one of the aforementioned strategies, and the latter using the recessive</p>
+    <!-- INSERT TABLE FROM DOC PAGE 15-->
+    <p>
+        The second use of the Recessive is to mark the obviative. This is not done often in Draconic, and is typically
+        reserved for cases of ambiguity when there are two referents of the same gender. Obviation in Draconic works
+        similarly to how it works in Blackfoot: in cases of obviation, the Recessive will refer to the referent that was
+        not most recently the subject. Distal demonstratives can indicate obviation in the same way.
+    </p>
+
     <script>
         const val = document.getElementById('val');
-        setInterval(function() {
+        setInterval(function () {
             i = NOUNS.FLAT[Math.floor(Math.random() * NOUNS.FLAT.length)];
             genders = Object.keys(i.genders)
             gender = genders[Math.floor(Math.random() * genders.length)]
