@@ -1326,3 +1326,4 @@ dictionaryPage(); // so constants arent redefined.
 // this works as a wrapper function essentially^^
 
 //maybe add a 4th type? if number, then use lirioz' NUMBERS.numberToText.
+//5th type is a buttonpress that just loads the entire plain dictionary.
