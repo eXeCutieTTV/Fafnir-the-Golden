@@ -18,19 +18,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         console.log('keyword |', keyword);
 
         // for type2
-        //let prefixData = [];
-        //let suffixData = [];
-        let verbSuffixData = []; //should remove these as necesary - not needed since i use return result. can be done as seen bellow.
-        let verbPrefixData = [];
-        let nounSuffixData = [];
-        let ppPrefixData = [];
-        let adjSuffixData = [];
-
-        let verbPrefix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true, verbPrefixData) || [];
-        let ppPrefix = helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true, ppPrefixData) || [];
-        let verbSuffix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) || [];
-        let nounSuffix = helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) || [];
-        let adjSuffix = helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true, adjSuffixData) || [];
+        let verbPrefix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [];
+        let ppPrefix = helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true) || [];
+        let verbSuffix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+        let nounSuffix = helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+        let adjSuffix = helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true) || [];
 
         let verbBothAffixes = {
             prefix: [],
@@ -626,23 +618,24 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     }
                 }
             }
-            if (affixTypesMap.ppPrefix.rawMap && affixTypesMap.ppPrefix.rawMap.affixStem) {
+            if (affixTypesMap.ppPrefix.rawMap/* && affixTypesMap.ppPrefix.rawMap[0].affixStem*/) {
+                for (entry of Object.values(affixTypesMap.ppPrefix.rawMap)) {
+                    //const entry = affixTypesMap.ppPrefix.rawMap;
+                    console.log(entry);
 
-                const entry = affixTypesMap.ppPrefix.rawMap;
-                //console.log(entry);
-
-                if (ALL_WORDS.MAP[entry.affixStem]) {
-                    affixTypesMap.ppPrefix.resultMap.push(entry);
-                    affixTypesMap.ppPrefix.state = true;
-                } else {
-                    nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) || [];
-                    if (nounSuffix.length > 0) {
-                        affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix.push(entry);
-                        for (obj of Object.values(nounSuffix)) {
-                            entry.affixStem = obj.affixStem; //fix stem.
-                            affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
+                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                        affixTypesMap.ppPrefix.resultMap.push(entry);
+                        affixTypesMap.ppPrefix.state = true;
+                    } else {
+                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) || [];
+                        if (nounSuffix.length > 0) {
+                            affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix.push(entry);
+                            for (obj of Object.values(nounSuffix)) {
+                                entry.affixStem = obj.affixStem; //fix stem.
+                                affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
+                            }
+                            affixTypesMap.nounSuffixANDppPrefix.state = true;
                         }
-                        affixTypesMap.nounSuffixANDppPrefix.state = true;
                     }
                 }
             }

@@ -161,9 +161,8 @@ const standard = {
     searchableTable
 }
 
-const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resultArray) {
+const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
 
-    resultArray.length = 0; // clear array first
     //console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll));
 
     let array = [];
@@ -191,9 +190,6 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     let affixCase = '';
 
     let affixStem = '';
-
-    let definition = '';//if pp
-    let usage_notes = '';//if pp
 
     //decide if applied or unapplied suffix is used
     function appliedOrUnapplied(applied, unapplied, affixType) {
@@ -248,9 +244,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
     switch (affixType) {
         case 'v':
             if (isPrefix === true) {
-                verbPrefResult = [];
+                const verbPrefResult = [];
                 match.forEach(arr => {
-                    //console.log('arr | ', arr);
 
                     const affixApplied = arr[1][0] || '';
                     const affixUnapplied = arr[1][1] || '';
@@ -262,28 +257,21 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     appliedOrUnapplied(affixApplied, affixUnapplied, 'prefix');
 
                     const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
-                    affixStem = V2;
 
                     let matchResult = {
                         affixType,
                         affixPerson,
                         affixGender,
                         affixNumber,
-                        affixStem,
+                        affixStem: V2,
                         affix,
                     }
-                    //console.log(matchResult);
                     verbPrefResult.push(matchResult);
-                    //console.log(matchResult);
-                    return matchResult;
                 });
-                //console.log('verbPrefResult | ', verbPrefResult);
-                resultArray.push(...verbPrefResult); //console.log(resultArray, resultArray.length);
                 return verbPrefResult;
             } else if (isPrefix === false) {
-                verbSuffResult = [];
+                const verbSuffResult = [];
                 match.forEach(arr => {
-                    //console.log('arr | ', arr);
 
                     const affixApplied = arr[1][0] || '';
                     const affixUnapplied = arr[1][1] || '';
@@ -295,23 +283,18 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     appliedOrUnapplied(affixApplied, affixUnapplied, 'suffix');
 
                     const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                    affixStem = V1;
 
                     let matchResult = {
                         affixType,
                         affixPerson,
                         affixGender,
                         affixNumber,
-                        affixStem,
+                        affixStem: V1,
                         affix,
                     }
 
                     verbSuffResult.push(matchResult);
-                    //console.log(matchResult);
-                    return matchResult;
                 });
-                //console.log('verbSuffResult | ', verbSuffResult);
-                resultArray.push(...verbSuffResult); //console.log(resultArray, resultArray.length);
                 return verbSuffResult;
             }
 
@@ -319,9 +302,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
             break;
         case 'n':
             if (isPrefix === false) {
-                nounSuffResult = [];
+                const nounSuffResult = [];
                 match.forEach(arr => {
-                    //console.log('arr | ', arr);
 
                     const affixApplied = arr[1][0] || '';
                     const affixUnapplied = arr[1][1] || '';
@@ -333,11 +315,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     affixGender = arr[2][1];
                     affixNumber = arr[2][2][0];
 
-                    //console.log(affix, affixDeclension, affixCase, affixGender, affixNumber, affix.length);
                     const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                    affixStem = N1;
                     const MAP = ALL_WORDS.MAP[affixStem];
-                    //console.log(affixStem, MAP);
 
                     if (MAP && MAP.type === 'adj') { affixType = 'adj' }//check if adj
                     const matchResult = {
@@ -345,27 +324,32 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                         affixGender,
                         affixNumber,
                         affixDeclension,
-                        affixStem,
+                        affixStem: N1,
                         affixCase,
                         affix,
                     }
-                    if (MAP) {//checks if the stem exists (doesnt return array for æfon for affix 'n' ex - æfu isnt a stemword)
-                        nounSuffResult.push(matchResult);
-                        return matchResult;
-                    } else { return; }
+                    nounSuffResult.push(matchResult);
                 });
-                //console.log('nounSuffResult | ', nounSuffResult);
-                resultArray.push(...nounSuffResult);
-                //console.log(resultArray, resultArray.length);
                 return nounSuffResult;
             }
             break;
         case 'pp':
-            affix = array.word || '';
-            const { slice1: PP1, slice2: PP2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
-            affixStem = PP2;
+            if (isPrefix === true) {
+                const ppResult = [];
+                match.forEach(arr => {
+                    affix = arr.word || '';
+                    const { slice1: PP1, slice2: PP2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
 
-            //console.log(affix, affixStem);
+                    const matchResult = {
+                        affix,
+                        affixStem: PP2,
+                        affixType
+                    }
+
+                    ppResult.push(matchResult);
+                });
+                return ppResult;
+            }
             break;
         case 'adj'://unused
             if (isPrefix === false) {
@@ -402,125 +386,24 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll, resul
                     } else { return; }
                 });
                 console.log('adjSuffResult | ', adjSuffResult);
-                resultArray.push(...adjSuffResult); console.log(resultArray, resultArray.length);
                 return adjSuffResult;
             }
             break;
-        case 'part': console.log(affixType);
+        case 'part':
+            if (isPrefix === true) {
+                console.log(affixType);
+                const result = {
+                    affix: match.word,
+                    affixType: match.type
+                }
+                return result;
+            }
             break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
     }
-    const result = {
-        affixType,
-        affixPerson,
-        affixGender,
-        affixNumber,
-        affixDeclension,
-        affixStem,
-        affixCase,
-        affix,
-    };
-
-    if (Array.isArray(resultArray)) resultArray.push(result);
-    return result;
 }
-const neoSuffixChecker = function neoSuffixChecker(keyword, map, resultArray) {
-    resultArray.length = 0; // clear array first
-    const array = WORD_UTILS.matchSuffix(keyword, map);
-    if (!array) return null;
 
-    const suffixes = array[0] || [];
-    const Suffixtype = array[2];
-    const Suffixperson = array[3];
-    const Suffixgender = array[4];
-    const Suffixnumber = array[5];
-    const Suffixdeclensions = array[1] || [];
-
-    const appliedSuffix = suffixes[0] || '';
-    const unappliedSuffix = suffixes[1] || '';
-
-    let usedSuffix = '';
-    if (appliedSuffix && unappliedSuffix) {
-        if (keyword.endsWith(appliedSuffix) && keyword.endsWith(unappliedSuffix)) {
-            usedSuffix = appliedSuffix;
-        } else if (keyword.endsWith(unappliedSuffix)) {
-            usedSuffix = unappliedSuffix;
-        } else return null;
-    } else if (appliedSuffix) usedSuffix = appliedSuffix;
-    else if (unappliedSuffix) usedSuffix = unappliedSuffix;
-    if (!usedSuffix) return null;
-
-    const suffixLength = usedSuffix.length;
-    const { slice1, slice2 } = helperFunctions.standard.sliceKeywordNegative(keyword, suffixLength);
-    const Suffixstem = slice1;
-
-    const result = {
-        Suffixtype,
-        Suffixperson,
-        Suffixgender,
-        Suffixnumber,
-        Suffixdeclensions,
-        appliedSuffix,
-        unappliedSuffix,
-        usedSuffix,
-        Suffixstem
-    };
-
-    // push into provided array if it is a real array
-    if (Array.isArray(resultArray)) resultArray.push(result);
-
-    // also return the result so caller can use it immediately
-    return result;
-}
-const neoPrefixChecker = function neoPrefixChecker(keyword, map, resultArray) {
-    resultArray.length = 0; // clear array first
-    const array = WORD_UTILS.matchPrefix(keyword, map);
-    console.log(array);
-    if (!array) {
-        return;
-    }
-    const prefix = array[0];
-    //const Prefixtype = array[1];
-    const Prefixperson = array[1];
-    const Prefixgender = array[2];
-    const Prefixnumber = array[3];
-    const Prefixdeclension = array[1] || [];
-    console.log(Prefixdeclension);
-
-    console.log(
-        'Prefixperson | ', Prefixperson,
-        'Prefixgender | ', Prefixgender,
-        'Prefixnumber | ', Prefixnumber
-    )
-
-    const usedPrefix = prefix; // no variants
-
-    if (!usedPrefix) {
-        return;
-    }
-
-    const prefixLength = usedPrefix.length;
-    const { slice1, slice2 } = helperFunctions.standard.sliceKeywordPositive(keyword, prefixLength);
-    const Prefixstem = slice2;
-    console.log(prefix, usedPrefix); // worked earlier - havent changed anything:q
-
-
-    const result = {
-        Prefixperson,
-        Prefixgender,
-        Prefixnumber,
-        Prefixdeclension,
-        usedPrefix,
-        Prefixstem,
-        array
-    }
-    // push into provided array if it is a real array
-    if (Array.isArray(resultArray)) resultArray.push(result);
-
-    return result;
-    //neoPrefixChecker('xenæf', VERBS.PREFIXES.FLAT_MATCHES);
-}
 
 const matchtype2 = {
     affixChecker,
