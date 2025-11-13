@@ -630,11 +630,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
             }
             if (affixTypesMap.pPrefix.rawMap) {
-                affixTypesMap.pPrefix.state = true;
 
                 for (entry of Object.values(affixTypesMap.pPrefix.rawMap)) {
                     if (ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.pPrefix.resultMap.push(entry);
+                        affixTypesMap.pPrefix.state = true;
                     } else {
                         nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
                         if (nounSuffix.length > 0) {
@@ -1268,6 +1268,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                 openPageOld('page96');
                 return;
+            }
+            if (affixTypesMap.pPrefix.state) {
+                console.log('--noun with particle--');
+
+                
+            }
+            if (affixTypesMap.nounSuffixANDpPrefix.state) {
+                console.log('--noun with particle and suffix--');
             }
         }//TODO. make affixchecker not need array for argument. more type2 logic - particles, determiners, pronouns etc.
         if (matchType === 3) {//type 3

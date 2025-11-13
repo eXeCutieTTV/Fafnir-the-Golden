@@ -6,25 +6,21 @@
 <link rel="stylesheet" href="pages\dictionarypage\text\verbtextbox.css">
 <link rel="stylesheet" href="pages\dictionarypage\text\nountextbox.css">
 
-<div class="outerdivp99">
-    <div class="leftdivp99">
-        <h2 class="headerp99">Dictionary</h2>
+<div id="outerdivp99">
+    <div id="innerdivp99">
+        <h2 id="headerp99">Dictionary</h2>
         <p>This is dictionary.</p>
         <h2>On searching in draconic</h2>
         <p>...</p>
         <h2>On searching in english</h2>
         <p>...</p>
-        <div id="tableWrapper"></div>
-    </div>
-
-    <div class="rightdivp99">
-        <div class="page99Search">
+        <div id="searchDiv">
+            <input id="search_field" autocomplete="off" type="text" placeholder=".....">
             <button id="search_button">Search</button>
-            <input id="search_field" autocomplete="off" type="text" placeholder="Search...">
             <ul id="suggestions" class="suggestions" role="listbox" hidden></ul>
         </div>
+        <div id="tableWrapper"></div>
     </div>
-
 </div>
 <script src="pages\dictionarypage\newDictionary.js"></script> <!--newDictionary.js link-->
 <script src="pages\dictionarypage\searchSuggestions.js"></script> <!--searchSuggestions.js link-->
