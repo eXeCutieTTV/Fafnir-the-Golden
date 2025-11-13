@@ -1605,7 +1605,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
             }
-        }//TODO. make affixchecker not need array for argument. more type2 logic - particles, determiners, pronouns etc.
+        }//TODO. more type2 logic - particles, determiners, pronouns etc.
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
             const searchHandler = ALL_WORDS.fetchByDefinition(keyword); // Array[]
@@ -1615,8 +1615,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 // check for type === "n" then do for () {} else do normal thingi?
                 if (entry.type === "n") {
                     for (const [gender, def] of Object.entries(WORD_UTILS.combineGenders(entry.genders))) {
-                        helperFunctions.matchtype3.extraTableRow(entry.word, `n ${entry.declension}`, gender, def, entry.usage_notes || '...');
-
+                        helperFunctions.matchtype3.extraTableRow(entry.word, `n ${entry.declension}`, gender, def, entry.usage_notes || '...');//TODO make <-- use insert tr instead of this goofy function.
                     }
                 } else {
                     const type = entry.type || '...';
@@ -1640,12 +1639,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         helperFunctions.standard.reverseSearchIdsOnSearch();
     }
 
-    // usage => for (let i = 0; i < rowAmount; i++) { extraTableRow(keyword or something custom); }
-
-    //on-page button toggler
-
-
-
     //evenlisteners vv
     // === Search button click ===
     searchBTN.addEventListener('click', () => {
@@ -1665,3 +1658,4 @@ dictionaryPage(); // so constants arent redefined.
 
 //maybe add a 4th type? if number, then use lirioz' NUMBERS.numberToText.
 //5th type is a buttonpress that just loads the entire plain dictionary.
+//maybe need an entire 6th type just for lur?

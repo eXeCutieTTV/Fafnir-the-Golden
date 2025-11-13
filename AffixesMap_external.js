@@ -258,4 +258,5 @@ const FLAT_VERB_SUBJECT_PREFIXES = [...new Set(getAllValues(VERB_SUBJECT_PREFIXE
 const FLAT_VERB_OBJECT_SUFFIXES = [...new Set(getAllValues(VERB_OBJECT_SUFFIXES))];
 
 
+
 window.modules.push("AffixesMap")
