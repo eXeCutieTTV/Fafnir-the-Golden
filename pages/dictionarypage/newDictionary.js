@@ -25,6 +25,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             nounSuffix: helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [],
             adjSuffix: helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true) || [],
             pPrefix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, true, true) || [],
+            pSuffix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, false, true) || [],
         }
 
         function bkjlcdfkjbacsfksjbsdkabjc() {
@@ -551,7 +552,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
         }
         else if (//type 2
-            type2AffixesMap.verbPrefix || type2AffixesMap.ppPrefix || type2AffixesMap.verbSuffix || type2AffixesMap.nounSuffix || type2AffixesMap.adjSuffix || type2AffixesMap.pPrefix
+            type2AffixesMap.verbPrefix || type2AffixesMap.ppPrefix || type2AffixesMap.verbSuffix || type2AffixesMap.nounSuffix || type2AffixesMap.adjSuffix || type2AffixesMap.pPrefix || type2AffixesMap.pSuffix
         ) {
             console.log('-----type2-----');
 
@@ -562,9 +563,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 ppPrefix: { rawMap: type2AffixesMap.ppPrefix, resultMap: [], state: false },
                 adjSuffix: { rawMap: type2AffixesMap.adjSuffix, resultMap: [], state: false },
                 pPrefix: { rawMap: type2AffixesMap.pPrefix, resultMap: [], state: false },
+                pSuffix: { rawMap: type2AffixesMap.pSuffix, resultMap: [], state: false },
                 verbBothAffixes: { resultMap: { prefix: [], suffix: [], }, state: false },
-                nounSuffixANDppPrefix: { resultMap: { prefix: [], suffix: [], }, state: false },
-                nounSuffixANDpPrefix: { resultMap: { prefix: [], suffix: [], }, state: false },
+                nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [], }, state: false },
+                nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
+                nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
             }
             console.log(affixTypesMap);
 
@@ -619,7 +622,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     } else {
                         nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
                         if (nounSuffix.length > 0) {
-                            affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix.push(entry);
+                            affixTypesMap.nounSuffixANDppPrefix.resultMap.preposition.push(entry);
                             for (obj of Object.values(nounSuffix)) {
                                 entry.affixStem = obj.affixStem; //fix stem.
                                 affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
@@ -630,7 +633,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
             }
             if (affixTypesMap.pPrefix.rawMap) {
-
                 for (entry of Object.values(affixTypesMap.pPrefix.rawMap)) {
                     if (ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.pPrefix.resultMap.push(entry);
@@ -638,12 +640,30 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     } else {
                         nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
                         if (nounSuffix.length > 0) {
-                            affixTypesMap.nounSuffixANDpPrefix.resultMap.prefix.push(entry);
+                            affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
                             for (obj of Object.values(nounSuffix)) {
                                 entry.affixStem = obj.affixStem; //fix stem.
                                 affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(obj);
                             }
                             affixTypesMap.nounSuffixANDpPrefix.state = true;
+                        }
+                    }
+                }
+            }
+            if (affixTypesMap.pSuffix.rawMap) {
+                for (entry of Object.values(affixTypesMap.pSuffix.rawMap)) {
+                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                        affixTypesMap.pSuffix.resultMap.push(entry);
+                        affixTypesMap.pSuffix.state = true;
+                    } else {
+                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+                        if (nounSuffix.length > 0) {
+                            affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry);
+                            for (obj of Object.values(nounSuffix)) {
+                                entry.affixStem = obj.affixStem; //fix stem.
+                                affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(obj);
+                            }
+                            affixTypesMap.nounSuffixANDpSuffix.state = true;
                         }
                     }
                 }
@@ -1271,11 +1291,205 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.pPrefix.state) {
                 console.log('--noun with particle--');
+                matchType = 2;
 
-                
+
+                const array = affixTypesMap.pPrefix.resultMap[0];
+                const prefix = array.affix;
+                const prefixStem = array.affixStem;
+
+                const pArray = ALL_WORDS.MAP[prefix];
+                const pDefinition = pArray.definition;
+                const pUsage_notes = pArray.usage_notes;
+                console.log(array);
+                if (ALL_WORDS.MAP[prefixStem]) {
+                    console.log('clean match');
+
+                    let nounTblDiv = '';
+                    let html = '';
+
+                    const arr = ALL_WORDS.MAP[prefixStem];
+                    const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
+                    switch (prefix) {
+                        case 'i':
+                            html = `
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>...</th>
+                                                <th>Stem</th>
+                                                <th>Declension</th>
+                                                <th>Definition</th>
+                                                <th>Gender</th>
+                                                <th>Usage_Notes</th>
+                                                <th>Wordclass</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyP"></tbody>
+                                    </table>
+                                </div>
+                                <div style="margin-top:35px">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>...</th>
+                                                <th style="width:116px">Prefix</th>
+                                                <th>Definition</th>
+                                                <th>Usage Notes</th>
+                                                <th>Wordclass</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Info</th>
+                                                <td>${prefix || '...'}</td>
+                                                <td>${pDefinition || '...'}</td>
+                                                <td>${pUsage_notes || '...'}</td>
+                                                <td>${'particle'}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="margin-top:50px" id="pNounTable"></div>
+                            `;
+                            helperFunctions.standard.createPageById('page96', html);
+                            for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
+                                //console.log(gndr, def);
+                                const htmlP = `
+                                    <tr>
+                                        <th>Info</th>
+                                        <td>${prefixStem}</td>
+                                        <td>${arr.declension}</td>
+                                        <td>${def}</td>
+                                        <td>${gndr}</td>
+                                        <td>${arr.usage_notes || '...'}</td>
+                                        <td>${'noun'}</td>
+                                    </tr>
+                                `;
+                                helperFunctions.standard.insertTrIntoTableById('tbodyP', htmlP);
+                            }
+
+                            nounTblDiv = document.getElementById('pNounTable');
+                            helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
+                            helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
+                            helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+                            break;
+
+                        default:
+                            console.warn(`${prefix} is not available as a noun prefix`);
+                            return;
+                    }
+                    openPageOld('page96');
+                    return;
+                }
+            }
+            if (affixTypesMap.pSuffix.state) {
+                console.log('--p suffix--');
+                matchType = 2;
+
+
+                const array = affixTypesMap.pSuffix.resultMap[0];
+                const particle = array.affix;
+                const particleStem = array.affixStem;
+
+                const pArray = ALL_WORDS.MAP[particle];
+                const pDefinition = pArray.definition;
+                const pUsage_notes = pArray.usage_notes;
+                console.log(pArray);
+
+                if (ALL_WORDS.MAP[particleStem]) {
+                    console.log('clean match');
+
+                    const arr = ALL_WORDS.MAP[particleStem];
+                    console.log(arr);
+                    const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
+                    console.log(NcombinedGendersObject);
+
+                    switch (particle) {
+                        case 'ān':
+                        case 'ōn':
+                        case 'ūn':
+                            const html = `
+                                <div>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>...</th>
+                                                <th>Stem</th>
+                                                <th>Declension</th>
+                                                <th>Definition</th>
+                                                <th>Gender</th>
+                                                <th>Usage_Notes</th>
+                                                <th>Wordclass</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyP"></tbody>
+                                    </table>
+                                </div>
+                                <div style="margin-top:35px">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>...</th>
+                                                <th style="width:116px">Prefix</th>
+                                                <th>Definition</th>
+                                                <th>Usage Notes</th>
+                                                <th>Wordclass</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Info</th>
+                                                <td>${particle || '...'}</td>
+                                                <td>${pDefinition || '...'}</td>
+                                                <td>${pUsage_notes || '...'}</td>
+                                                <td>${'particle'}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="margin-top:50px" id="pNounTable"></div>
+                            `;
+                            helperFunctions.standard.createPageById('page96', html);
+                            for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
+                                console.log(gndr, def);
+                                const htmlP = `
+                                    <tr>
+                                        <th>Info</th>
+                                        <td>${particleStem}</td>
+                                        <td>${arr.declension}</td>
+                                        <td>${def}</td>
+                                        <td>${gndr}</td>
+                                        <td>${arr.usage_notes || '...'}</td>
+                                        <td>${'noun'}</td>
+                                    </tr>
+                                `;
+                                helperFunctions.standard.insertTrIntoTableById('tbodyP', htmlP);
+                            }
+
+                            const nounTblDiv = document.getElementById('pNounTable');
+                            helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
+                            helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
+                            helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+
+                            openPageOld('page96');
+                            return;
+                        default:
+                            console.warn(`${prefix} is not available as a noun suffix`);
+                            return;
+                    }
+                }
             }
             if (affixTypesMap.nounSuffixANDpPrefix.state) {
-                console.log('--noun with particle and suffix--');
+                console.log('--noun with particle prefix and suffix--');
+                matchType = 2;
+
+            }
+            if (affixTypesMap.nounSuffixANDpSuffix.state) {
+                console.log('--noun with particle suffix and suffix--');
+                matchType = 2;
+
             }
         }//TODO. make affixchecker not need array for argument. more type2 logic - particles, determiners, pronouns etc.
         if (matchType === 3) {//type 3

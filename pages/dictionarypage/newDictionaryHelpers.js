@@ -359,7 +359,21 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
                     const matchResult = {
                         affix: arr.word,
                         affixStem: P2,
-                        affixType: arr.type
+                        affixType: arr.type,
+                    }
+                    pResult.push(matchResult);
+                });
+                return pResult;
+            } else if (isPrefix === false) {
+                const pResult = [];
+                match.forEach(arr => {
+                    console.log(arr);
+                    console.log(arr.word, arr.type, arr.word.length);
+                    const { slice1: P1, slice2: P2 } = helperFunctions.standard.sliceKeywordNegative(word, arr.word.length);
+                    const matchResult = {
+                        affix: arr.word,
+                        affixStem: P1,
+                        affixType: arr.type,
                     }
                     pResult.push(matchResult);
                 });
