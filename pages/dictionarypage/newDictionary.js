@@ -17,6 +17,24 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         let keyword = ((searchFLD && searchFLD.value ? searchFLD.value.trim() : '').toLowerCase()) || word;
         console.log('keyword |', keyword);
 
+
+        for (gender of Object.values(PRONOUNS.MAP)) {
+            for (number of Object.values(gender)) {
+                for (person of Object.values(number)) {
+                    for (Case of Object.values(person)) {
+                        if (Case === keyword) {
+                            console.log(Case);
+                            matchType = 1.5;
+                        }
+                    }
+                }
+            }
+        }
+        if (matchType === 1.5) {
+            console.log('is personal pronoun');
+            return;
+        }
+
         // for type2
         const type2AffixesMap = {
             verbPrefix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [],
