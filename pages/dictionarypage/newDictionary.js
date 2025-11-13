@@ -1485,6 +1485,120 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 console.log('--noun with particle prefix and suffix--');
                 matchType = 2;
 
+
+                const stemMap = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0].affixStem] || []; //console.log(stemMap);
+                let stemDifinition = stemMap.definition || '...';
+                const stemNotes = stemMap.usage_notes || '...';
+
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'n') { wordclass = key.NAME }
+                };
+                if (affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.affix != 'i') { //<--
+                    console.warn(`${prefix} is not available as a noun prefix`);
+                    return;
+                }
+                const html = `
+                    <div>
+                        <table>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Word</th>
+                                <th>Stem</th>
+                                <th>Wordclass</th>
+                                <th>Usage Notes</th>
+                            </tr>
+                            <tr>
+                                <th>Info</th>
+                                <td>${keyword}</td>
+                                <td id="type2SuffixONLYStem">${affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0].affixStem}</td>
+                                <td>${wordclass}</td>
+                                <td>${stemNotes || '...'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <div id=tablesContainer>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Suffix</th>
+                                    <th>Declension</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                    <th>Case</th>
+                                    <th>Definition</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+                    `;
+                helperFunctions.standard.createPageById('page96', html);
+                affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.forEach(arr => {
+                    const suffixDeclension = arr.affixDeclension;
+                    const suffixGender = arr.affixGender;
+                    const suffixNumber = arr.affixNumber;
+                    const suffixCase = arr.affixCase;
+                    const suffix = arr.affix;
+
+                    const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                    for (const [gndr, def] of Object.entries(combinedGendersObject)) {
+                        if (gndr === suffixGender) {
+                            stemDifinition = def;
+                            //console.log(combinedGendersObject);
+                            //console.log(gndr, def);
+
+                            const html = `
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${suffix}</td>
+                                    <td>${suffixDeclension}</td>
+                                    <td>${suffixGender}</td>
+                                    <td>${suffixNumber}</td>
+                                    <td>${suffixCase}</td>
+                                    <td>${stemDifinition}</td>
+                                </tr>
+                                `;
+                            helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                        }
+                    }
+                });
+
+                //added div vv
+                const prefix = affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix; //console.log(prefix);
+                const map = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix]; //console.log(map);
+                const ppHtml = `
+                    <table style="margin-top:35px">
+                        <thead>
+                            <tr>
+                                <th>...</th>
+                                <th style="width:116px">Prefix</th>
+                                <th>Definition</th>
+                                <th>Usage Notes</th>
+                                <th>Wordclass</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Info</th>
+                                <td>${prefix || '...'}</td>
+                                <td>${map.definition || '...'}</td>
+                                <td>${map.usage_notes || '...'}</td>
+                                <td>${'particle'}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+
+                const wrapper = document.getElementById('tablesContainer');
+                helperFunctions.standard.createDivById('', wrapper, ppHtml);
+
+                openPageOld('page96');
+                return;
             }
             if (affixTypesMap.nounSuffixANDpSuffix.state) {
                 console.log('--noun with particle suffix and suffix--');

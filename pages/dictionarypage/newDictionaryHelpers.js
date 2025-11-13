@@ -353,8 +353,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
             if (isPrefix === true) {
                 const pResult = [];
                 match.forEach(arr => {
-                    console.log(arr);
-                    console.log(arr.word, arr.type, arr.word.length);
+                    //console.log(arr);
+                    //console.log(arr.word, arr.type, arr.word.length);
                     const { slice1: P1, slice2: P2 } = helperFunctions.standard.sliceKeywordPositive(word, arr.word.length);
                     const matchResult = {
                         affix: arr.word,
@@ -367,8 +367,8 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
             } else if (isPrefix === false) {
                 const pResult = [];
                 match.forEach(arr => {
-                    console.log(arr);
-                    console.log(arr.word, arr.type, arr.word.length);
+                    //console.log(arr);
+                    //console.log(arr.word, arr.type, arr.word.length);
                     const { slice1: P1, slice2: P2 } = helperFunctions.standard.sliceKeywordNegative(word, arr.word.length);
                     const matchResult = {
                         affix: arr.word,
