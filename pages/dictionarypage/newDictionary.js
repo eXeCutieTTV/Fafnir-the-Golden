@@ -18,19 +18,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         console.log('keyword |', keyword);
 
         // for type2
-        let verbPrefix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [];
-        let ppPrefix = helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true) || [];
-        let verbSuffix = helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [];
-        let nounSuffix = helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
-        let adjSuffix = helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true) || [];
-
-        let verbBothAffixes = {
-            prefix: [],
-            suffix: [],
-        }
-        let nounSuffixANDppPrefix = {
-            prefix: [],
-            suffix: [],
+        const type2AffixesMap = {
+            verbPrefix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [],
+            ppPrefix: helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true) || [],
+            verbSuffix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [],
+            nounSuffix: helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [],
+            adjSuffix: helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true) || [],
+            pPrefix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, true, true) || [],
         }
 
         function bkjlcdfkjbacsfksjbsdkabjc() {
@@ -557,30 +551,31 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
         }
         else if (//type 2
-            verbPrefix || ppPrefix || verbSuffix || nounSuffix || adjSuffix
+            type2AffixesMap.verbPrefix || type2AffixesMap.ppPrefix || type2AffixesMap.verbSuffix || type2AffixesMap.nounSuffix || type2AffixesMap.adjSuffix || type2AffixesMap.pPrefix
         ) {
             console.log('-----type2-----');
 
             const affixTypesMap = {
-                verbPrefix: { rawMap: verbPrefix, resultMap: [], state: false },
-                verbSuffix: { rawMap: verbSuffix, resultMap: [], state: false },
-                nounSuffix: { rawMap: nounSuffix, resultMap: [], state: false },
-                ppPrefix: { rawMap: ppPrefix, resultMap: [], state: false },
-                adjSuffix: { rawMap: adjSuffix, resultMap: [], state: false },
-                verbBothAffixes: { resultMap: verbBothAffixes, state: false },
-                nounSuffixANDppPrefix: { resultMap: nounSuffixANDppPrefix, state: false }
+                verbPrefix: { rawMap: type2AffixesMap.verbPrefix, resultMap: [], state: false },
+                verbSuffix: { rawMap: type2AffixesMap.verbSuffix, resultMap: [], state: false },
+                nounSuffix: { rawMap: type2AffixesMap.nounSuffix, resultMap: [], state: false },
+                ppPrefix: { rawMap: type2AffixesMap.ppPrefix, resultMap: [], state: false },
+                adjSuffix: { rawMap: type2AffixesMap.adjSuffix, resultMap: [], state: false },
+                pPrefix: { rawMap: type2AffixesMap.pPrefix, resultMap: [], state: false },
+                verbBothAffixes: { resultMap: { prefix: [], suffix: [], }, state: false },
+                nounSuffixANDppPrefix: { resultMap: { prefix: [], suffix: [], }, state: false },
+                nounSuffixANDpPrefix: { resultMap: { prefix: [], suffix: [], }, state: false },
             }
             console.log(affixTypesMap);
 
             //array / data update vv
             if (affixTypesMap.verbPrefix.rawMap) {
                 for (entry of Object.values(affixTypesMap.verbPrefix.rawMap)) {
-                    //console.log(entry);
                     if (ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.verbPrefix.resultMap.push(entry);
                         affixTypesMap.verbPrefix.state = true;
                     } else {
-                        verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true, verbSuffixData) || [];
+                        verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [];
                         if (verbSuffix) {
                             for (entry2 of Object.values(verbSuffix)) {
                                 if (ALL_WORDS.MAP[entry2.affixStem]) {
@@ -589,20 +584,17 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                                     entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
 
-                                    verbBothAffixes.prefix.push(entry);
-                                    verbBothAffixes.suffix.push(entry2);
+                                    affixTypesMap.verbBothAffixes.resultMap.prefix.push(entry);
+                                    affixTypesMap.verbBothAffixes.resultMap.suffix.push(entry2);
                                     affixTypesMap.verbBothAffixes.state = true;
                                 }
                             }
                         }
-                        //console.log(verbSuffix);
                     }
                 }
-                //console.log(verbPrefix);
             }
             if (affixTypesMap.verbSuffix.rawMap) {
                 for (entry of Object.values(affixTypesMap.verbSuffix.rawMap)) {
-                    //console.log(entry);
                     if (ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.verbSuffix.resultMap.push(entry);
                         affixTypesMap.verbSuffix.state = true;
@@ -620,14 +612,12 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.ppPrefix.rawMap/* && affixTypesMap.ppPrefix.rawMap[0].affixStem*/) {
                 for (entry of Object.values(affixTypesMap.ppPrefix.rawMap)) {
-                    //const entry = affixTypesMap.ppPrefix.rawMap;
-                    console.log(entry);
 
                     if (ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.ppPrefix.resultMap.push(entry);
                         affixTypesMap.ppPrefix.state = true;
                     } else {
-                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true, nounSuffixData) || [];
+                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
                         if (nounSuffix.length > 0) {
                             affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix.push(entry);
                             for (obj of Object.values(nounSuffix)) {
@@ -635,6 +625,25 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
                             }
                             affixTypesMap.nounSuffixANDppPrefix.state = true;
+                        }
+                    }
+                }
+            }
+            if (affixTypesMap.pPrefix.rawMap) {
+                affixTypesMap.pPrefix.state = true;
+
+                for (entry of Object.values(affixTypesMap.pPrefix.rawMap)) {
+                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                        affixTypesMap.pPrefix.resultMap.push(entry);
+                    } else {
+                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+                        if (nounSuffix.length > 0) {
+                            affixTypesMap.nounSuffixANDpPrefix.resultMap.prefix.push(entry);
+                            for (obj of Object.values(nounSuffix)) {
+                                entry.affixStem = obj.affixStem; //fix stem.
+                                affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(obj);
+                            }
+                            affixTypesMap.nounSuffixANDpPrefix.state = true;
                         }
                     }
                 }
