@@ -1644,7 +1644,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             openPageOld('page96');
                             return;
                         default:
-                            console.warn(`${prefix} is not available as a noun suffix`);
+                            console.warn(`${particle} is not available as a noun suffix`);
                             return;
                     }
                 }
@@ -1744,7 +1744,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         <thead>
                             <tr>
                                 <th>...</th>
-                                <th style="width:116px">Particle</th>
+                                <th style="width:116px">Prefix</th>
                                 <th>Definition</th>
                                 <th>Usage Notes</th>
                                 <th>Wordclass</th>
@@ -1884,7 +1884,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 openPageOld('page96');
                 return;
             }
-        }//TODO. more type2 logic - particles, determiners, pronouns etc.
+        }
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
             const searchHandler = ALL_WORDS.fetchByDefinition(keyword); // Array[]
