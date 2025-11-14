@@ -9,8 +9,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         let matchType = 3 //asume its type3, if its not then we change it - type3 detection is if(matchType === 3).
 
-        searchBTN = document.getElementById('search_button');
-        searchFLD = document.getElementById('search_field');
 
         if (searchFLD.value.length === 0) { return; }//doesnt search if searchFLD is empty
 
@@ -22,39 +20,33 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             searchFLD.value = '';
             searchFLD.blur();
         }
-        
-        const pronounMatch = [];
-        for (const [genderKey, genderMap] of Object.entries(PRONOUNS.MAP)) {
-            for (const [numberKey, numberMap] of Object.entries(genderMap)) {
-                for (const [personKey, personMap] of Object.entries(numberMap)) {
-                    for (const [caseKey, caseValue] of Object.entries(personMap)) {
-                        if (caseValue === keyword) {
-                            matchType = 1.1;
-                            const result = {
-                                path: {
-                                    gender: genderKey,
-                                    number: numberKey,
-                                    person: personKey,
-                                    case: caseKey,
-                                },
-                                word: caseValue
+
+        // for type1.1
+        function isPronoun(word) {
+            const matches = [];
+            for (const [genderKey, genderMap] of Object.entries(PRONOUNS.MAP)) {
+                for (const [numberKey, numberMap] of Object.entries(genderMap)) {
+                    for (const [personKey, personMap] of Object.entries(numberMap)) {
+                        for (const [caseKey, caseValue] of Object.entries(personMap)) {
+                            if (caseValue === word) {
+                                matchType = 1.1;
+                                matches.push({
+                                    path: {
+                                        gender: genderKey,
+                                        number: numberKey,
+                                        person: personKey,
+                                        case: caseKey,
+                                    },
+                                    word: caseValue
+                                });
                             }
-                            pronounMatch.push(result);
                         }
                     }
                 }
             }
+            return matches;
         }
-        if (matchType === 1.1) {
-            console.log(pronounMatch);
-
-            pronounMatch.forEach(entry => {
-                console.log(entry.word, 'is a personal pronoun');
-            });
-
-            return;
-        }
-
+        const pronounMatch = isPronoun(keyword);
         // for type2
         const type2AffixesMap = {
             verbPrefix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [],
@@ -68,35 +60,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         function bkjlcdfkjbacsfksjbsdkabjc() {
             /*  
-                æze-
-                aze-
-                fenlly-
-                ħá-
-                ħáŋ-
-                ho-
-                hu-
-                huz-
-                kxā-
-                kxæ-
-                lleŋ-
-                lloq̇-
-                ly-
-                ō-
-                qa-
-                qē-
-                qēru-
-                q̇ū-
-                qχok-
-                sæχ-
-                saχ-
-                sī-
-                sil-
-                thū-
-                tre-
-                ū-
-                all prepositions^^
-                        
-                        
                 i- prefix to turn nouns into adjectives
                 -nyl to turn adjectives into adverbs
                 -ûl
@@ -113,26 +76,15 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 -thok	
                 -hoq̇
                 ^^ unique determiner suffixes. (only for determiners).
-                        
-                noun suffixes
-                        
-                verb prefixes
-                verb suffixes
-                        
-                i think this is it.^^
-                        
-                raw exact match
             */
         }//HAHAHAHHAHAHAHAHHA. FUCK YOU COMMENT >:) :q
-
-
 
         helperFunctions.standard.clearPageById('page97'); //type 1
         helperFunctions.standard.clearPageById('page96'); //type 2
         helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
 
         if (//type 1
-            ALL_WORDS.fetch(keyword) && ALL_WORDS.fetch(keyword).length > 0
+            ALL_WORDS.MAP[keyword] && ALL_WORDS.MAP[keyword].word.length > 0
         ) {
             matchType = 1;
             console.log('-----type1-----');
@@ -584,9 +536,23 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     openPageOld('page97');
                 } else { return; }
             });
+        } else if (matchType === 1.1) {//type 1.1
+
+            console.log(pronounMatch);
+            pronounMatch.forEach(entry => {
+                console.log(entry.word, 'is a personal pronoun');
+            });
+
+            return;
         }
         else if (//type 2
-            type2AffixesMap.verbPrefix || type2AffixesMap.ppPrefix || type2AffixesMap.verbSuffix || type2AffixesMap.nounSuffix || type2AffixesMap.adjSuffix || type2AffixesMap.pPrefix || type2AffixesMap.pSuffix
+            type2AffixesMap.verbPrefix ||
+            type2AffixesMap.ppPrefix ||
+            type2AffixesMap.verbSuffix ||
+            type2AffixesMap.nounSuffix ||
+            type2AffixesMap.adjSuffix ||
+            type2AffixesMap.pPrefix ||
+            type2AffixesMap.pSuffix
         ) {
             console.log('-----type2-----');
 
@@ -1671,6 +1637,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
         }
         helperFunctions.standard.reverseSearchIdsOnSearch();
+
+        searchBTN = document.getElementById('search_button');
+        searchFLD = document.getElementById('search_field');
     }
 
     //evenlisteners vv
