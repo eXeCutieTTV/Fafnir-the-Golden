@@ -40,8 +40,9 @@
     background: var(--bg1);
     border-top: 1px solid var(--border);
     border-right: 1px solid var(--border);
+    z-index: 99999;
 
-    width: 10%;
+    width: 9.9%;
     height: 100%;
     overflow-x: auto;
     overflow-y: hidden;
