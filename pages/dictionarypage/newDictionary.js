@@ -17,21 +17,41 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         let keyword = ((searchFLD && searchFLD.value ? searchFLD.value.trim() : '').toLowerCase()) || word;
         console.log('keyword |', keyword);
 
-
-        for (gender of Object.values(PRONOUNS.MAP)) {
-            for (number of Object.values(gender)) {
-                for (person of Object.values(number)) {
-                    for (Case of Object.values(person)) {
-                        if (Case === keyword) {
-                            console.log(Case);
-                            matchType = 1.5;
+        //clear searchFLD
+        if (searchFLD && searchFLD.value.trim() !== '') {
+            searchFLD.value = '';
+            searchFLD.blur();
+        }
+        
+        const pronounMatch = [];
+        for (const [genderKey, genderMap] of Object.entries(PRONOUNS.MAP)) {
+            for (const [numberKey, numberMap] of Object.entries(genderMap)) {
+                for (const [personKey, personMap] of Object.entries(numberMap)) {
+                    for (const [caseKey, caseValue] of Object.entries(personMap)) {
+                        if (caseValue === keyword) {
+                            matchType = 1.1;
+                            const result = {
+                                path: {
+                                    gender: genderKey,
+                                    number: numberKey,
+                                    person: personKey,
+                                    case: caseKey,
+                                },
+                                word: caseValue
+                            }
+                            pronounMatch.push(result);
                         }
                     }
                 }
             }
         }
-        if (matchType === 1.5) {
-            console.log('is personal pronoun');
+        if (matchType === 1.1) {
+            console.log(pronounMatch);
+
+            pronounMatch.forEach(entry => {
+                console.log(entry.word, 'is a personal pronoun');
+            });
+
             return;
         }
 
@@ -105,11 +125,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             */
         }//HAHAHAHHAHAHAHAHHA. FUCK YOU COMMENT >:) :q
 
-        //clear searchFLD
-        if (searchFLD && searchFLD.value.trim() !== '') {
-            searchFLD.value = '';
-            searchFLD.blur();
-        }
+
 
         helperFunctions.standard.clearPageById('page97'); //type 1
         helperFunctions.standard.clearPageById('page96'); //type 2
