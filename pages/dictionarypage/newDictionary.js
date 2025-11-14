@@ -1919,6 +1919,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
+        console.log(searchBTN, searchFLD);
     }
 
     //evenlisteners vv
