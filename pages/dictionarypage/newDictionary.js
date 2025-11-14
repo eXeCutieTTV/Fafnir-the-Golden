@@ -1796,6 +1796,34 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Adjective-Table-Directive': false, 'Adjective-Table-Recessive': false });
 
                                 openPageOld('page96');
+                                break;
+                            case 'nyl':
+                                console.log('adj turned into adv');
+                                const htmlADV = `
+                                    <div>
+                                        <table>
+                                            <theader>
+                                                <tr>
+                                                    <th>Word</th>
+                                                    <th>Definition</th>
+                                                    <th>Usage Notes</th>
+                                                    <th>Wordclass</th>
+                                                </tr>
+                                            </theader>
+                                            <tbody>
+                                                <tr>
+                                                    <td>${arr.word}</td>
+                                                    <td>${arr.definition}</td>
+                                                    <td>${arr.usage_notes || '...'}</td>
+                                                    <td>${'Adverb'}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                `;
+                                helperFunctions.standard.createPageById('page96', htmlADV);
+                                openPageOld('page96');
+                                break;
                             default:
                                 console.warn(`${particle} is not available as a noun suffix`);
                                 break;
@@ -1872,6 +1900,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
                                 openPageOld('page96');
+                                break;
                             default:
                                 console.warn(`${particle} is not available as a noun suffix`);
                                 break;
