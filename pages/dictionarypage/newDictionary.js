@@ -725,7 +725,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             console.log(affixTypesMap);
 
-            //array / data update vv
+            //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
             if (affixTypesMap.verbPrefix.rawMap) {
                 for (entry of Object.values(affixTypesMap.verbPrefix.rawMap)) {
                     if (ALL_WORDS.MAP[entry.affixStem]) {
@@ -764,6 +764,17 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     if (ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.nounSuffix.resultMap.push(entry);
                         affixTypesMap.nounSuffix.state = true;
+                    } else {
+                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, PARTICLES.MAP, false, true) || [];
+                        console.log(pSuffix);
+                        for (entry2 of Object.values(pSuffix)) {
+                            console.log(entry2);
+                            if (ALL_WORDS.MAP[entry2.affixStem]) {
+                                affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
+                                affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
+                                affixTypesMap.nounSuffixANDpSuffix.state = true;
+                            }
+                        }
                     }
                 }
             }
