@@ -161,6 +161,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             adjSuffix: helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true) || [],
             pPrefix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, true, true) || [],
             pSuffix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, false, true) || [],
+            detSuffix: [], //<---
         }
 
         helperFunctions.standard.clearPageById('page97'); //type 1
@@ -843,7 +844,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
             openPageOld('page95');
-        }
+        }//maybe change to if, insead of else if? vv
         else if (//type 2
             type2AffixesMap.verbPrefix ||
             type2AffixesMap.ppPrefix ||
@@ -863,6 +864,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 adjSuffix: { rawMap: type2AffixesMap.adjSuffix, resultMap: [], state: false },
                 pPrefix: { rawMap: type2AffixesMap.pPrefix, resultMap: [], state: false },
                 pSuffix: { rawMap: type2AffixesMap.pSuffix, resultMap: [], state: false },
+                detSuffix: { rawMap: type2AffixesMap.detSuffix, resultMap: [], state: false },
                 verbBothAffixes: { resultMap: { prefix: [], suffix: [], }, state: false },
                 nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [], }, state: false },
                 nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
@@ -1076,7 +1078,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
 
                 openPageOld('page96');
-                return;
             }
             if (affixTypesMap.verbSuffix.state) {
                 console.log('--verb suffix--');
@@ -1176,11 +1177,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     }
 
                     openPageOld('page96');
-                    return;
                 }
 
                 openPageOld('page96');
-                return;
             }
             if (affixTypesMap.verbBothAffixes.state) {
                 console.log('--both verb affixes--');
@@ -1300,7 +1299,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
 
                 openPageOld('page96');
-                return;
             }
             if (affixTypesMap.nounSuffix.state) {
                 console.log('--noun suffix--');
@@ -1395,7 +1393,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
 
                 openPageOld('page96');
-                return;
             }
             if (affixTypesMap.ppPrefix.state) {
                 console.log('--prepositional prefix--');
@@ -1484,7 +1481,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
                     openPageOld('page96');
-                    return;
                 }
             }
             if (affixTypesMap.nounSuffixANDppPrefix.state) {
@@ -1601,7 +1597,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
                 openPageOld('page96');
-                return;
             }
             if (affixTypesMap.pPrefix.state) {
                 console.log('--noun with particle--');
@@ -1695,7 +1690,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             return;
                     }
                     openPageOld('page96');
-                    return;
                 }
             }
             if (affixTypesMap.pSuffix.state) {
@@ -1788,10 +1782,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
                             openPageOld('page96');
-                            return;
                         default:
                             console.warn(`${particle} is not available as a noun suffix`);
-                            return;
+                            break;
                     }
                 }
             }
@@ -1912,7 +1905,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
                 openPageOld('page96');
-                return;
             }
             if (affixTypesMap.nounSuffixANDpSuffix.state) {
                 console.log('--noun with particle suffix and suffix--');
@@ -2028,7 +2020,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
                 openPageOld('page96');
-                return;
             }
         }
         if (matchType === 3) {//type 3
