@@ -165,7 +165,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             pSuffix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, false, true) || [],
             detSuffix: [], //<---
         }
-
         helperFunctions.standard.clearPageById('page97'); //type 1
         helperFunctions.standard.clearPageById('page95'); //type 1.1
         helperFunctions.standard.clearPageById('page96'); //type 2
@@ -871,8 +870,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [], }, state: false },
                 nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
                 nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
+                adjSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
             }
-            console.log(affixTypesMap);
+            //console.log(affixTypesMap);
             allMatchesArray.type2 = affixTypesMap;
 
             //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
@@ -911,15 +911,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             if (affixTypesMap.nounSuffix.rawMap) {
                 for (entry of Object.values(affixTypesMap.nounSuffix.rawMap)) {
                     //console.log(entry);
-                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                    if (ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'n') {
                         affixTypesMap.nounSuffix.resultMap.push(entry);
                         affixTypesMap.nounSuffix.state = true;
                     } else {
                         pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, PARTICLES.MAP, false, true) || [];
-                        //console.log(pSuffix);
                         for (entry2 of Object.values(pSuffix)) {
-                            //console.log(entry2);
-                            if (ALL_WORDS.MAP[entry2.affixStem]) {
+                            if (ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'n') {
 
                                 entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
 
@@ -982,6 +980,26 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(obj);
                             }
                             affixTypesMap.nounSuffixANDpSuffix.state = true;
+                        }
+                    }
+                }
+            }
+            if (affixTypesMap.adjSuffix.rawMap) {
+                for (entry of Object.values(affixTypesMap.adjSuffix.rawMap)) {
+                    if (ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'adj') {
+                        affixTypesMap.adjSuffix.resultMap.push(entry);
+                        affixTypesMap.adjSuffix.state = true;
+                    } else {
+                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, PARTICLES.MAP, false, true) || [];
+                        for (entry2 of Object.values(pSuffix)) {
+                            if (ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'adj') {
+
+                                entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
+
+                                affixTypesMap.adjSuffixANDpSuffix.resultMap.particle.push(entry2);
+                                affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix.push(entry);
+                                affixTypesMap.adjSuffixANDpSuffix.state = true;
+                            }
                         }
                     }
                 }
@@ -1706,87 +1724,158 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const pArray = ALL_WORDS.MAP[particle];
                 const pDefinition = pArray.definition;
                 const pUsage_notes = pArray.usage_notes;
-                console.log(pArray);
-
+                //console.log(pArray);
                 if (ALL_WORDS.MAP[particleStem]) {
                     console.log('clean match');
 
                     const arr = ALL_WORDS.MAP[particleStem];
                     console.log(arr);
-                    const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
-                    console.log(NcombinedGendersObject);
+                    if (arr.type === 'adj') {
+                        console.log('adj')
 
-                    switch (particle) {
-                        case 'ān':
-                        case 'ōn':
-                        case 'ūn':
-                            const html = `
-                                <div>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>...</th>
-                                                <th>Stem</th>
-                                                <th>Declension</th>
-                                                <th>Definition</th>
-                                                <th>Gender</th>
-                                                <th>Usage_Notes</th>
-                                                <th>Wordclass</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyP"></tbody>
-                                    </table>
-                                </div>
-                                <div style="margin-top:35px">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>...</th>
-                                                <th style="width:116px">Prefix</th>
-                                                <th>Definition</th>
-                                                <th>Usage Notes</th>
-                                                <th>Wordclass</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>Info</th>
-                                                <td>${particle || '...'}</td>
-                                                <td>${pDefinition || '...'}</td>
-                                                <td>${pUsage_notes || '...'}</td>
-                                                <td>${'particle'}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div style="margin-top:50px" id="pNounTable"></div>
-                            `;
-                            helperFunctions.standard.createPageById('page96', html);
-                            for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
-                                console.log(gndr, def);
-                                const htmlP = `
-                                    <tr>
-                                        <th>Info</th>
-                                        <td>${particleStem}</td>
-                                        <td>${arr.declension}</td>
-                                        <td>${def}</td>
-                                        <td>${gndr}</td>
-                                        <td>${arr.usage_notes || '...'}</td>
-                                        <td>${'noun'}</td>
-                                    </tr>
+                        switch (particle) {
+                            case 'ān':
+                            case 'ōn':
+                            case 'ūn':
+                                const html = `
+                                    <div>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>...</th>
+                                                    <th>Stem</th>
+                                                    <th>Declension</th>
+                                                    <th>Definition</th>
+                                                    <th>Usage_Notes</th>
+                                                    <th>Wordclass</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyP"></tbody>
+                                        </table>
+                                    </div>
+                                    <div style="margin-top:35px">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>...</th>
+                                                    <th style="width:116px">Suffix</th>
+                                                    <th>Definition</th>
+                                                    <th>Usage Notes</th>
+                                                    <th>Wordclass</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Info</th>
+                                                    <td>${particle || '...'}</td>
+                                                    <td>${pDefinition || '...'}</td>
+                                                    <td>${pUsage_notes || '...'}</td>
+                                                    <td>${'particle'}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div style="margin-top:50px" id="pNounTable"></div>
                                 `;
+                                helperFunctions.standard.createPageById('page96', html);
+                                const htmlP = `
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${particleStem}</td>
+                                            <td>${arr.declension}</td>
+                                            <td>${arr.definition}</td>
+                                            <td>${arr.usage_notes || '...'}</td>
+                                            <td>${'noun'}</td>
+                                        </tr>
+                                    `;
                                 helperFunctions.standard.insertTrIntoTableById('tbodyP', htmlP);
-                            }
 
-                            const nounTblDiv = document.getElementById('pNounTable');
-                            helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
-                            helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
-                            helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+                                const ADJwrapper = document.getElementById('pNounTable');
+                                helperFunctions.matchtype1.neoAdjectiveTables(arr.declension, 1, ADJwrapper);
+                                helperFunctions.matchtype1.neoAdjectiveTables(arr.declension, 2, ADJwrapper);
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Adjective-Table-Directive': false, 'Adjective-Table-Recessive': false });
 
-                            openPageOld('page96');
-                        default:
-                            console.warn(`${particle} is not available as a noun suffix`);
-                            break;
+                                openPageOld('page96');
+                            default:
+                                console.warn(`${particle} is not available as a noun suffix`);
+                                break;
+                        }
+                    } else if (arr.type === 'n') {
+                        const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
+                        //console.log(NcombinedGendersObject);
+
+                        switch (particle) {
+                            case 'ān':
+                            case 'ōn':
+                            case 'ūn':
+                                const html = `
+                                    <div>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>...</th>
+                                                    <th>Stem</th>
+                                                    <th>Declension</th>
+                                                    <th>Definition</th>
+                                                    <th>Gender</th>
+                                                    <th>Usage_Notes</th>
+                                                    <th>Wordclass</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbodyP"></tbody>
+                                        </table>
+                                    </div>
+                                    <div style="margin-top:35px">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>...</th>
+                                                    <th style="width:116px">Prefix</th>
+                                                    <th>Definition</th>
+                                                    <th>Usage Notes</th>
+                                                    <th>Wordclass</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Info</th>
+                                                    <td>${particle || '...'}</td>
+                                                    <td>${pDefinition || '...'}</td>
+                                                    <td>${pUsage_notes || '...'}</td>
+                                                    <td>${'particle'}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div style="margin-top:50px" id="pNounTable"></div>
+                                `;
+                                helperFunctions.standard.createPageById('page96', html);
+                                for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
+                                    console.log(gndr, def);
+                                    const htmlP = `
+                                        <tr>
+                                            <th>Info</th>
+                                            <td>${particleStem}</td>
+                                            <td>${arr.declension}</td>
+                                            <td>${def}</td>
+                                            <td>${gndr}</td>
+                                            <td>${arr.usage_notes || '...'}</td>
+                                            <td>${'noun'}</td>
+                                        </tr>
+                                    `;
+                                    helperFunctions.standard.insertTrIntoTableById('tbodyP', htmlP);
+                                }
+
+                                const nounTblDiv = document.getElementById('pNounTable');
+                                helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
+                                helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+
+                                openPageOld('page96');
+                            default:
+                                console.warn(`${particle} is not available as a noun suffix`);
+                                break;
+                        }
                     }
                 }
             }
@@ -2021,6 +2110,134 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const wrapper = document.getElementById('tablesContainer');
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
+                openPageOld('page96');
+            }
+            if (affixTypesMap.adjSuffix.state) {
+                matchType = 2;
+
+                const html = `
+                    <div>
+                        <table>
+                            <theader>
+                                <tr>
+                                    <th>Word</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                    <th>Wordclass</th>
+                                </tr>
+                            </theader>
+                            <tbody>
+                                <td>${keyword}</td>
+                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].definition}</td>
+                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].usage_notes || '...'}</td>
+                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].type}</td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top:15px">
+                        <table>
+                            <theader>
+                                <tr>
+                                    <th>Suffix</th>
+                                    <th>Stem</th>
+                                    <th>Declension</th>
+                                    <th>Case</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                </tr>
+                            </theader>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+                `;
+                helperFunctions.standard.createPageById('page96', html);
+                affixTypesMap.adjSuffix.resultMap.forEach(entry => {
+                    const html = `
+                        <tr>
+                            <td>${entry.affix}</td>
+                            <td>${entry.affixStem}</td>
+                            <td>${entry.affixDeclension}</td>
+                            <td>${entry.affixCase}</td>
+                            <td>${entry.affixGender}</td>
+                            <td>${entry.affixNumber}</td>
+                        </tr>
+                    `;
+                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                });
+                openPageOld('page96');
+            }
+            if (affixTypesMap.adjSuffixANDpSuffix.state) {
+                matchType = 2;
+
+                const html = `
+                    <div>
+                        <table>
+                            <theader>
+                                <tr>
+                                    <th>Word</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                    <th>Wordclass</th>
+                                </tr>
+                            </theader>
+                            <tbody>
+                                <td>${keyword}</td>
+                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].definition}</td>
+                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].usage_notes || '...'}</td>
+                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].type}</td>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top:15px">
+                        <table>
+                            <theader>
+                                <tr>
+                                    <th>Suffix</th>
+                                    <th>Stem</th>
+                                    <th>Declension</th>
+                                    <th>Case</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                </tr>
+                            </theader>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                        <table style="margin-top:15px">
+                            <theader>
+                                <tr>
+                                    <th>Particle</th>
+                                    <th>Stem</th>
+                                    <th>Wordclass</th>
+                                </tr>
+                            </theader>
+                            <tbody id="tbody2"></tbody>
+                        </table>
+                    </div>
+                `;
+                helperFunctions.standard.createPageById('page96', html);
+                affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix.forEach(entry => {
+                    const html = `
+                        <tr>
+                            <td>${entry.affix}</td>
+                            <td>${entry.affixStem}</td>
+                            <td>${entry.affixDeclension}</td>
+                            <td>${entry.affixCase}</td>
+                            <td>${entry.affixGender}</td>
+                            <td>${entry.affixNumber}</td>
+                        </tr>
+                    `;
+                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                });
+                affixTypesMap.adjSuffixANDpSuffix.resultMap.particle.forEach(entry => {
+                    const html = `
+                        <tr>
+                            <td>${entry.affix}</td>
+                            <td>${entry.affixStem}</td>
+                            <td>${entry.affixType}</td>
+                        </tr>
+                    `;
+                    helperFunctions.standard.insertTrIntoTableById('tbody2', html);
+                });
                 openPageOld('page96');
             }
         }
