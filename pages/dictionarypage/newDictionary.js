@@ -37,7 +37,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                         person: personKey,
                                         case: caseKey,
                                     },
-                                    word: caseValue
+                                    word: caseValue,
+                                    type: 'personal'
                                 });
                             }
                         }
@@ -80,6 +81,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         }//HAHAHAHHAHAHAHAHHA. FUCK YOU COMMENT >:) :q
 
         helperFunctions.standard.clearPageById('page97'); //type 1
+        helperFunctions.standard.clearPageById('page95'); //type 1.1
         helperFunctions.standard.clearPageById('page96'); //type 2
         helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
 
@@ -537,11 +539,48 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 } else { return; }
             });
         } else if (matchType === 1.1) {//type 1.1
+            console.log('-----type1.1-----');
 
             console.log(pronounMatch);
             pronounMatch.forEach(entry => {
                 console.log(entry.word, 'is a personal pronoun');
             });
+
+            const html = `
+                <div>
+                    <table>
+                        <theader>
+                            <tr>
+                                <th>Pronoun type</th>
+                                <th>Pronoun</th>
+                                <th>Gender</th>
+                                <th>Person</th>
+                                <th>Number</th>
+                                <th>Case</th>
+                            </tr>
+                        </theader>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+            `;
+
+            helperFunctions.standard.createPageById('page95', html);
+
+            pronounMatch.forEach(entry => {
+
+                const html = `
+                    <tr>
+                        <th>${entry.type}</th>
+                        <td>${entry.word}</td>
+                        <td>${entry.path.gender}</td>
+                        <td>${entry.path.person}</td>
+                        <td>${entry.path.number}</td>
+                        <td>${entry.path.case}</td>
+                    </tr>
+                `;
+                helperFunctions.standard.insertTrIntoTableById('tbody', html);
+            });
+            openPageOld('page95');
 
             return;
         }
