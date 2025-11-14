@@ -6,12 +6,29 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
     // main search function
     function search(word) {
-
-        let matchType = 3 //asume its type3, if its not then we change it - type3 detection is if(matchType === 3).
-
-
         if (searchFLD.value.length === 0) { return; }//doesnt search if searchFLD is empty
-
+        let allMatchesArray = {
+            type1: {
+                v: {
+                    lur: [],
+                    regular: []
+                },
+                n: [],
+                adj: [],
+                adv: [],
+                aux: [],
+                pp: [],
+                part: [],
+                pn: [],
+                det: [],
+                con: [],
+                cor: [],
+            },
+            type2: {
+                temp: 'this is only updated if type2 is applicable'
+            }
+        }
+        let matchType = 3 //asume its type3, if its not then we change it - type3 detection is if(matchType === 3).
         let keyword = ((searchFLD && searchFLD.value ? searchFLD.value.trim() : '').toLowerCase()) || word;
         console.log('keyword |', keyword);
 
@@ -30,7 +47,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         for (const [caseKey, caseValue] of Object.entries(personMap)) {
                             if (caseValue === word) {
                                 matchType = 1.1;
-                                matches.push({
+                                const result = {
                                     path: {
                                         gender: genderKey,
                                         number: numberKey,
@@ -39,7 +56,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     },
                                     word: caseValue,
                                     type: 'personal'
-                                });
+                                }
+                                matches.push(result);
+                                allMatchesArray.type1.pn.push(result);
                             }
                         }
                     }
@@ -57,14 +76,16 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     for (const [numberKey, numberValue] of Object.entries(typeMap)) {
                         if (numberValue === word) {
                             matchType = 1.2;
-                            matches.push({
+                            const result = {
                                 path: {
                                     gender: genderKey,
                                     number: numberKey,
                                 },
                                 word: numberValue,
                                 type: typeKey
-                            });
+                            }
+                            matches.push(result);
+                            allMatchesArray.type1.det.push(result);
                         }
                     }
                 }
@@ -81,14 +102,16 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     for (const [caseKey, caseValue] of Object.entries(typeMap)) {
                         if (caseValue === word) {
                             matchType = 1.3;
-                            matches.push({
+                            const result = {
                                 path: {
                                     gender: genderKey,
                                     case: caseKey,
                                 },
                                 word: caseValue,
                                 type: typeKey
-                            });
+                            }
+                            matches.push(result);
+                            allMatchesArray.type1.cor.push(result);
                         }
                     }
                 }
@@ -107,7 +130,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             for (const [numberKey, numberValue] of Object.entries(personMap)) {
                                 if (numberValue === word) {
                                     matchType = 1.4;
-                                    matches.push({
+                                    const result = {
                                         path: {
                                             aspect: aspectKey,
                                             tense: tenseKey,
@@ -116,7 +139,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             number: numberKey
                                         },
                                         word: numberValue
-                                    });
+                                    }
+                                    matches.push(result);
+                                    allMatchesArray.type1.v.lur.push(result);
                                 }
                             }
                         }
@@ -161,15 +186,12 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                 switch (wordclass) {
                     case 'adj':
-
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-
+                            allMatchesArray.type1.adj.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
-
                             const tableSearchable = document.getElementById('tableSearchBtn');
-
 
                             // Wait for the page content to load, then setup the table (header table)
                             helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
@@ -230,7 +252,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'adv':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-
+                            allMatchesArray.type1.adv.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
@@ -246,7 +268,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'aux':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-
+                            allMatchesArray.type1.aux.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
@@ -292,6 +314,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     case 'con':
                         if (word === keyword) {
+                            allMatchesArray.type1.con.push(entry);
+
                             const html = `
                                 <div class="outerdiv">
                                     <div id="leftdivdictionary" class="leftdivdictionary">
@@ -347,26 +371,88 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     case 'det':
                         console.log(wordclass);
+                        if (entry.word === keyword) {
+                            console.log(entry);
+                            allMatchesArray.type1.det.push(entry);
+
+                            helperFunctions.matchtype1.page97Base(keyword, wordclass);
+                            const tableSearchable = document.getElementById('tableSearchBtn');
+
+
+                            helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
+
+                                const html = `
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Word</th>
+                                                <th>Definition</th>
+                                                <th>Usage Notes</th>
+                                                <th>Wordclass</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${entry.word}</td>
+                                                <td>${entry.definition}</td>
+                                                <td>${entry.usage_notes}</td>
+                                                <td>${entry.type}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                `;
+
+                                helperFunctions.standard.createDivById('', pageContainer, html);
+
+                                const html2 = `
+                                    <table style="margin-top:10px" id="suffixTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Exalted</th>
+                                                <th>Rational</th>
+                                                <th>Monstrous</th>
+                                                <th>Irrational</th>
+                                                <th>Magical</th>
+                                                <th>Mundane</th>
+                                                <th>Abstract</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>${DETERMINERS.SUFFIXES.MAP.Exalted}</td>
+                                                <td>${DETERMINERS.SUFFIXES.MAP.Rational}</td>
+                                                <td>${DETERMINERS.SUFFIXES.MAP.Monstrous}</td>
+                                                <td>${DETERMINERS.SUFFIXES.MAP.Irrational}</td>
+                                                <td>${DETERMINERS.SUFFIXES.MAP.Magical}</td>
+                                                <td>${DETERMINERS.SUFFIXES.MAP.Mundane}</td>
+                                                <td>${DETERMINERS.SUFFIXES.MAP.Abstract}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                `;
+                                helperFunctions.standard.createDivById('', pageContainer, html2);
+                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'suffixTable': false });
+
+                                tableSearchable.addEventListener('click', () => {
+                                    console.log(wordclass);
+                                    helperFunctions.standard.searchableTable(wordclass);
+                                });
+                            });
+                        }
 
                         break;
                     case 'n':
                         const NcombinedGendersObject = WORD_UTILS.combineGenders(entry.genders) // Key-value pairs
                         if (word === keyword) {
                             console.log('clean match |', keyword);
+                            allMatchesArray.type1.n.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
 
                             const tableSearchable = document.getElementById('tableSearchBtn');
 
 
-                            // Wait for the page content to load, then setup the table (header table)
                             helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
-                                // Create and fill the table
-                                //console.log(NOUNS.SUFFIXES.MAP);
-                                //const table = createTable(keyword, pageContainer);//just copy english table logic??
-                                //console.log(wordclass);
-                                //fillTable(keyword, wordclass, table);
-
                                 const html = `
                                     <table>
                                         <thead>
@@ -416,6 +502,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     case 'part':
                         if (word === keyword) {
+                            allMatchesArray.type1.part.push(entry);
+
                             const html = `
                                 <div class="outerdiv">
                                     <div id="leftdivdictionary" class="leftdivdictionary">
@@ -469,12 +557,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             });
                         }
                         break;
-                    case 'pn':
-                        console.log(wordclass);
-
-                        break;
                     case 'pp':
                         if (word === keyword) {
+                            allMatchesArray.type1.pp.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
                             helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
@@ -503,6 +588,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'v':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
+                            allMatchesArray.type1.v.regular.push(entry);
 
                             const html = `
                                 <div class="outerdiv">
@@ -640,8 +726,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
             openPageOld('page95');
-
-            return;
         }
         else if (matchType === 1.2) {//type 1.2
 
@@ -683,8 +767,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
             openPageOld('page95');
-
-            return;
         }
         else if (matchType === 1.3) {//type 1.3
             console.log('-----type1.3-----');
@@ -725,8 +807,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
             openPageOld('page95');
-
-            return;
         }
         else if (matchType === 1.4) {//type 1.4
             console.log('-----type1.4-----');
@@ -763,7 +843,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
             openPageOld('page95');
-            return;
         }
         else if (//type 2
             type2AffixesMap.verbPrefix ||
@@ -790,6 +869,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
             }
             console.log(affixTypesMap);
+            allMatchesArray.type2 = affixTypesMap;
 
             //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
             if (affixTypesMap.verbPrefix.rawMap) {
@@ -1986,6 +2066,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
         //console.log(searchBTN, searchFLD);
+        console.log('all matches |', allMatchesArray);
     }
 
     //evenlisteners vv
@@ -2008,3 +2089,4 @@ dictionaryPage(); // so constants arent redefined.
 //maybe add a 4th type? if number, then use lirioz' NUMBERS.numberToText.
 //5th type is a buttonpress that just loads the entire plain dictionary.
 //maybe need an entire 6th type just for lur?
+//rest of particle suffixes.
