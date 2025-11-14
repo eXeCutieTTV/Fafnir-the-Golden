@@ -2082,8 +2082,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
     if (window.__dictionaryPageInitPromise) return;
 
     const waitForSearchControls = () => Promise.all([
-        helperFunctions.tablegen.waitForElement('#page99 #search_button', 10000),
-        helperFunctions.tablegen.waitForElement('#page99 #search_field', 10000),
+        helperFunctions.tablegen.waitForElement('#page99 #search_button', 604800000), //a week <--
+        helperFunctions.tablegen.waitForElement('#page99 #search_field', 604800000),
     ]);
 
     window.__dictionaryPageInitPromise = waitForSearchControls()
