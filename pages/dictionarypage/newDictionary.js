@@ -52,7 +52,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         // for type1.2
         function isDeterminer(word) {
             const matches = [];
-            for (const [genderKey, genderMap] of Object.entries(IRREGULAR_DETERMINERS)) {
+            for (const [genderKey, genderMap] of Object.entries(DETERMINERS.IRREGULARS.MAP)) {
                 for (const [typeKey, typeMap] of Object.entries(genderMap)) {
                     for (const [numberKey, numberValue] of Object.entries(typeMap)) {
                         if (numberValue === word) {
@@ -76,7 +76,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         // for type1.3
         function isCorrelative(word) {
             const matches = [];
-            for (const [genderKey, genderMap] of Object.entries(CORRELATIVES)) {
+            for (const [genderKey, genderMap] of Object.entries(CORRELATIVES.MAP)) {
                 for (const [typeKey, typeMap] of Object.entries(genderMap)) {
                     for (const [caseKey, caseValue] of Object.entries(typeMap)) {
                         if (caseValue === word) {
@@ -96,6 +96,36 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             return matches;
         }
         const correlativeMatch = isCorrelative(keyword);
+
+        // for type1.4
+        function IsLur(word) {
+            const matches = [];
+            for (const [aspectKey, aspectMap] of Object.entries(LUR.MAP)) {
+                for (const [tenseKey, tenseMap] of Object.entries(aspectMap)) {
+                    for (const [genderKey, genderMap] of Object.entries(tenseMap)) {
+                        for (const [personKey, personMap] of Object.entries(genderMap)) {
+                            for (const [numberKey, numberValue] of Object.entries(personMap)) {
+                                if (numberValue === word) {
+                                    matchType = 1.4;
+                                    matches.push({
+                                        path: {
+                                            aspect: aspectKey,
+                                            tense: tenseKey,
+                                            gender: genderKey,
+                                            person: personKey,
+                                            number: numberKey
+                                        },
+                                        word: numberValue
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return matches;
+        }
+        const lurMatch = IsLur(keyword);
 
         // for type2
         const type2AffixesMap = {
@@ -657,7 +687,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             return;
         }
         else if (matchType === 1.3) {//type 1.3
-
             console.log('-----type1.3-----');
 
             console.log(correlativeMatch);
@@ -697,6 +726,43 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             });
             openPageOld('page95');
 
+            return;
+        }
+        else if (matchType === 1.4) {//type 1.4
+            console.log('-----type1.4-----');
+
+            const html = `
+                <div>
+                    <table>
+                        <theader>
+                            <tr>
+                                <th>Word</th>
+                                <th>Aspect</th>
+                                <th>Tense</th>
+                                <th>Gender</th>
+                                <th>Person</th>
+                                <th>Number</th>
+                            </tr>
+                        </theader>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+            `;
+            helperFunctions.standard.createPageById('page95', html);
+            lurMatch.forEach(entry => {
+                const html = `
+                    <tr>
+                        <td>${entry.word}</td>
+                        <td>${entry.path.aspect}</td>
+                        <td>${entry.path.tense}</td>
+                        <td>${entry.path.gender}</td>
+                        <td>${entry.path.person}</td>
+                        <td>${entry.path.number}</td>
+                    </tr>
+                `;
+                helperFunctions.standard.insertTrIntoTableById('tbody', html);
+            });
+            openPageOld('page95');
             return;
         }
         else if (//type 2
@@ -1919,7 +1985,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
-        console.log(searchBTN, searchFLD);
+        //console.log(searchBTN, searchFLD);
     }
 
     //evenlisteners vv
