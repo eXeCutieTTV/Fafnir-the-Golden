@@ -1,3 +1,8 @@
+:root {
+    --p99-blur-amount: 6px;
+    --p99-blur-color: rgba(0, 0, 0, 0.35);
+}
+
 #outerdivp99 {
     display: flex;
 }
@@ -7,6 +12,7 @@
     flex: 1;
     margin-left: 8px;
     margin-right: 8px;
+    position: relative;
 }
 
 #headerp99 {
@@ -96,4 +102,24 @@
     width: 25%;
     transform: translateX(-50%);
     scrollbar-width: none;
+}
+
+#innerdivp99::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--p99-blur-color);
+    backdrop-filter: blur(var(--p99-blur-amount));
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+body.dictionary-blur-active #innerdivp99::before {
+    opacity: 1;
+}
+
+body.dictionary-blur-active #searchDiv {
+    z-index: 2;
 }
