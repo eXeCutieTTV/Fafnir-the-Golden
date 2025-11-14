@@ -1,6 +1,8 @@
 function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. not only verbs & nouns :sob:
     // /\(/o.o\)/\ - Spooky the spider
-
+    for (key of Object.values(ADJECTIVES.SUFFIXES.FLAT_MATCHES)) {
+        if (key[3] === 'n') { key[3] = 'adj' }
+    }
     let searchBTN = document.getElementById('search_button');
     let searchFLD = document.getElementById('search_field');
 
@@ -2074,8 +2076,27 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         }
     });
 }
-dictionaryPage(); // so constants arent redefined.
-// this works as a wrapper function essentially^^
+
+// Wait until page99's controls exist before wiring up the dictionary logic.
+(function bootstrapDictionaryPage() {
+    if (window.__dictionaryPageInitPromise) return;
+
+    const waitForSearchControls = () => Promise.all([
+        helperFunctions.tablegen.waitForElement('#page99 #search_button', 10000),
+        helperFunctions.tablegen.waitForElement('#page99 #search_field', 10000),
+    ]);
+
+    window.__dictionaryPageInitPromise = waitForSearchControls()
+        .then(() => {
+            if (window.__dictionaryPageInitialized) return;
+            dictionaryPage();
+            window.__dictionaryPageInitialized = true;
+        })
+        .catch((error) => {
+            console.warn('dictionaryPage bootstrap failed:', error);
+            window.__dictionaryPageInitPromise = null;
+        });
+})();
 
 //maybe add a 4th type? if number, then use lirioz' NUMBERS.numberToText.
 //5th type is a buttonpress that just loads the entire plain dictionary.

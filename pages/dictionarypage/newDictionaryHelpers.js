@@ -380,6 +380,38 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
                 return pResult;
             }
             break;
+        case 'adj':
+            if (isPrefix === false) {
+                const adjSuffResult = [];
+                match.forEach(arr => {
+
+                    const affixApplied = arr[1][0] || '';
+                    const affixUnapplied = arr[1][1] || '';
+
+                    appliedOrUnapplied(affixApplied, affixUnapplied, 'suffix');
+
+                    affixDeclension = arr[2][3][0];
+                    affixCase = arr[2][0];
+                    affixGender = arr[2][1];
+                    affixNumber = arr[2][2][0];
+
+                    const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
+                    const MAP = ALL_WORDS.MAP[affixStem];
+
+                    const matchResult = {
+                        affixType,
+                        affixGender,
+                        affixNumber,
+                        affixDeclension,
+                        affixStem: N1,
+                        affixCase,
+                        affix,
+                    }
+                    adjSuffResult.push(matchResult);
+                });
+                return adjSuffResult;
+            }
+            break;
         default:
             console.warn(`${affixType} is not a valid affix type`);
     }
@@ -923,3 +955,4 @@ const helperFunctions =
     tablegen,
     formatting
 }
+
