@@ -48,6 +48,55 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             return matches;
         }
         const pronounMatch = isPronoun(keyword);
+
+        // for type1.2
+        function isDeterminer(word) {
+            const matches = [];
+            for (const [genderKey, genderMap] of Object.entries(IRREGULAR_DETERMINERS)) {
+                for (const [typeKey, typeMap] of Object.entries(genderMap)) {
+                    for (const [numberKey, numberValue] of Object.entries(typeMap)) {
+                        if (numberValue === word) {
+                            matchType = 1.2;
+                            matches.push({
+                                path: {
+                                    gender: genderKey,
+                                    number: numberKey,
+                                },
+                                word: numberValue,
+                                type: typeKey
+                            });
+                        }
+                    }
+                }
+            }
+            return matches;
+        }
+        const determinerMatch = isDeterminer(keyword);
+
+        // for type1.3
+        function isCorrelative(word) {
+            const matches = [];
+            for (const [genderKey, genderMap] of Object.entries(CORRELATIVES)) {
+                for (const [typeKey, typeMap] of Object.entries(genderMap)) {
+                    for (const [caseKey, caseValue] of Object.entries(typeMap)) {
+                        if (caseValue === word) {
+                            matchType = 1.3;
+                            matches.push({
+                                path: {
+                                    gender: genderKey,
+                                    case: caseKey,
+                                },
+                                word: caseValue,
+                                type: typeKey
+                            });
+                        }
+                    }
+                }
+            }
+            return matches;
+        }
+        const correlativeMatch = isCorrelative(keyword);
+
         // for type2
         const type2AffixesMap = {
             verbPrefix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [],
@@ -58,27 +107,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             pPrefix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, true, true) || [],
             pSuffix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, false, true) || [],
         }
-
-        function bkjlcdfkjbacsfksjbsdkabjc() {
-            /*  
-                i- prefix to turn nouns into adjectives
-                -nyl to turn adjectives into adverbs
-                -ûl
-                -ūn
-                -ān
-                -ōn
-                particles^^
-                        
-                -hyn	
-                -hyf	
-                -ħó	
-                -llīl	
-                -huχ	
-                -thok	
-                -hoq̇
-                ^^ unique determiner suffixes. (only for determiners).
-            */
-        }//HAHAHAHHAHAHAHAHHA. FUCK YOU COMMENT >:) :q
 
         helperFunctions.standard.clearPageById('page97'); //type 1
         helperFunctions.standard.clearPageById('page95'); //type 1.1
@@ -538,7 +566,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     openPageOld('page97');
                 } else { return; }
             });
-        } else if (matchType === 1.1) {//type 1.1
+        }
+        else if (matchType === 1.1) {//type 1.1
             console.log('-----type1.1-----');
 
             console.log(pronounMatch);
@@ -551,7 +580,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     <table>
                         <theader>
                             <tr>
-                                <th>Pronoun type</th>
+                                <th style="width: 200px">Pronoun type</th>
                                 <th>Pronoun</th>
                                 <th>Gender</th>
                                 <th>Person</th>
@@ -575,6 +604,92 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         <td>${entry.path.gender}</td>
                         <td>${entry.path.person}</td>
                         <td>${entry.path.number}</td>
+                        <td>${entry.path.case}</td>
+                    </tr>
+                `;
+                helperFunctions.standard.insertTrIntoTableById('tbody', html);
+            });
+            openPageOld('page95');
+
+            return;
+        }
+        else if (matchType === 1.2) {//type 1.2
+
+            console.log('-----type1.2-----');
+
+            console.log(determinerMatch);
+            determinerMatch.forEach(entry => {
+                console.log(entry.word, 'is a personal pronoun');
+            });
+
+            const html = `
+                <div>
+                    <table>
+                        <theader>
+                            <tr>
+                                <th style="width: 200px">Determiner type</th>
+                                <th>Pronoun</th>
+                                <th>Gender</th>
+                                <th>Number</th>
+                            </tr>
+                        </theader>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+            `;
+
+            helperFunctions.standard.createPageById('page95', html);
+
+            determinerMatch.forEach(entry => {
+
+                const html = `
+                    <tr>
+                        <th>${entry.type}</th>
+                        <td>${entry.word}</td>
+                        <td>${entry.path.gender}</td>
+                        <td>${entry.path.number}</td>
+                    </tr>
+                `;
+                helperFunctions.standard.insertTrIntoTableById('tbody', html);
+            });
+            openPageOld('page95');
+
+            return;
+        }
+        else if (matchType === 1.3) {//type 1.3
+
+            console.log('-----type1.3-----');
+
+            console.log(correlativeMatch);
+            correlativeMatch.forEach(entry => {
+                console.log(entry.word, 'is a personal pronoun');
+            });
+
+            const html = `
+                <div>
+                    <table>
+                        <theader>
+                            <tr>
+                                <th style="width: 200px">Correlative type</th>
+                                <th>Pronoun</th>
+                                <th>Gender</th>
+                                <th>Case</th>
+                            </tr>
+                        </theader>
+                        <tbody id="tbody"></tbody>
+                    </table>
+                </div>
+            `;
+
+            helperFunctions.standard.createPageById('page95', html);
+
+            correlativeMatch.forEach(entry => {
+
+                const html = `
+                    <tr>
+                        <th>${entry.type}</th>
+                        <td>${entry.word}</td>
+                        <td>${entry.path.gender}</td>
                         <td>${entry.path.case}</td>
                     </tr>
                 `;

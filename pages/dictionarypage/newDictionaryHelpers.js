@@ -923,3 +923,145 @@ const helperFunctions =
     tablegen,
     formatting
 }
+
+
+
+
+
+
+
+
+
+
+
+const CorrelativeTypesMap = {
+    INT: 'Interrogative',
+    R: 'Relative',
+    COR: 'Correlative',
+    PDEM: 'Proximal-Demonstrative',
+    DDEM: 'Distal-Demonstrative',
+}
+
+const CORRELATIVES = {
+    [GENDERS.ANIMATES.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hā", [IDS.TARGETS.O]: "halláħ" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "sē", [IDS.TARGETS.O]: "sēlláħ" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "thare", [IDS.TARGETS.O]: "tharlláħ" },
+    },
+    [GENDERS.INANIMATES.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hox", [IDS.TARGETS.O]: "hóqħ" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "six", [IDS.TARGETS.O]: "sôqħ" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "tharx", [IDS.TARGETS.O]: "tharáqħ" },
+    },
+    [GENDERS.MAP.E.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hālen", [IDS.TARGETS.O]: "hallħân" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "sēlen", [IDS.TARGETS.O]: "sēllħân" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "tharlen", [IDS.TARGETS.O]: "tharħân" },
+        [CorrelativeTypesMap.PDEM]: { [IDS.TARGETS.S]: "sēn", [IDS.TARGETS.O]: "sōhyn" },
+        [CorrelativeTypesMap.DDEM]: { [IDS.TARGETS.S]: "lēn", [IDS.TARGETS.O]: "li'ōn" },
+    },
+    [GENDERS.MAP.R.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hāllef", [IDS.TARGETS.O]: "hallħâf" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "sēllef", [IDS.TARGETS.O]: "sēllħâf" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "tharllef", [IDS.TARGETS.O]: "tharħâf" },
+        [CorrelativeTypesMap.PDEM]: { [IDS.TARGETS.S]: "sēf", [IDS.TARGETS.O]: "sōhyf" },
+        [CorrelativeTypesMap.DDEM]: { [IDS.TARGETS.S]: "lēf", [IDS.TARGETS.O]: "li'ōf" },
+    },
+    [GENDERS.MAP.MON.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hālló", [IDS.TARGETS.O]: "hallħô" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "sēlló", [IDS.TARGETS.O]: "sēllħô" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "tharlló", [IDS.TARGETS.O]: "tharħô" },
+        [CorrelativeTypesMap.PDEM]: { [IDS.TARGETS.S]: "sēħó", [IDS.TARGETS.O]: "sōħó" },
+        [CorrelativeTypesMap.DDEM]: { [IDS.TARGETS.S]: "lēħó", [IDS.TARGETS.O]: "li'ô" },
+    },
+    [GENDERS.MAP.I.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hāllcīl", [IDS.TARGETS.O]: "hallħīl" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "sēllcīl", [IDS.TARGETS.O]: "sēllħīl" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "tharcīl", [IDS.TARGETS.O]: "tharħīl" },
+        [CorrelativeTypesMap.PDEM]: { [IDS.TARGETS.S]: "sēllīl", [IDS.TARGETS.O]: "sōllīl" },
+        [CorrelativeTypesMap.DDEM]: { [IDS.TARGETS.S]: "lēllīl", [IDS.TARGETS.O]: "li'llīl" },
+    },
+    [GENDERS.MAP.MAG.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "huχuχ", [IDS.TARGETS.O]: "hoqħôχ" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "siχuχ", [IDS.TARGETS.O]: "suqħôχ" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "tharχuχ", [IDS.TARGETS.O]: "tharqħôχ" },
+        [CorrelativeTypesMap.PDEM]: { [IDS.TARGETS.S]: "sēhuχ", [IDS.TARGETS.O]: "sōhuχ" },
+        [CorrelativeTypesMap.DDEM]: { [IDS.TARGETS.S]: "lēhuχ", [IDS.TARGETS.O]: "li'ōχ" },
+    },
+    [GENDERS.MAP.MUN.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hotok", [IDS.TARGETS.O]: "hoqħárk" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "sitok", [IDS.TARGETS.O]: "suqħárk" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "thartok", [IDS.TARGETS.O]: "tharqħárk" },
+        [CorrelativeTypesMap.PDEM]: { [IDS.TARGETS.S]: "sērk", [IDS.TARGETS.O]: "sōthok" },
+        [CorrelativeTypesMap.DDEM]: { [IDS.TARGETS.S]: "lērk", [IDS.TARGETS.O]: "li'ōk" },
+    },
+    [GENDERS.MAP.A.NAME]: {
+        [CorrelativeTypesMap.INT]: { [IDS.TARGETS.S]: "hoχoq̇", [IDS.TARGETS.O]: "hoqħôq̇" },
+        [CorrelativeTypesMap.R]: { [IDS.TARGETS.S]: "siχoq̇", [IDS.TARGETS.O]: "suqħôq̇" },
+        [CorrelativeTypesMap.COR]: { [IDS.TARGETS.S]: "tharχoq̇", [IDS.TARGETS.O]: "tharqħôq̇" },
+        [CorrelativeTypesMap.PDEM]: { [IDS.TARGETS.S]: "sēhoq̇", [IDS.TARGETS.O]: "sōhoq̇" },
+        [CorrelativeTypesMap.DDEM]: { [IDS.TARGETS.S]: "lēhoq̇", [IDS.TARGETS.O]: "li'ōq̇" },
+    }
+}
+
+const DeterminersTypeMap = {
+    NA: 'Negative-Article',
+    DA: 'Definite-Article',
+    PDEM: 'Proximal-Demonstrative',
+    DDEM: 'Distal-Demonstrative',
+}
+
+const IRREGULAR_DETERMINERS = {
+    [GENDERS.MAP.E.NAME]: {
+        [DeterminersTypeMap.NA]: "q̇e",
+        [DeterminersTypeMap.DA]: { [IDS.NUMBERS.S]: "tyn", [IDS.NUMBERS.P]: "tōn" },
+        [DeterminersTypeMap.PDEM]: { [IDS.NUMBERS.S]: "sēn", [IDS.NUMBERS.P]: "sōn" },
+        [DeterminersTypeMap.DDEM]: { [IDS.NUMBERS.S]: "lēn", [IDS.NUMBERS.P]: "li'ōn" },
+    },
+    [GENDERS.MAP.R.NAME]: {
+        [DeterminersTypeMap.NA]: "q̇e",
+        [DeterminersTypeMap.DA]: { [IDS.NUMBERS.S]: "tyf", [IDS.NUMBERS.P]: "tōf" },
+        [DeterminersTypeMap.PDEM]: { [IDS.NUMBERS.S]: "sēf", [IDS.NUMBERS.P]: "sōf" },
+        [DeterminersTypeMap.DDEM]: { [IDS.NUMBERS.S]: "lēf", [IDS.NUMBERS.P]: "li'ōf" },
+    },
+    [GENDERS.MAP.MON.NAME]: {
+        [DeterminersTypeMap.NA]: "q̇e",
+        [DeterminersTypeMap.DA]: { [IDS.NUMBERS.S]: "tó", [IDS.NUMBERS.P]: "tô" },
+        [DeterminersTypeMap.PDEM]: { [IDS.NUMBERS.S]: "sēħó", [IDS.NUMBERS.P]: "sōħó" },
+        [DeterminersTypeMap.DDEM]: { [IDS.NUMBERS.S]: "lēħó", [IDS.NUMBERS.P]: "li'ô" },
+    },
+    [GENDERS.MAP.I.NAME]: {
+        [DeterminersTypeMap.NA]: "q̇e",
+        [DeterminersTypeMap.DA]: { [IDS.NUMBERS.S]: "tīl", [IDS.NUMBERS.P]: "tūl" },
+        [DeterminersTypeMap.PDEM]: { [IDS.NUMBERS.S]: "sēllīl", [IDS.NUMBERS.P]: "sōllīl" },
+        [DeterminersTypeMap.DDEM]: { [IDS.NUMBERS.S]: "lēllīl", [IDS.NUMBERS.P]: "li'llīl" },
+    },
+    [GENDERS.MAP.MAG.NAME]: {
+        [DeterminersTypeMap.NA]: "q̇e",
+        [DeterminersTypeMap.DA]: { [IDS.NUMBERS.S]: "tuχ", [IDS.NUMBERS.P]: "tōχ" },
+        [DeterminersTypeMap.PDEM]: { [IDS.NUMBERS.S]: "sēhuχ", [IDS.NUMBERS.P]: "sōhuχ" },
+        [DeterminersTypeMap.DDEM]: { [IDS.NUMBERS.S]: "lēhuχ", [IDS.NUMBERS.P]: "li'ōχ" },
+    },
+    [GENDERS.MAP.MUN.NAME]: {
+        [DeterminersTypeMap.NA]: "q̇e",
+        [DeterminersTypeMap.DA]: { [IDS.NUMBERS.S]: "tyrk", [IDS.NUMBERS.P]: "tōk" },
+        [DeterminersTypeMap.PDEM]: { [IDS.NUMBERS.S]: "sērk", [IDS.NUMBERS.P]: "sōthok" },
+        [DeterminersTypeMap.DDEM]: { [IDS.NUMBERS.S]: "lērk", [IDS.NUMBERS.P]: "li'ōk" },
+    },
+    [GENDERS.MAP.A.NAME]: {
+        [DeterminersTypeMap.NA]: "q̇e",
+        [DeterminersTypeMap.DA]: { [IDS.NUMBERS.S]: "toq̇", [IDS.NUMBERS.P]: "tōq̇" },
+        [DeterminersTypeMap.PDEM]: { [IDS.NUMBERS.S]: "sēhoq̇", [IDS.NUMBERS.P]: "sōhoq̇" },
+        [DeterminersTypeMap.DDEM]: { [IDS.NUMBERS.S]: "lēhoq̇", [IDS.NUMBERS.P]: "li'ōq̇" },
+    }
+}
+
+const DETERMINERS_SUFFIXES = {
+    [GENDERS.MAP.E.NAME]: "hyn",
+    [GENDERS.MAP.R.NAME]: "hyf",
+    [GENDERS.MAP.MON.NAME]: "ħó",
+    [GENDERS.MAP.I.NAME]: "llīl",
+    [GENDERS.MAP.MAG.NAME]: "huχ",
+    [GENDERS.MAP.MUN.NAME]: "thok",
+    [GENDERS.MAP.A.NAME]: "hoq̇"
+}
