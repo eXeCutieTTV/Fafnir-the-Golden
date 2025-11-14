@@ -4,6 +4,8 @@
 
 .pages {
     padding-bottom: 65px; /* space for nav buttons */
+    position: relative;
+    isolation: isolate;
 }
 
 .page.active {
