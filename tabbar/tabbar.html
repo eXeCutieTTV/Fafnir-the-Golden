@@ -2,25 +2,29 @@
 <link rel="stylesheet" href="pages\page.css">
 
 <div class="tab-bar">
-    <div id="modeToggle" onclick="document.documentElement.classList.toggle('dark')">DarkMode</div>
-    <div class="tab active" onclick="openPage('pages/welcomepage/page0.html', 'page0', { runScripts: true, replace: false}, this)">Welcome</div>
-    <div class="tab" onclick="openPage('pages/dictionarypage/page99.html', 'page99', { runScripts: true, replace: false},this);">Dictionary</div>
-    <div class="tab" onclick="openPage('pages/alphabetpage/page1.html', 'page1', { runScripts: true, replace: false}, this); alphabetOnTimeout();">1. Alphabet</div>
-    <div class="tab" onclick="openPage('pages/phonologypage/page2.html', 'page2', { runScripts: true, replace: false}, this);">2. Phonology</div>
-    <div class="tab" onclick="openPage('pages/nounspage/page3.html', 'page3', { runScripts: true, replace: false}, this);">3. Nouns</div>
-    <div class="tab" onclick="openPage('pages/verbspage/page4.html', 'page4', { runScripts: true, replace: false}, this);">4. Verbs</div>
-    <div class="tab" onclick="openPage('pages/adverbspage/page5.html', 'page5', { runScripts: true, replace: false}, this);">5. Adverbs</div>
-    <div class="tab" onclick="openPage('pages/auxilariespage/page6.html', 'page6', { runScripts: true, replace: false}, this);">6. Auxilaries</div>
-    <div class="tab" onclick="openPage('pages/adjectivespage/page7.html', 'page7', { runScripts: true, replace: false}, this);">7. Adjectives</div>
-    <div class="tab" onclick="openPage('pages/animacy&agencypage/page8.html', 'page8', { runScripts: true, replace: false}, this);">8. Animacy & Agency</div>
-    <div class="tab" onclick="openPage('pages/prepositionspage/page9.html', 'page9', { runScripts: true, replace: false}, this);">9. Prepositions</div>
-    <div class="tab" onclick="openPage('pages/determinerspage/page10.html', 'page10', { runScripts: true, replace: false}, this);">10. Determiners</div>
-    <div class="tab" onclick="openPage('pages/pronounspage/page11.html', 'page11', { runScripts: true, replace: false}, this);">11. Pronouns</div>
-    <div class="tab" onclick="openPage('pages/questionspage/page12.html', 'page12', { runScripts: true, replace: false}, this);">12. Questions</div>
-    <div class="tab" onclick="openPage('pages/numberspage/page16.html', 'page16', { runScripts: true, replace: false}, this);">16. Numbers</div>
-    <div class="tab" onclick="openPage('pages/clausalpage/page17.html', 'page17', { runScripts: true, replace: false}, this);">17. Sentence structure</div>
-    <div class="tab" onclick="openPage('pages/wordorderpage/page18.html', 'page18', { runScripts: true, replace: false}, this);">18. Wordorder</div>
-    <div class="tab" onclick="openPage('', 'page19', { runScripts: true, replace: false}, this);">19. Games</div>
-    <div class="tab" onclick="openPage('', 'page29', { runScripts: true, replace: false}, this);">29. Glossing Tool</div>
-    <div class="tab" onclick="openPage('', 'page39', { runScripts: true, replace: false}, this);">39. Base 8 Math and Graph</div>
+    <div id="settings">
+        <div id="modeToggle" onclick="document.documentElement.classList.toggle('dark')">DarkMode</div>
+    </div>
+    <div class="tabs">
+        <div class="tab active" onclick="openPage('pages/welcomepage/page0.html', 'page0', { runScripts: true, replace: false}, this)">Welcome</div>
+        <div class="tab" onclick="openPage('pages/dictionarypage/page99.html', 'page99', { runScripts: true, replace: false},this);">Dictionary</div>
+        <div class="tab" onclick="openPage('pages/alphabetpage/page1.html', 'page1', { runScripts: true, replace: false}, this); alphabetOnTimeout();">1. Alphabet</div>
+        <div class="tab" onclick="openPage('pages/phonologypage/page2.html', 'page2', { runScripts: true, replace: false}, this);">2. Phonology</div>
+        <div class="tab" onclick="openPage('pages/nounspage/page3.html', 'page3', { runScripts: true, replace: false}, this);">3. Nouns</div>
+        <div class="tab" onclick="openPage('pages/verbspage/page4.html', 'page4', { runScripts: true, replace: false}, this);">4. Verbs</div>
+        <div class="tab" onclick="openPage('pages/adverbspage/page5.html', 'page5', { runScripts: true, replace: false}, this);">5. Adverbs</div>
+        <div class="tab" onclick="openPage('pages/auxilariespage/page6.html', 'page6', { runScripts: true, replace: false}, this);">6. Auxilaries</div>
+        <div class="tab" onclick="openPage('pages/adjectivespage/page7.html', 'page7', { runScripts: true, replace: false}, this);">7. Adjectives</div>
+        <div class="tab" onclick="openPage('pages/animacy&agencypage/page8.html', 'page8', { runScripts: true, replace: false}, this);">8. Animacy & Agency</div>
+        <div class="tab" onclick="openPage('pages/prepositionspage/page9.html', 'page9', { runScripts: true, replace: false}, this);">9. Prepositions</div>
+        <div class="tab" onclick="openPage('pages/determinerspage/page10.html', 'page10', { runScripts: true, replace: false}, this);">10. Determiners</div>
+        <div class="tab" onclick="openPage('pages/pronounspage/page11.html', 'page11', { runScripts: true, replace: false}, this);">11. Pronouns</div>
+        <div class="tab" onclick="openPage('pages/questionspage/page12.html', 'page12', { runScripts: true, replace: false}, this);">12. Questions</div>
+        <div class="tab" onclick="openPage('pages/numberspage/page16.html', 'page16', { runScripts: true, replace: false}, this);">16. Numbers</div>
+        <div class="tab" onclick="openPage('pages/clausalpage/page17.html', 'page17', { runScripts: true, replace: false}, this);">17. Sentence structure</div>
+        <div class="tab" onclick="openPage('pages/wordorderpage/page18.html', 'page18', { runScripts: true, replace: false}, this);">18. Wordorder</div>
+        <div class="tab" onclick="openPage('', 'page19', { runScripts: true, replace: false}, this);">19. Games</div>
+        <div class="tab" onclick="openPage('', 'page29', { runScripts: true, replace: false}, this);">29. Glossing Tool</div>
+        <div class="tab" onclick="openPage('', 'page39', { runScripts: true, replace: false}, this);">39. Base 8 Math and Graph</div>
+    </div>
 </div><!--TODO, pressing tab should highlight the next tab on the bar, pressing enter opens the page. shift+tab to go backwards.-->
