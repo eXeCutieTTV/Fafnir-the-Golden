@@ -2304,6 +2304,19 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
+        //evenlisteners vv
+        // === Search button click ===
+        searchBTN.addEventListener('click', () => {
+            search(); // /\(/o.o\)/\ - Spooky the spider
+        });
+
+        // === Trigger search on Enter key ===
+        searchFLD.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // prevent form submission
+                search();
+            }
+        });
         //console.log(searchBTN, searchFLD);
         console.log('all matches |', allMatchesArray);
     }
