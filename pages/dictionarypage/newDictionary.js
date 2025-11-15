@@ -2283,8 +2283,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             if (affixTypesMap.auxPrefix.state) {
 
                 const array = affixTypesMap.auxPrefix.resultMap[0];
-                const particle = array.affix;
-                const particleStem = array.affixStem;
 
                 const html = `
                     <div>
@@ -2426,4 +2424,3 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 //maybe need an entire 6th type just for lur?
 //rest of particle suffixes.
 //probably revert that change that codex added to page loading lmao. it fucks up when you re-enter the page - from a searchpage.
-//auxilary can take verb prefixes.
