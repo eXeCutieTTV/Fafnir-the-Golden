@@ -2281,7 +2281,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 openPageOld('page96');
             }
             if (affixTypesMap.auxPrefix.state) {
-
+                matchType = 2;
                 const array = affixTypesMap.auxPrefix.resultMap[0];
 
                 const html = `
