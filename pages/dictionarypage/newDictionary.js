@@ -163,6 +163,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             adjSuffix: helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true) || [],
             pPrefix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, true, true) || [],
             pSuffix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, false, true) || [],
+            auxPrefix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [],
             detSuffix: [], //<---
         }
         helperFunctions.standard.clearPageById('page97'); //type 1
@@ -853,7 +854,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             type2AffixesMap.nounSuffix ||
             type2AffixesMap.adjSuffix ||
             type2AffixesMap.pPrefix ||
-            type2AffixesMap.pSuffix
+            type2AffixesMap.pSuffix ||
+            type2AffixesMap.auxPrefix
         ) {
             console.log('-----type2-----');
 
@@ -866,6 +868,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 pPrefix: { rawMap: type2AffixesMap.pPrefix, resultMap: [], state: false },
                 pSuffix: { rawMap: type2AffixesMap.pSuffix, resultMap: [], state: false },
                 detSuffix: { rawMap: type2AffixesMap.detSuffix, resultMap: [], state: false },
+                auxPrefix: { rawMap: type2AffixesMap.auxPrefix, resultMap: [], state: false },
                 verbBothAffixes: { resultMap: { prefix: [], suffix: [], }, state: false },
                 nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [], }, state: false },
                 nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
@@ -878,14 +881,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
             if (affixTypesMap.verbPrefix.rawMap) {
                 for (entry of Object.values(affixTypesMap.verbPrefix.rawMap)) {
-                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                    if (ALL_WORDS.MAP[entry.affixStem] && ALL_WORDS.MAP[entry.affixStem].type === 'v') {
                         affixTypesMap.verbPrefix.resultMap.push(entry);
                         affixTypesMap.verbPrefix.state = true;
                     } else {
                         verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [];
                         if (verbSuffix) {
                             for (entry2 of Object.values(verbSuffix)) {
-                                if (ALL_WORDS.MAP[entry2.affixStem]) {
+                                if (ALL_WORDS.MAP[entry2.affixStem] && ALL_WORDS.MAP[entry.affixStem].type === 'v') {
                                     //console.log(entry);
                                     //console.log(entry2);
 
@@ -1001,6 +1004,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 affixTypesMap.adjSuffixANDpSuffix.state = true;
                             }
                         }
+                    }
+                }
+            }
+            if (affixTypesMap.auxPrefix.rawMap) {
+                for (entry of Object.values(affixTypesMap.auxPrefix.rawMap)) {
+                    if (ALL_WORDS.MAP[entry.affixStem] && ALL_WORDS.MAP[entry.affixStem].type === 'aux') {
+                        affixTypesMap.auxPrefix.resultMap.push(entry);
+                        affixTypesMap.auxPrefix.state = true;
                     }
                 }
             }
@@ -2266,6 +2277,59 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         </tr>
                     `;
                     helperFunctions.standard.insertTrIntoTableById('tbody2', html);
+                });
+                openPageOld('page96');
+            }
+            if (affixTypesMap.auxPrefix.state) {
+
+                const array = affixTypesMap.auxPrefix.resultMap[0];
+                const particle = array.affix;
+                const particleStem = array.affixStem;
+
+                const html = `
+                    <div>
+                        <table>
+                            <theader>
+                                <tr>
+                                    <th>Word</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                    <th>Wordclass</th>
+                                </tr>
+                            </theader>
+                            <tbody>
+                                <tr>
+                                    <td>${keyword}</td>
+                                    <td>${ALL_WORDS.MAP[array.affixStem].definition}</td>
+                                    <td>${ALL_WORDS.MAP[array.affixStem].usage_notes}</td>
+                                    <td>${'Auxilary'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table style="margin-top:15px">
+                            <theader>
+                                <tr>
+                                    <th>Prefix</th>
+                                    <th>Stem</th>
+                                    <th>Gender</th>
+                                    <th>Person</th>
+                                </tr>
+                            </theader>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+                `;
+                helperFunctions.standard.createPageById('page96', html);
+                affixTypesMap.auxPrefix.resultMap.forEach(entry => {
+                    const html = `
+                        <tr>
+                            <td>${entry.affix}</td>
+                            <td>${entry.affixStem}</td>
+                            <td>${entry.affixGender}</td>
+                            <td>${entry.affixPerson}</td>
+                        </tr>
+                    `;
+                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
                 });
                 openPageOld('page96');
             }
