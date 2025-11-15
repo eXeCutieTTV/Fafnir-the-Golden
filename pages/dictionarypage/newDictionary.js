@@ -2397,7 +2397,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         }
     });
 }
+dictionaryPage();
 
+/*
 // Wait until page99's controls exist before wiring up the dictionary logic.
 (function bootstrapDictionaryPage() {
     if (window.__dictionaryPageInitPromise) return;
@@ -2418,7 +2420,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             window.__dictionaryPageInitPromise = null;
         });
 })();
-
+*/
 //maybe add a 4th type? if number, then use lirioz' NUMBERS.numberToText.
 //5th type is a buttonpress that just loads the entire plain dictionary.
 //maybe need an entire 6th type just for lur?
