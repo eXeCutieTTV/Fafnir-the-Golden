@@ -888,6 +888,10 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [];
                         if (verbSuffix) {
                             for (entry2 of Object.values(verbSuffix)) {
+                                //console.log(entry, entry2);
+                                //const { slice1:v1, slice2:v2 } = helperFunctions.standard.sliceKeywordNegative(entry.affixStem, entry2.affix.length);
+                                //console.log(v1, v2);
+                                //entry.affixStem = v1;
                                 if (ALL_WORDS.MAP[entry2.affixStem] && ALL_WORDS.MAP[entry.affixStem].type === 'v') {
                                     //console.log(entry);
                                     //console.log(entry2);
@@ -2052,44 +2056,44 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 };
 
                 const html = `
-                                <div>
-                                    <table>
-                                        <tr>
-                                            <th style="width:116px">...</th>
-                                            <th>Word</th>
-                                            <th>Stem</th>
-                                            <th>Wordclass</th>
-                                            <th>Usage Notes</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Info</th>
-                                            <td>${keyword}</td>
-                                            <td id="type2SuffixONLYStem">${affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].affixStem}</td>
-                                            <td>${wordclass}</td>
-                                            <td>${stemNotes || '...'}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <br>
-                                <br>
-                                <br>
-                                <div id=tablesContainer>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th style="width:116px">...</th>
-                                                <th>Suffix</th>
-                                                <th>Declension</th>
-                                                <th>Gender</th>
-                                                <th>Number</th>
-                                                <th>Case</th>
-                                                <th>Definition</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbody"></tbody>
-                                    </table>
-                                </div>
-                                `;
+                    <div>
+                        <table>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Word</th>
+                                <th>Stem</th>
+                                <th>Wordclass</th>
+                                <th>Usage Notes</th>
+                            </tr>
+                            <tr>
+                                <th>Info</th>
+                                <td>${keyword}</td>
+                                <td id="type2SuffixONLYStem">${affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].affixStem}</td>
+                                <td>${wordclass}</td>
+                                <td>${stemNotes || '...'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <div id=tablesContainer>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Suffix</th>
+                                    <th>Declension</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                    <th>Case</th>
+                                    <th>Definition</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody"></tbody>
+                        </table>
+                    </div>
+                    `;
                 helperFunctions.standard.createPageById('page96', html);
                 affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.forEach(arr => {
                     const suffixDeclension = arr.affixDeclension;
@@ -2125,28 +2129,27 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const particle = affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix; //console.log(prefix);
                 const map = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix]; //console.log(map);
                 const ppHtml = `
-                                <table style="margin-top:35px">
-                                    <thead>
-                                        <tr>
-                                            <th>...</th>
-                                            <th style="width:116px">Particle</th>
-                                            <th>Definition</th>
-                                            <th>Usage Notes</th>
-                                            <th>Wordclass</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>Info</th>
-                                            <td>${particle || '...'}</td>
-                                            <td>${map.definition || '...'}</td>
-                                            <td>${map.usage_notes || '...'}</td>
-                                            <td>${'preposition'}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            `;
-
+                    <table style="margin-top:35px">
+                        <thead>
+                            <tr>
+                                <th>...</th>
+                                <th style="width:116px">Particle</th>
+                                <th>Definition</th>
+                                <th>Usage Notes</th>
+                                <th>Wordclass</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Info</th>
+                                <td>${particle || '...'}</td>
+                                <td>${map.definition || '...'}</td>
+                                <td>${map.usage_notes || '...'}</td>
+                                <td>${'preposition'}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
                 const wrapper = document.getElementById('tablesContainer');
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 

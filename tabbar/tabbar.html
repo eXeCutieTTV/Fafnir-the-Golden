@@ -1,9 +1,10 @@
 <link rel="stylesheet" href="tabbar\tabbar.css">
 <link rel="stylesheet" href="pages\page.css">
 
+
 <div class="tab-bar">
     <div id="settings">
-        <div id="modeToggle" onclick="document.documentElement.classList.toggle('dark')">DarkMode</div>
+        <div id="modeToggle" onclick="darkmodeToggle()">DarkMode</div>
     </div>
     <div class="tabs">
         <div class="tab active" onclick="openPage('pages/welcomepage/page0.html', 'page0', { runScripts: true, replace: false}, this)">Welcome</div>

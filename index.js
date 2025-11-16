@@ -1,3 +1,21 @@
+let darkmode = localStorage.getItem("darkmode-state");
+
+function darkmodeToggle() {
+  if (darkmode === "black") {
+    localStorage.setItem("darkmode-state", "white");
+    console.log(darkmode, "now white");
+  } else {
+    localStorage.setItem("darkmode-state", "black");
+    console.log(darkmode, "now black");
+  }
+  document.documentElement.classList.toggle('dark');
+  darkmode = localStorage.getItem("darkmode-state");
+  return;
+}
+if (darkmode === "black") {
+  document.documentElement.classList.toggle('dark');
+}
+
 // tab functionality
 function openPage(url, pageId, opts, element) {
   const pageEl = document.getElementById(pageId);
