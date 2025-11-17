@@ -886,13 +886,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         affixTypesMap.verbPrefix.state = true;
                     } else {
                         verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [];
-                        if (verbSuffix) {
+                        if (verbSuffix.length > 0) {
                             for (entry2 of Object.values(verbSuffix)) {
                                 //console.log(entry, entry2);
                                 //const { slice1:v1, slice2:v2 } = helperFunctions.standard.sliceKeywordNegative(entry.affixStem, entry2.affix.length);
                                 //console.log(v1, v2);
                                 //entry.affixStem = v1;
-                                if (ALL_WORDS.MAP[entry2.affixStem] && ALL_WORDS.MAP[entry.affixStem].type === 'v') {
+                                if (ALL_WORDS.MAP[entry2.affixStem]) {
                                     //console.log(entry);
                                     //console.log(entry2);
 

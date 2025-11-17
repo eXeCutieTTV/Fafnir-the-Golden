@@ -945,6 +945,20 @@ const formatting = {
 }
 
 
+const displayForms = function displayForms(allMatchesArray) {
+    if (!allMatchesArray) return;
+
+    const div = document.getElementById('listDiv');
+    if (!div) return;
+
+    //allMatchesArray.forEach
+}
+
+const final = {
+    displayForms
+}
+
+
 
 const helperFunctions =
 {
@@ -953,6 +967,7 @@ const helperFunctions =
     matchtype2,
     matchtype1,
     tablegen,
-    formatting
+    formatting,
+    final
 }
 
