@@ -49,6 +49,30 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         for (const [caseKey, caseValue] of Object.entries(personMap)) {
                             if (caseValue === word) {
                                 matchType = 1.1;
+                                function shortpath() {
+                                    const tempArray = [];
+
+                                    const mapArray = [IDS.NUMBERS, IDS.CASE];
+                                    mapArray.forEach(el => {
+                                        //tempArray.push(el);
+                                        for (const [short, long] of Object.entries(el)) {
+                                            if (caseKey === long) {
+                                                tempArray.push(short);
+                                            }
+                                            if (numberKey === long) {
+                                                tempArray.push(short);
+                                            }
+                                        }
+                                    });
+                                    for (entry of Object.values(GENDERS.MAP)) {
+                                        if (entry.NAME === genderKey) {
+                                            tempArray.push(entry.SHORT);
+                                        }
+                                    }
+                                    const result = `pers.${tempArray[2]}.${tempArray[1]}.${personKey}.${tempArray[0]}`;//type.gender.number.person.case
+                                    console.log(tempArray)
+                                    return result;
+                                }
                                 const result = {
                                     path: {
                                         gender: genderKey,
@@ -57,7 +81,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                         case: caseKey,
                                     },
                                     word: caseValue,
-                                    type: 'personal'
+                                    type: 'personal',
+                                    path_short: shortpath() || '',
                                 }
                                 matches.push(result);
                                 allMatchesArray.type1.pn.push(result);
@@ -78,13 +103,38 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     for (const [numberKey, numberValue] of Object.entries(typeMap)) {
                         if (numberValue === word) {
                             matchType = 1.2;
+                            function shortpath() {
+                                const tempArray = [];
+
+                                const mapArray = [IDS.NUMBERS, IDS.DET_TYPES];
+                                mapArray.forEach(el => {
+                                    //tempArray.push(el);
+                                    for (const [short, long] of Object.entries(el)) {
+                                        if (numberKey === long) {
+                                            tempArray.push(short);
+                                        }
+                                        if (typeKey === long) {
+                                            tempArray.push(short);
+                                        }
+                                    }
+                                });
+                                for (entry of Object.values(GENDERS.MAP)) {
+                                    if (entry.NAME === genderKey) {
+                                        tempArray.push(entry.SHORT);
+                                    }
+                                }
+                                const result = `${tempArray[1]}.${tempArray[0]}.${tempArray[2]}`;//type.number.gender
+
+                                return result;
+                            }
                             const result = {
                                 path: {
                                     gender: genderKey,
                                     number: numberKey,
                                 },
                                 word: numberValue,
-                                type: typeKey
+                                type: typeKey,
+                                path_short: shortpath() || '',
                             }
                             matches.push(result);
                             allMatchesArray.type1.det.push(result);
@@ -104,13 +154,38 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     for (const [caseKey, caseValue] of Object.entries(typeMap)) {
                         if (caseValue === word) {
                             matchType = 1.3;
+                            function shortpath() {
+                                const tempArray = [];
+
+                                const mapArray = [IDS.TARGETS, IDS.COR_TYPES];
+                                mapArray.forEach(el => {
+                                    //tempArray.push(el);
+                                    for (const [short, long] of Object.entries(el)) {
+                                        if (caseKey === long) {
+                                            tempArray.push(short);
+                                        }
+                                        if (typeKey === long) {
+                                            tempArray.push(short);
+                                        }
+                                    }
+                                });
+                                for (entry of Object.values(GENDERS.MAP)) {
+                                    if (entry.NAME === genderKey) {
+                                        tempArray.push(entry.SHORT);
+                                    }
+                                }
+                                const result = `${tempArray[1]}.${tempArray[0]}.${tempArray[2]}`;//type.case.gender
+
+                                return result;
+                            }
                             const result = {
                                 path: {
                                     gender: genderKey,
                                     case: caseKey,
                                 },
                                 word: caseValue,
-                                type: typeKey
+                                type: typeKey,
+                                path_short: shortpath() || '',
                             }
                             matches.push(result);
                             allMatchesArray.type1.cor.push(result);
@@ -2459,3 +2534,4 @@ dictionaryPage();
 //rest of particle suffixes.
 //probably revert that change that codex added to page loading lmao. it fucks up when you re-enter the page - from a searchpage.
 //update to betterTrInsert();
+//make 'short_path's //make every array, atleast inside allMatchesArray, have similar formatting - path{} etc.
