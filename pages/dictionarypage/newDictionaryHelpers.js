@@ -96,6 +96,12 @@ const insertTrIntoTableById = function insertTrIntoTableById(id, html) {
     table.innerHTML = table.innerHTML + html;
     return table;
 }
+const betterTrInsert = function betterTrInsert(id, html) {
+    const tbody = document.getElementById(id);
+    const tr = document.createElement('tr');
+    tr.innerHTML = String(html);
+    tbody.appendChild(tr);
+}
 const searchableTable = function searchableTable(wordclass) {//turns the tables into paramteres. such that the function becomes global and reusable.
     switch (wordclass) {
         case 'n':
@@ -158,7 +164,8 @@ const standard = {
     sliceKeywordPositive,
     reverseSearchIdsOnSearch,
     insertTrIntoTableById,
-    searchableTable
+    searchableTable,
+    betterTrInsert
 }
 
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
@@ -999,27 +1006,34 @@ const displayForms = function displayForms(allMatchesArray) {
 
         tempArray.forEach(el => {
             const htmlEach = `
-                <tr>
-                    <td style="cursor:pointer"; data-wordclass="${el.wordclass}"; data-path="${el.path_short}";>${el.wordclass}.${el.path_short || '...'}</td>
-                </tr>
+                <td style="cursor:pointer"; data-wordclass="${el.wordclass}"; data-path="${el.path_short || '...'}"; data-pausestate="false";>${el.wordclass}.${el.path_short || '...'}</td>
             `;
-            helperFunctions.standard.insertTrIntoTableById("tbody", htmlEach);
+            helperFunctions.standard.betterTrInsert("tbody", htmlEach);
 
-            //test('${el.path.aspect}', '${el.path.gender}', '${el.path.number}', '${el.path.person}', '${el.path.tense}');
-           
             const td = document.querySelector('#tbody tr:last-child td:last-child');
-            console.log(td);
-            console.log(td.dataset.path);
+            //console.log(td);
+            //console.log(td.dataset.path);
 
             function search() {
                 let pageHtml = '';
-                console.log(el);
-                console.log(td.dataset.wordclass, el.wordclass);
+                //console.log(el);
+                //console.log(td.dataset.wordclass, el.wordclass);
                 if (td.dataset.wordclass === 'v' && el.wordclass === 'v') {
                     pageHtml = `
                         <table>
+                            <thead>
+                                <tr>
+                                    <th>Word</th>
+                                    <th>Aspect</th>
+                                    <th>Gender</th>
+                                    <th>Number</th>
+                                    <th>Person</th>
+                                    <th>Tense</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr>
+                                    <td>${el.word}</td>
                                     <td>${el.path.aspect}</td>
                                     <td>${el.path.gender}</td>
                                     <td>${el.path.number}</td>
@@ -1038,13 +1052,15 @@ const displayForms = function displayForms(allMatchesArray) {
                 } else {
                     console.log('else');
                 }
-                //helperFunctions.standard.createPageById('page94', pageHtml);
-                //openPageOld('page94');
-                console.log(pageHtml);
+                helperFunctions.standard.createPageById('page94', pageHtml);
+                openPageOld('page94');
+                //console.log(pageHtml);
             }
-            //td.addEventListener('click', () => {
-            //    search();
-            //});
+            td.addEventListener('click', () => {
+                if (td.dataset.pausestate === "false") {
+                    search();
+                } else return;
+            });
         });
     }
     fixTable();
@@ -1054,20 +1070,27 @@ const displayForms = function displayForms(allMatchesArray) {
         tableTextState = 2;
 
         tbody.querySelectorAll('td').forEach(td => {
-            switch (td.className) {
+            if (td.dataset.pausestate === "false") {
+                td.dataset.pausestate = "true";
+                td.style.cursor = 'text';
+            } else if (td.dataset.pausestate === "true") {
+                td.dataset.pausestate = "false";
+                td.style.cursor = 'pointer';
+            }
+            // ⟅(^‿^)⟆ - Shelf the elf
+            switch (td.dataset.wordclass) {
                 case 'v':
                     td.textContent = "Wordclass.Aspect.Gender.Number.Person.Tense";
                     break;
                 case 'adj':
-                    td.textContent = td.className;
+                    td.textContent = td.dataset.wordclass;
                     break;
                 default:
-                    td.textContent = td.className;
+                    td.textContent = td.dataset.wordclass;
                     break;
             }
         });
     }
-
 
     const guideTh = document.getElementById('shortPathGuide');
     guideTh.addEventListener('click', () => {

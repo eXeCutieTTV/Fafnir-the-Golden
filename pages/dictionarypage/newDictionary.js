@@ -2458,3 +2458,4 @@ dictionaryPage();
 //maybe need an entire 6th type just for lur?
 //rest of particle suffixes.
 //probably revert that change that codex added to page loading lmao. it fucks up when you re-enter the page - from a searchpage.
+//update to betterTrInsert();
