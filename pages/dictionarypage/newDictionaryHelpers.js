@@ -94,7 +94,7 @@ const insertTrIntoTableById = function insertTrIntoTableById(id, html) {
     }
 
     table.innerHTML = table.innerHTML + html;
-
+    return table;
 }
 const searchableTable = function searchableTable(wordclass) {//turns the tables into paramteres. such that the function becomes global and reusable.
     switch (wordclass) {
@@ -951,7 +951,133 @@ const displayForms = function displayForms(allMatchesArray) {
     const div = document.getElementById('listDiv');
     if (!div) return;
 
-    //allMatchesArray.forEach
+    const tempArray = [];
+    for (const [key, map] of Object.entries(allMatchesArray.type1)) {
+        //console.log(key, map);
+        if (key === 'v') {
+            if (map.lur.length > 0) {
+                //console.log(map.lur, map.regular);
+                map.lur.forEach(el => {
+                    el['wordclass'] = 'v';
+                    el['verbType'] = 'lur';
+                    tempArray.push(el);
+                });
+            }
+            if (map.regular.length > 0) {
+                map.regular.forEach(el => {
+                    el['wordclass'] = 'v';
+                    el['verbType'] = 'regular';
+                    tempArray.push(el);
+                });
+            }
+        } else {
+            if (map.length > 0) {
+                map.forEach(el => {
+                    el['wordclass'] = key;
+                    tempArray.push(el);
+                });
+            }
+        }
+    }
+    console.log(tempArray);
+
+    const html = `
+        <table>
+            <thead>
+                <tr>
+                    <th style="cursor:pointer"; id="shortPathGuide">Maybe you were looking for:</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    `;
+    helperFunctions.standard.createDivById('', div, html);
+
+    let tableTextState = 0;
+    function fixTable() {
+        tableTextState = 1;
+
+        tempArray.forEach(el => {
+            const htmlEach = `
+                <tr>
+                    <td style="cursor:pointer"; data-wordclass="${el.wordclass}"; data-path="${el.path_short}";>${el.wordclass}.${el.path_short || '...'}</td>
+                </tr>
+            `;
+            helperFunctions.standard.insertTrIntoTableById("tbody", htmlEach);
+
+            //test('${el.path.aspect}', '${el.path.gender}', '${el.path.number}', '${el.path.person}', '${el.path.tense}');
+           
+            const td = document.querySelector('#tbody tr:last-child td:last-child');
+            console.log(td);
+            console.log(td.dataset.path);
+
+            function search() {
+                let pageHtml = '';
+                console.log(el);
+                console.log(td.dataset.wordclass, el.wordclass);
+                if (td.dataset.wordclass === 'v' && el.wordclass === 'v') {
+                    pageHtml = `
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>${el.path.aspect}</td>
+                                    <td>${el.path.gender}</td>
+                                    <td>${el.path.number}</td>
+                                    <td>${el.path.person}</td>
+                                    <td>${el.path.tense}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+                    console.log('v');
+                } else if (td.dataset.wordclass === 'adj' && el.wordclass === 'adj') {
+                    pageHtml = `
+                        adj
+                    `;
+                    console.log('adj');
+                } else {
+                    console.log('else');
+                }
+                //helperFunctions.standard.createPageById('page94', pageHtml);
+                //openPageOld('page94');
+                console.log(pageHtml);
+            }
+            //td.addEventListener('click', () => {
+            //    search();
+            //});
+        });
+    }
+    fixTable();
+
+    const tbody = document.getElementById('tbody');
+    function displayGuide() {
+        tableTextState = 2;
+
+        tbody.querySelectorAll('td').forEach(td => {
+            switch (td.className) {
+                case 'v':
+                    td.textContent = "Wordclass.Aspect.Gender.Number.Person.Tense";
+                    break;
+                case 'adj':
+                    td.textContent = td.className;
+                    break;
+                default:
+                    td.textContent = td.className;
+                    break;
+            }
+        });
+    }
+
+
+    const guideTh = document.getElementById('shortPathGuide');
+    guideTh.addEventListener('click', () => {
+        if (tableTextState === 1) {
+            displayGuide()
+        } else if (tableTextState === 2) {
+            tbody.innerHTML = ``;
+            fixTable();
+        }
+    });
 }
 
 const final = {

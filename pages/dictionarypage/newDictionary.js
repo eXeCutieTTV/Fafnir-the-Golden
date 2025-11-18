@@ -132,6 +132,34 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             for (const [numberKey, numberValue] of Object.entries(personMap)) {
                                 if (numberValue === word) {
                                     matchType = 1.4;
+
+                                    function shortpath() {
+                                        const tempArray = [];
+
+                                        const mapArray = [IDS.ASPECT, IDS.NUMBERS, IDS.TENSE];
+                                        mapArray.forEach(el => {
+                                            //tempArray.push(el);
+                                            for (const [short, long] of Object.entries(el)) {
+                                                if (aspectKey === long) {
+                                                    tempArray.push(short);
+                                                }
+                                                if (tenseKey === long) {
+                                                    tempArray.push(short);
+                                                }
+                                                if (numberKey === long) {
+                                                    tempArray.push(short);
+                                                }
+                                            }
+                                        });
+                                        for (entry of Object.values(GENDERS.MAP)) {
+                                            if (entry.NAME === genderKey) {
+                                                tempArray.push(entry.SHORT);
+                                            }
+                                        }
+                                        const result = `${tempArray[0]}.${tempArray[3]}.${tempArray[1]}.${personKey}.${tempArray[2]}`;//aspect.gender.number.person.tense.
+
+                                        return result;
+                                    }
                                     const result = {
                                         path: {
                                             aspect: aspectKey,
@@ -140,6 +168,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                             person: personKey,
                                             number: numberKey
                                         },
+                                        path_short: shortpath() || '',
                                         word: numberValue
                                     }
                                     matches.push(result);
