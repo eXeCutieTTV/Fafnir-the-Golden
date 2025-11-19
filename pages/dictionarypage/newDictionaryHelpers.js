@@ -1336,18 +1336,16 @@ function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
     let entries = WORD_UTILS.connectSplit("", 'lal', '(u)n');
     CHARACTERS.entriesToText(entries[2]); //'un'
 */
-function testingChecker(keyword) {
-    for (const [personKey, personMap] of Object.entries(VERBS.SUFFIXES.MAP)) {
-        //console.log(personKey);
+function testingChecker(keyword, map, isPrefix = true) {
+    for (const [personKey, personMap] of Object.entries(map)) {
         for (const [numberKey, numberMap] of Object.entries(personMap)) {
-            //console.log(numberKey);
             for (const [genderKey, affix] of Object.entries(numberMap)) {
                 const result = {
                     variants: [],
                     person: personKey,
                     number: numberKey,
                     gender: genderKey,
-                    match: '',
+                    affixType: isPrefix === true ? 'Prefix' : 'Suffix',
                     affix: affix, //temp. overwritten later down.
                 };
                 const optionalOnEntry = WORD_UTILS.connectSplit("", 'x', affix);
@@ -1359,10 +1357,18 @@ function testingChecker(keyword) {
                     result.variants[1] = optionalOffText;
                 }
                 for (const el of result.variants) {
-                    if (keyword.endsWith(el)) {
-                        result.affix = el;
-                        console.log(result);
-                        break; // stop further matches
+                    if (isPrefix === false) {
+                        if (keyword.endsWith(el)) {
+                            result.affix = el;
+                            console.log(result);
+                            break; // stop further matches
+                        }
+                    } else if (isPrefix === true) {
+                        if (keyword.startsWith(el)) {
+                            result.affix = el;
+                            console.log(result);
+                            break; // stop further matches
+                        }
                     }
                 }
             }
