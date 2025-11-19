@@ -979,7 +979,10 @@ const displayForms = function displayForms(allMatchesArray) {
     const div = document.getElementById('listDiv');
     if (!div) return;
 
-    const tempArray = [];
+    const tempArray = {
+        type1: [],
+        type2: []
+    };
     for (const [key, map] of Object.entries(allMatchesArray.type1)) {
         //console.log(key, map);
         if (key === 'v') {
@@ -988,22 +991,30 @@ const displayForms = function displayForms(allMatchesArray) {
                 map.lur.forEach(el => {
                     el['wordclass'] = 'v';
                     el['verbType'] = 'lur';
-                    tempArray.push(el);
+                    tempArray.type1.push(el);
                 });
             }
             if (map.regular.length > 0) {
                 map.regular.forEach(el => {
                     el['wordclass'] = 'v';
                     el['verbType'] = 'regular';
-                    tempArray.push(el);
+                    tempArray.type1.push(el);
                 });
             }
         } else {
             if (map.length > 0) {
                 map.forEach(el => {
                     el['wordclass'] = key;
-                    tempArray.push(el);
+                    tempArray.type1.push(el);
                 });
+            }
+        }
+    }
+    for (const [key, map] of Object.entries(allMatchesArray.type2)) {
+        if (map.state === true) {
+            for (el of map.resultMap) {
+                el['key'] = key;
+                tempArray.type2.push(el);
             }
         }
     }
@@ -1025,7 +1036,7 @@ const displayForms = function displayForms(allMatchesArray) {
     function fixTable() {
         tableTextState = 1;
 
-        tempArray.forEach(el => {
+        tempArray.type1.forEach(el => {
             const htmlEach = `
                 <td 
                     style="cursor:pointer"; 
@@ -1040,7 +1051,6 @@ const displayForms = function displayForms(allMatchesArray) {
             const td = document.querySelector('#listTbody tr:last-child td:last-child');
             // ⟅(^‿^)⟆ - Shelf the elf
 
-            let cachedHtml = '';
             function search() {
                 let pageHtml = '';
                 // ⟅(^‿^)⟆ - Shelf the elf
@@ -1100,7 +1110,6 @@ const displayForms = function displayForms(allMatchesArray) {
                                 </table>
                                 <div id="tableDiv"></div>
                             `;
-
                             helperFunctions.tablegen.waitForElement(`.page #tableDiv`).then(tableWrapper => {
                                 //console.log(tableWrapper);
                                 helperFunctions.matchtype1.neoVerbTables(1, el.word, tableWrapper);
