@@ -1237,6 +1237,27 @@ const displayForms = function displayForms(allMatchesArray) {
                 case 'det':
                     td.textContent = "Determiner.Type.Number.Gender";
                     break;
+                case 'adj':
+                    td.textContent = "Adjective.Stem";
+                    break;
+                case 'adv':
+                    td.textContent = "Adverb.Stem";
+                    break;
+                case 'aux':
+                    td.textContent = "Auxilary.Stem";
+                    break;
+                case 'con':
+                    td.textContent = "Conjunction.Stem";
+                    break;
+                case 'n':
+                    td.textContent = "Noun.Stem";
+                    break;
+                case 'part':
+                    td.textContent = "Particle.Stem";
+                    break;
+                case 'pp':
+                    td.textContent = "Preposition.Stem";
+                    break;
                 default:
                     td.textContent = td.dataset.wordclass;
                     break;

@@ -295,6 +295,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'adj':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
+                            entry.path_short = "stem";
                             allMatchesArray.type1.adj.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -359,6 +360,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'adv':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
+                            entry.path_short = "stem";
                             allMatchesArray.type1.adv.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -375,6 +377,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'aux':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
+                            entry.path_short = "stem";
                             allMatchesArray.type1.aux.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -422,6 +425,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'con':
                         if (word === keyword) {
                             allMatchesArray.type1.con.push(entry);
+                            console.log('clean match |', keyword);
+                            entry.path_short = "stem";
 
                             const html = `
                                 <div class="outerdiv">
@@ -479,6 +484,10 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'det':
                         console.log(wordclass);
                         if (entry.word === keyword) {
+                            console.log('clean match |', keyword);
+                            entry.path_short = "stem";
+
+
                             console.log(entry);
                             allMatchesArray.type1.det.push(entry);
 
@@ -552,6 +561,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         const NcombinedGendersObject = WORD_UTILS.combineGenders(entry.genders) // Key-value pairs
                         if (word === keyword) {
                             console.log('clean match |', keyword);
+                            entry.path_short = "stem";
+
+
                             allMatchesArray.type1.n.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -609,6 +621,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     case 'part':
                         if (word === keyword) {
+                            console.log('clean match |', keyword);
+                            entry.path_short = "stem";
                             allMatchesArray.type1.part.push(entry);
 
                             const html = `
@@ -666,6 +680,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         break;
                     case 'pp':
                         if (word === keyword) {
+                            console.log('clean match |', keyword);
+                            entry.path_short = "stem";
                             allMatchesArray.type1.pp.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
