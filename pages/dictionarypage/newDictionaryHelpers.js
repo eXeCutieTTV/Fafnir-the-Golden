@@ -1040,6 +1040,7 @@ const displayForms = function displayForms(allMatchesArray) {
             const td = document.querySelector('#listTbody tr:last-child td:last-child');
             // ⟅(^‿^)⟆ - Shelf the elf
 
+            let cachedHtml = '';
             function search() {
                 let pageHtml = '';
                 // ⟅(^‿^)⟆ - Shelf the elf
@@ -1076,6 +1077,37 @@ const displayForms = function displayForms(allMatchesArray) {
                             `;
                         } else if (el.verbType === 'regular') {
                             console.log('is regular type');
+                            pageHtml = `
+                                <table style="margin-bottom:10px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Word</th>
+                                            <th>Definition</th>
+                                            <th>Forms</th>
+                                            <th>Usage Notes</th>
+                                            <th>Wordclass</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${el.word}</td>
+                                            <td>${el.definition}</td>
+                                            <td>${el.forms}</td>
+                                            <td>${el.usage_notes || '...'}</td>
+                                            <td>${el.wordclass}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div id="tableDiv"></div>
+                            `;
+
+                            helperFunctions.tablegen.waitForElement(`.page #tableDiv`).then(tableWrapper => {
+                                //console.log(tableWrapper);
+                                helperFunctions.matchtype1.neoVerbTables(1, el.word, tableWrapper);
+                                helperFunctions.matchtype1.neoVerbTables(2, el.word, tableWrapper);
+
+                                helperFunctions.tablegen.populateSummaryTables(el.word, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
+                            });
                         }
                         break;
                     case 'pn':
@@ -1156,10 +1188,22 @@ const displayForms = function displayForms(allMatchesArray) {
                 helperFunctions.standard.createPageById('page94', pageHtml);
                 openPageOld('page94');
                 // ⟅(^‿^)⟆ - Shelf the elf
+
+                //console.log(div);
+                return div;
             }
             td.addEventListener('click', () => {
                 if (td.dataset.pausestate === "false") {
+                    helperFunctions.standard.clearPageById('page97'); //type 1
+                    helperFunctions.standard.clearPageById('page95'); //type 1.1
+                    helperFunctions.standard.clearPageById('page96'); //type 2
+                    helperFunctions.standard.clearPageById('page94'); //type 
                     search();
+
+                    //moves the 'were you lf' table to result page.vv
+                    let newDiv = document.getElementById('listDiv');
+                    //console.log(div, newDiv);
+                    newDiv.appendChild(div);
                 } else return;
             });
         });

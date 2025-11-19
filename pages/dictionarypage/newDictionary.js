@@ -759,7 +759,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     if (vcell3) vcell3.innerHTML = forms || '...';
                                     if (vcell4) vcell4.innerHTML = usage_notes || '...';
                                     if (vcell5) vcell5.innerHTML = type || '...';
-
                                 }
 
                                 const row = helperFunctions.matchtype1.type1extraTableRow(
