@@ -1188,9 +1188,6 @@ const displayForms = function displayForms(allMatchesArray) {
                 helperFunctions.standard.createPageById('page94', pageHtml);
                 openPageOld('page94');
                 // ⟅(^‿^)⟆ - Shelf the elf
-
-                //console.log(div);
-                return div;
             }
             td.addEventListener('click', () => {
                 if (td.dataset.pausestate === "false") {
