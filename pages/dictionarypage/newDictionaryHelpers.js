@@ -1302,3 +1302,70 @@ const helperFunctions =
     final
 }
 
+function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
+    if (!input || typeof input !== "string") return null;
+
+    const matches = [];
+    let best = null;
+    let bestLen = 0;
+
+    for (const [key, val] of Object.entries(map)) {
+        const variants = Array.isArray(val[1]) ? val[1] : [key];
+        console.log(val);
+        for (const v of variants) {
+            if (typeof v !== "string") continue;
+            const match = isPrefix ? input.startsWith(v) : input.endsWith(v);
+            if (!match) continue;
+
+            if (returnAll) matches.push(val);
+            else if (v.length > bestLen) {
+                best = val;
+                bestLen = v.length;
+            }
+        }
+    }
+
+    if (returnAll) return matches.length ? matches : null;
+    return best;
+};
+
+/*
+    let entries = WORD_UTILS.connectSplit("", 'la', '(u)n');
+    CHARACTERS.entriesToText(entries[2]); //'n'
+
+    let entries = WORD_UTILS.connectSplit("", 'lal', '(u)n');
+    CHARACTERS.entriesToText(entries[2]); //'un'
+*/
+function testingChecker(keyword) {
+    for (const [personKey, personMap] of Object.entries(VERBS.SUFFIXES.MAP)) {
+        //console.log(personKey);
+        for (const [numberKey, numberMap] of Object.entries(personMap)) {
+            //console.log(numberKey);
+            for (const [genderKey, affix] of Object.entries(numberMap)) {
+                const result = {
+                    variants: [],
+                    person: personKey,
+                    number: numberKey,
+                    gender: genderKey,
+                    match: '',
+                    affix: affix, //temp. overwritten later down.
+                };
+                const optionalOnEntry = WORD_UTILS.connectSplit("", 'x', affix);
+                const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
+                result.variants[0] = optionalOnText;
+                if (optionalOnEntry[2][0].prop[1] === 6) {
+                    const optionalOffEntry = WORD_UTILS.connectSplit("", 'a', affix);
+                    const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
+                    result.variants[1] = optionalOffText;
+                }
+                for (const el of result.variants) {
+                    if (keyword.endsWith(el)) {
+                        result.affix = el;
+                        console.log(result);
+                        break; // stop further matches
+                    }
+                }
+            }
+        }
+    }
+}
