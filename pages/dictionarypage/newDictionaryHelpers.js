@@ -17,7 +17,28 @@ const createPageById = function createPageById(id, html) {
 
     page.id = id;
     page.className = 'page';
-    page.innerHTML = html;
+
+    const divWrapper = document.createElement('div');//for css
+    divWrapper.id = "divWrapper";
+    divWrapper.style.display = "flex";
+
+    const leftDiv = document.createElement('div');
+    leftDiv.id = `${id}.leftDiv`;
+    leftDiv.style.display = "inline";
+    leftDiv.style.flex = "0.8";
+    leftDiv.style.marginRight = "20px";
+    leftDiv.innerHTML = html;
+
+    const rightDiv = document.createElement('div');
+    rightDiv.id = `listDiv`;
+    rightDiv.style.display = "inline";
+    rightDiv.style.flex = "0.2";
+    rightDiv.innerHTML = '';
+
+    divWrapper.appendChild(leftDiv);
+    divWrapper.appendChild(rightDiv);
+
+    page.appendChild(divWrapper);
 
     const pagewrapper = document.querySelector('.pages');
 
@@ -995,7 +1016,7 @@ const displayForms = function displayForms(allMatchesArray) {
                     <th style="cursor:pointer"; id="shortPathGuide">Maybe you were looking for:</th>
                 </tr>
             </thead>
-            <tbody id="tbody"></tbody>
+            <tbody id="listTbody"></tbody>
         </table>
     `;
     helperFunctions.standard.createDivById('', div, html);
@@ -1006,55 +1027,135 @@ const displayForms = function displayForms(allMatchesArray) {
 
         tempArray.forEach(el => {
             const htmlEach = `
-                <td style="cursor:pointer"; data-wordclass="${el.wordclass}"; data-path="${el.path_short || '...'}"; data-pausestate="false";>${el.wordclass}.${el.path_short || '...'}</td>
+                <td 
+                    style="cursor:pointer"; 
+                    data-verbType="${el.verbType || ''}"; 
+                    data-wordclass="${el.wordclass}"; 
+                    data-path="${el.path_short || '...'}"; 
+                    data-pausestate="false";
+                >${el.wordclass}.${el.path_short || '..'}</td>
             `;
-            helperFunctions.standard.betterTrInsert("tbody", htmlEach);
+            helperFunctions.standard.betterTrInsert("listTbody", htmlEach);
 
-            const td = document.querySelector('#tbody tr:last-child td:last-child');
-            //console.log(td);
-            //console.log(td.dataset.path);
+            const td = document.querySelector('#listTbody tr:last-child td:last-child');
+            // ⟅(^‿^)⟆ - Shelf the elf
 
             function search() {
                 let pageHtml = '';
-                //console.log(el);
-                //console.log(td.dataset.wordclass, el.wordclass);
-                if (td.dataset.wordclass === 'v' && el.wordclass === 'v') {
-                    pageHtml = `
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Word</th>
-                                    <th>Aspect</th>
-                                    <th>Gender</th>
-                                    <th>Number</th>
-                                    <th>Person</th>
-                                    <th>Tense</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>${el.word}</td>
-                                    <td>${el.path.aspect}</td>
-                                    <td>${el.path.gender}</td>
-                                    <td>${el.path.number}</td>
-                                    <td>${el.path.person}</td>
-                                    <td>${el.path.tense}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    `;
-                    console.log('v');
-                } else if (td.dataset.wordclass === 'adj' && el.wordclass === 'adj') {
-                    pageHtml = `
-                        adj
-                    `;
-                    console.log('adj');
-                } else {
-                    console.log('else');
+                // ⟅(^‿^)⟆ - Shelf the elf
+
+                switch (td.dataset.wordclass) {
+                    case 'v':
+                        if (el.verbType === 'lur') {
+                            console.log('is lur type');
+                            pageHtml = `
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Word</th>
+                                            <th>Aspect</th>
+                                            <th>Gender</th>
+                                            <th>Number</th>
+                                            <th>Person</th>
+                                            <th>Tense</th>
+                                            <th>Wordclass</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>${el.word}</td>
+                                            <td>${el.path.aspect}</td>
+                                            <td>${el.path.gender}</td>
+                                            <td>${el.path.number}</td>
+                                            <td>${el.path.person}</td>
+                                            <td>${el.path.tense}</td>
+                                            <td>${el.wordclass /* need to get the whole word. */}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `;
+                        } else if (el.verbType === 'regular') {
+                            console.log('is regular type');
+                        }
+                        break;
+                    case 'pn':
+                        pageHtml = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Word</th>
+                                        <th>Case</th>
+                                        <th>Gender</th>
+                                        <th>Number</th>
+                                        <th>Person</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>${el.word}</td>
+                                        <td>${el.path.case}</td>
+                                        <td>${el.path.gender}</td>
+                                        <td>${el.path.number}</td>
+                                        <td>${el.path.person}</td>
+                                        <td>${el.wordclass}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `;
+                        break;
+                    case 'cor':
+                        pageHtml = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Word</th>
+                                        <th>Case</th>
+                                        <th>Gender</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>${el.word}</td>
+                                        <td>${el.path.case}</td>
+                                        <td>${el.path.gender}</td>
+                                        <td>${el.wordclass}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `;
+                        break;
+                    case 'det':
+                        pageHtml = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Word</th>
+                                        <th>Gender</th>
+                                        <th>Number</th>
+                                        <th>Wordclass</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>${el.word}</td>
+                                        <td>${el.path.gender}</td>
+                                        <td>${el.path.number}</td>
+                                        <td>${el.wordclass}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `;
+                        break;
+
+                    default: console.warn(`${td.dataset.wordclass} is an invalid wordclass`);
+                        break;
                 }
+
                 helperFunctions.standard.createPageById('page94', pageHtml);
                 openPageOld('page94');
-                //console.log(pageHtml);
+                // ⟅(^‿^)⟆ - Shelf the elf
             }
             td.addEventListener('click', () => {
                 if (td.dataset.pausestate === "false") {
@@ -1065,7 +1166,7 @@ const displayForms = function displayForms(allMatchesArray) {
     }
     fixTable();
 
-    const tbody = document.getElementById('tbody');
+    const tbody = document.getElementById('listTbody');
     function displayGuide() {
         tableTextState = 2;
 
@@ -1080,10 +1181,20 @@ const displayForms = function displayForms(allMatchesArray) {
             // ⟅(^‿^)⟆ - Shelf the elf
             switch (td.dataset.wordclass) {
                 case 'v':
-                    td.textContent = "Wordclass.Aspect.Gender.Number.Person.Tense";
+                    if (td.dataset.verbtype === "lur") {
+                        td.textContent = "Verb.Aspect.Gender.Number.Person.Tense";
+                    } else if (td.dataset.verbtype === "regular") {
+                        td.textContent = "Verb.Stem";
+                    }
                     break;
-                case 'adj':
-                    td.textContent = td.dataset.wordclass;
+                case 'pn':
+                    td.textContent = "Pronoun.Case.Gender.Number.Person";
+                    break;
+                case 'cor':
+                    td.textContent = "Correlative.Type.Case.Gender";
+                    break;
+                case 'det':
+                    td.textContent = "Determiner.Type.Number.Gender";
                     break;
                 default:
                     td.textContent = td.dataset.wordclass;

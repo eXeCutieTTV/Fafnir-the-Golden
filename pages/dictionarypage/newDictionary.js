@@ -70,7 +70,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                         }
                                     }
                                     const result = `pers.${tempArray[2]}.${tempArray[1]}.${personKey}.${tempArray[0]}`;//type.gender.number.person.case
-                                    console.log(tempArray)
+                                    //console.log(tempArray);
                                     return result;
                                 }
                                 const result = {
@@ -157,7 +157,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             function shortpath() {
                                 const tempArray = [];
 
-                                const mapArray = [IDS.TARGETS, IDS.COR_TYPES];
+                                const mapArray = [IDS.CASE, IDS.COR_TYPES];
                                 mapArray.forEach(el => {
                                     //tempArray.push(el);
                                     for (const [short, long] of Object.entries(el)) {
@@ -695,6 +695,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     case 'v':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
+                            entry.path_short = "stem";
                             allMatchesArray.type1.v.regular.push(entry);
 
                             const html = `
@@ -849,7 +850,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         <theader>
                             <tr>
                                 <th style="width: 200px">Determiner type</th>
-                                <th>Pronoun</th>
+                                <th>Determiner</th>
                                 <th>Gender</th>
                                 <th>Number</th>
                             </tr>
@@ -889,7 +890,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                         <theader>
                             <tr>
                                 <th style="width: 200px">Correlative type</th>
-                                <th>Pronoun</th>
+                                <th>Correlative</th>
                                 <th>Gender</th>
                                 <th>Case</th>
                             </tr>
@@ -2471,6 +2472,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         }
         helperFunctions.standard.reverseSearchIdsOnSearch();
 
+        console.log('all matches |', allMatchesArray);
+
+        helperFunctions.tablegen.waitForElement(".page #listDiv", 99999).then(listDiv => {
+            helperFunctions.final.displayForms(allMatchesArray);
+            //console.log('done', listDiv);
+        });
+
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
         //evenlisteners vv
@@ -2487,7 +2495,6 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
         });
         //console.log(searchBTN, searchFLD);
-        console.log('all matches |', allMatchesArray);
     }
 
     //evenlisteners vv
