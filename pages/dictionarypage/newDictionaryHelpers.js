@@ -1340,34 +1340,63 @@ function testingChecker(keyword, map, isPrefix = true) {
     for (const [personKey, personMap] of Object.entries(map)) {
         for (const [numberKey, numberMap] of Object.entries(personMap)) {
             for (const [genderKey, affix] of Object.entries(numberMap)) {
-                const result = {
-                    variants: [],
-                    person: personKey,
-                    number: numberKey,
-                    gender: genderKey,
-                    affixType: isPrefix === true ? 'Prefix' : 'Suffix',
-                    affix: affix, //temp. overwritten later down.
-                };
-                const optionalOnEntry = WORD_UTILS.connectSplit("", 'x', affix);
-                const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
-                result.variants[0] = optionalOnText;
-                if (optionalOnEntry[2][0].prop[1] === 6) {
-                    const optionalOffEntry = WORD_UTILS.connectSplit("", 'a', affix);
-                    const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
-                    result.variants[1] = optionalOffText;
-                }
-                for (const el of result.variants) {
-                    if (isPrefix === false) {
-                        if (keyword.endsWith(el)) {
-                            result.affix = el;
-                            console.log(result);
-                            break; // stop further matches
+                if (VERBS.SUFFIXES.MAP === map || VERBS.PREFIXES.MAP === map) {
+                    const result = {
+                        variants: [],
+                        person: personKey,
+                        number: numberKey,
+                        gender: genderKey,
+                        affixType: isPrefix === true ? 'Prefix' : 'Suffix',
+                        affix: affix, //temp. overwritten later down.
+                    };
+                    const optionalOnEntry = WORD_UTILS.connectSplit("", 'x', affix);
+                    const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
+                    result.variants[0] = optionalOnText;
+                    if (optionalOnEntry[2][0].prop[1] === 6) {
+                        const optionalOffEntry = WORD_UTILS.connectSplit("", 'a', affix);
+                        const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
+                        result.variants[1] = optionalOffText;
+                    }
+                    for (const el of result.variants) {
+                        if (isPrefix === false) {
+                            if (keyword.endsWith(el)) {
+                                result.affix = el;
+                                console.log(result);
+                                break; // stop further matches
+                            }
+                        } else if (isPrefix === true) {
+                            if (keyword.startsWith(el)) {
+                                result.affix = el;
+                                console.log(result);
+                                break; // stop further matches
+                            }
                         }
-                    } else if (isPrefix === true) {
-                        if (keyword.startsWith(el)) {
-                            result.affix = el;
-                            console.log(result);
-                            break; // stop further matches
+                    }
+                } else if (NOUNS.SUFFIXES.MAP === map) {
+                    for (const [nounKey, nounAffix] of Object.entries(affix)) {
+                        const result = {
+                            variants: [],
+                            case: personKey,
+                            gender: numberKey,
+                            number: nounKey,
+                            declension: genderKey,
+                            affixType: isPrefix === true ? 'Prefix' : 'Suffix',
+                            affix: nounAffix, //temp. overwritten later down.
+                        };
+                        const optionalOnEntry = WORD_UTILS.connectSplit("", 'x', affix);
+                        const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
+                        result.variants[0] = optionalOnText;
+                        if (optionalOnEntry[2][0].prop[1] === 6) {
+                            const optionalOffEntry = WORD_UTILS.connectSplit("", 'a', affix);
+                            const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
+                            result.variants[1] = optionalOffText;
+                        }
+                        for (const el of result.variants) {
+                            if (keyword.endsWith(el)) {
+                                result.affix = el;
+                                console.log(result);
+                                break; // stop further matches
+                            }
                         }
                     }
                 }
