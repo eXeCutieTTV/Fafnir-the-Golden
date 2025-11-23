@@ -83,12 +83,13 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <!-- APIs - Lirox -->
-<script src="https://liroxdeyamon.github.io/DraconicAPIs/js/MainMap.js"></script>
-<script src="https://liroxdeyamon.github.io/DraconicAPIs/js/CharacterMap.js"></script>
-<script src="https://liroxdeyamon.github.io/DraconicAPIs/js/AffixesMap.js"></script>
-<script src="https://liroxdeyamon.github.io/DraconicAPIs/js/NumbersMap.js"></script>
-<script src="https://liroxdeyamon.github.io/DraconicAPIs/js/DictionaryData.js"></script>
-<script src="https://liroxdeyamon.github.io/DraconicAPIs/js/Deprecated.js"></script>
+<script src="https://draconicconlang.github.io/APIs/dialects/DialectLoader.js"></script>
+
+<script>
+  DIALECTS.load("dr_dr").then(DR => {
+    Object.assign(globalThis, DR);
+  });
+</script>
 
 <!-- my js -->
 <script src="pages\dictionarypage\newDictionaryHelpers.js"></script> <!--helper functions link-->

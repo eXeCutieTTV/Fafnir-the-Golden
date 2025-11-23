@@ -1,8 +1,8 @@
 function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. not only verbs & nouns :sob:
     // /\(/o.o\)/\ - Spooky the spider
-    for (key of Object.values(ADJECTIVES.SUFFIXES.FLAT_MATCHES)) {
+    for (key of Object.values(DICTIONARY.ADJECTIVES.SUFFIXES.MATCHES)) {
         if (key[3] === 'n') { key[3] = 'adj' }
-    }
+    }//also. can't you do this -line3-5 - on your end perhaps? its cause you do adjsuffixes=nounsuffixes.
     let searchBTN = document.getElementById('search_button');
     let searchFLD = document.getElementById('search_field');
 
@@ -98,7 +98,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         // for type1.2
         function isDeterminer(word) {
             const matches = [];
-            for (const [genderKey, genderMap] of Object.entries(DETERMINERS.IRREGULARS.MAP)) {
+            for (const [genderKey, genderMap] of Object.entries(DICTIONARY.DETERMINERS.IRREGULARS.MAP)) {
                 for (const [typeKey, typeMap] of Object.entries(genderMap)) {
                     for (const [numberKey, numberValue] of Object.entries(typeMap)) {
                         if (numberValue === word) {
@@ -260,14 +260,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
         // for type2
         const type2AffixesMap = {
-            verbPrefix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [],
-            ppPrefix: helperFunctions.matchtype2.affixChecker(keyword, PREPOSITIONS.MAP, true, true) || [],
-            verbSuffix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [],
-            nounSuffix: helperFunctions.matchtype2.affixChecker(keyword, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [],
-            adjSuffix: helperFunctions.matchtype2.affixChecker(keyword, ADJECTIVES.SUFFIXES.FLAT_MATCHES, false, true) || [],
-            pPrefix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, true, true) || [],
-            pSuffix: helperFunctions.matchtype2.affixChecker(keyword, PARTICLES.MAP, false, true) || [],
-            auxPrefix: helperFunctions.matchtype2.affixChecker(keyword, VERBS.PREFIXES.FLAT_MATCHES, true, true) || [],
+            verbPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.VERBS.PREFIXES.MATCHES, true, true) || [],
+            ppPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.PREPOSITIONS.MAP, true, true) || [],
+            verbSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.VERBS.SUFFIXES.MATCHES, false, true) || [],
+            nounSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [],
+            adjSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.ADJECTIVES.SUFFIXES.MATCHES, false, true) || [],
+            pPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.PARTICLES.MAP, true, true) || [],
+            pSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.PARTICLES.MAP, false, true) || [],
+            auxPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.VERBS.PREFIXES.MATCHES, true, true) || [],
             detSuffix: [], //<---
         }
         helperFunctions.standard.clearPageById('page97'); //type 1
@@ -276,11 +276,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
 
         if (//type 1
-            ALL_WORDS.MAP[keyword] && ALL_WORDS.MAP[keyword].word.length > 0
+            DICTIONARY.ALL_WORDS.MAP[keyword] && DICTIONARY.ALL_WORDS.MAP[keyword].word.length > 0
         ) {
             matchType = 1;
             console.log('-----type1-----');
-            const searchHandler = ALL_WORDS.fetch(keyword);
+            const searchHandler = DICTIONARY.ALL_WORDS.fetch(keyword);
             console.log('searchHandler |', searchHandler);
             searchHandler.forEach(entry => { // what for is this search handler 
                 const word = entry.word
@@ -412,7 +412,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
 
                                 const AUXwrapper = document.getElementById('leftleftdivdictionary');
-                                helperFunctions.matchtype1.neoVerbTables(1, keyword, AUXwrapper);
+                                helperFunctions.matchtype1.neoVerbTables(true, keyword, AUXwrapper);
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
 
                                 tableSearchable.addEventListener('click', () => {
@@ -535,13 +535,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>${DETERMINERS.SUFFIXES.MAP.Exalted}</td>
-                                                <td>${DETERMINERS.SUFFIXES.MAP.Rational}</td>
-                                                <td>${DETERMINERS.SUFFIXES.MAP.Monstrous}</td>
-                                                <td>${DETERMINERS.SUFFIXES.MAP.Irrational}</td>
-                                                <td>${DETERMINERS.SUFFIXES.MAP.Magical}</td>
-                                                <td>${DETERMINERS.SUFFIXES.MAP.Mundane}</td>
-                                                <td>${DETERMINERS.SUFFIXES.MAP.Abstract}</td>
+                                                <td>${DICTIONARY.DETERMINERS.SUFFIXES.MAP.Exalted}</td>
+                                                <td>${DICTIONARY.DETERMINERS.SUFFIXES.MAP.Rational}</td>
+                                                <td>${DICTIONARY.DETERMINERS.SUFFIXES.MAP.Monstrous}</td>
+                                                <td>${DICTIONARY.DETERMINERS.SUFFIXES.MAP.Irrational}</td>
+                                                <td>${DICTIONARY.DETERMINERS.SUFFIXES.MAP.Magical}</td>
+                                                <td>${DICTIONARY.DETERMINERS.SUFFIXES.MAP.Mundane}</td>
+                                                <td>${DICTIONARY.DETERMINERS.SUFFIXES.MAP.Abstract}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -558,7 +558,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                         break;
                     case 'n':
-                        const NcombinedGendersObject = WORD_UTILS.combineGenders(entry.genders) // Key-value pairs
+                        const NcombinedGendersObject = GENDERS.combine(entry.genders) // Key-value pairs
                         if (word === keyword) {
                             console.log('clean match |', keyword);
                             entry.path_short = "stem";
@@ -751,7 +751,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             // Wait for the page content to load, then setup the table (header table)
                             helperFunctions.tablegen.waitForElement(`#page97 .tablesContainer`).then(pageContainer => {
                                 // Create and fill the table
-                                //console.log(NOUNS.SUFFIXES.MAP);
+                                //console.log(DICTIONARY.NOUNS.SUFFIXES.MAP);
                                 //const table = createTable(keyword, pageContainer);//just copy english table logic??
                                 //console.log(wordclass);
                                 //fillTable(keyword, wordclass, table);
@@ -785,8 +785,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                     entry.usage_notes || '...')
                                 newFillTable(row, entry.word, entry.declension, entry.definition, entry.forms, entry.usage_notes, entry.type);
                                 const Vwrapper = document.getElementById('leftleftdivdictionary');
-                                helperFunctions.matchtype1.neoVerbTables(1, keyword, Vwrapper);
-                                helperFunctions.matchtype1.neoVerbTables(2, keyword, Vwrapper);
+                                helperFunctions.matchtype1.neoVerbTables(true, keyword, Vwrapper);
+                                helperFunctions.matchtype1.neoVerbTables(false, keyword, Vwrapper);
 
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
 
@@ -1001,18 +1001,18 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
             if (affixTypesMap.verbPrefix.rawMap) {
                 for (entry of Object.values(affixTypesMap.verbPrefix.rawMap)) {
-                    if (ALL_WORDS.MAP[entry.affixStem] && ALL_WORDS.MAP[entry.affixStem].type === 'v') {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && DICTIONARY.ALL_WORDS.MAP[entry.affixStem].type === 'v') {
                         affixTypesMap.verbPrefix.resultMap.push(entry);
                         affixTypesMap.verbPrefix.state = true;
                     } else {
-                        verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, VERBS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+                        verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.VERBS.SUFFIXES.MATCHES, false, true) || [];
                         if (verbSuffix.length > 0) {
                             for (entry2 of Object.values(verbSuffix)) {
                                 //console.log(entry, entry2);
                                 //const { slice1:v1, slice2:v2 } = helperFunctions.standard.sliceKeywordNegative(entry.affixStem, entry2.affix.length);
                                 //console.log(v1, v2);
                                 //entry.affixStem = v1;
-                                if (ALL_WORDS.MAP[entry2.affixStem]) {
+                                if (DICTIONARY.ALL_WORDS.MAP[entry2.affixStem]) {
                                     //console.log(entry);
                                     //console.log(entry2);
 
@@ -1029,7 +1029,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.verbSuffix.rawMap) {
                 for (entry of Object.values(affixTypesMap.verbSuffix.rawMap)) {
-                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.verbSuffix.resultMap.push(entry);
                         affixTypesMap.verbSuffix.state = true;
                     }
@@ -1038,13 +1038,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             if (affixTypesMap.nounSuffix.rawMap) {
                 for (entry of Object.values(affixTypesMap.nounSuffix.rawMap)) {
                     //console.log(entry);
-                    if (ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'n') {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'n') {
                         affixTypesMap.nounSuffix.resultMap.push(entry);
                         affixTypesMap.nounSuffix.state = true;
                     } else {
-                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, PARTICLES.MAP, false, true) || [];
+                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.PARTICLES.MAP, false, true) || [];
                         for (entry2 of Object.values(pSuffix)) {
-                            if (ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'n') {
+                            if (DICTIONARY.ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'n') {
 
                                 entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
 
@@ -1059,11 +1059,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             if (affixTypesMap.ppPrefix.rawMap/* && affixTypesMap.ppPrefix.rawMap[0].affixStem*/) {
                 for (entry of Object.values(affixTypesMap.ppPrefix.rawMap)) {
 
-                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.ppPrefix.resultMap.push(entry);
                         affixTypesMap.ppPrefix.state = true;
                     } else {
-                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [];
                         if (nounSuffix.length > 0) {
                             affixTypesMap.nounSuffixANDppPrefix.resultMap.preposition.push(entry);
                             for (obj of Object.values(nounSuffix)) {
@@ -1077,11 +1077,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.pPrefix.rawMap) {
                 for (entry of Object.values(affixTypesMap.pPrefix.rawMap)) {
-                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.pPrefix.resultMap.push(entry);
                         affixTypesMap.pPrefix.state = true;
                     } else {
-                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [];
                         if (nounSuffix.length > 0) {
                             affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
                             for (obj of Object.values(nounSuffix)) {
@@ -1095,11 +1095,11 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.pSuffix.rawMap) {
                 for (entry of Object.values(affixTypesMap.pSuffix.rawMap)) {
-                    if (ALL_WORDS.MAP[entry.affixStem]) {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
                         affixTypesMap.pSuffix.resultMap.push(entry);
                         affixTypesMap.pSuffix.state = true;
                     } else {
-                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, NOUNS.SUFFIXES.FLAT_MATCHES, false, true) || [];
+                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [];
                         if (nounSuffix.length > 0) {
                             affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry);
                             for (obj of Object.values(nounSuffix)) {
@@ -1113,13 +1113,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.adjSuffix.rawMap) {
                 for (entry of Object.values(affixTypesMap.adjSuffix.rawMap)) {
-                    if (ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'adj') {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'adj') {
                         affixTypesMap.adjSuffix.resultMap.push(entry);
                         affixTypesMap.adjSuffix.state = true;
                     } else {
-                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, PARTICLES.MAP, false, true) || [];
+                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.PARTICLES.MAP, false, true) || [];
                         for (entry2 of Object.values(pSuffix)) {
-                            if (ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'adj') {
+                            if (DICTIONARY.ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'adj') {
 
                                 entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
 
@@ -1133,7 +1133,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
             }
             if (affixTypesMap.auxPrefix.rawMap) {
                 for (entry of Object.values(affixTypesMap.auxPrefix.rawMap)) {
-                    if (ALL_WORDS.MAP[entry.affixStem] && ALL_WORDS.MAP[entry.affixStem].type === 'aux') {
+                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && DICTIONARY.ALL_WORDS.MAP[entry.affixStem].type === 'aux') {
                         affixTypesMap.auxPrefix.resultMap.push(entry);
                         affixTypesMap.auxPrefix.state = true;
                     }
@@ -1227,7 +1227,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
                 const wrapper = document.getElementById('prefixONLYSuffixtable');
                 if (wrapper) {
-                    helperFunctions.matchtype1.neoVerbTables(2, keyword, wrapper);
+                    helperFunctions.matchtype1.neoVerbTables(false, keyword, wrapper);
 
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
@@ -1239,7 +1239,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
 
-                const stemMap = ALL_WORDS.MAP[affixTypesMap.verbSuffix.resultMap[0].affixStem] || [];
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbSuffix.resultMap[0].affixStem] || [];
                 const stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
@@ -1301,7 +1301,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     const suffixStem = arr.affixStem;
 
 
-                    if (ALL_WORDS.MAP[suffixStem]) {
+                    if (DICTIONARY.ALL_WORDS.MAP[suffixStem]) {
                         const PShtml = `
                                 <tr>
                                     <th>Suffix</th>
@@ -1326,7 +1326,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     }
                     const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
                     if (suffixONLYPrefixtableWrapper) {
-                        helperFunctions.matchtype1.neoVerbTables(1, keyword, suffixONLYPrefixtableWrapper);
+                        helperFunctions.matchtype1.neoVerbTables(true, keyword, suffixONLYPrefixtableWrapper);
 
                         helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                     }
@@ -1341,7 +1341,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
 
-                const stemMap = ALL_WORDS.MAP[affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem] || [];
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem] || [];
                 const stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
@@ -1405,7 +1405,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 helperFunctions.standard.createPageById('page96', html);
                 affixTypesMap.verbBothAffixes.resultMap.prefix.forEach(arr => {
 
-                    if (ALL_WORDS.MAP[arr.affixStem]) {
+                    if (DICTIONARY.ALL_WORDS.MAP[arr.affixStem]) {
                         const prefixGender = arr.affixGender;
                         const prefixNumber = arr.affixNumber;
                         const prefixPerson = arr.affixPerson;
@@ -1425,7 +1425,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 });
                 affixTypesMap.verbBothAffixes.resultMap.suffix.forEach(arr => {
 
-                    if (ALL_WORDS.MAP[arr.affixStem]) {
+                    if (DICTIONARY.ALL_WORDS.MAP[arr.affixStem]) {
                         const suffixGender = arr.affixGender;
                         const suffixNumber = arr.affixNumber;
                         const suffixPerson = arr.affixPerson;
@@ -1460,7 +1460,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
 
-                const stemMap = ALL_WORDS.MAP[affixTypesMap.nounSuffix.resultMap[0].affixStem] || []; console.log(stemMap);
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffix.resultMap[0].affixStem] || []; console.log(stemMap);
                 let stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
@@ -1516,7 +1516,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     const suffixCase = arr.affixCase;
                     const suffix = arr.affix;
 
-                    const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
                     for (const [gndr, def] of Object.entries(combinedGendersObject)) {
                         if (gndr === suffixGender) {
                             stemDifinition = def;
@@ -1558,17 +1558,17 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const prefix = array.affix;
                 const prefixStem = array.affixStem;
 
-                const ppArray = ALL_WORDS.MAP[prefix];
+                const ppArray = DICTIONARY.ALL_WORDS.MAP[prefix];
                 const ppDefinition = ppArray.definition;
                 const ppUsage_notes = ppArray.usage_notes;
                 console.log(ppArray);
 
-                if (ALL_WORDS.MAP[prefixStem]) {
+                if (DICTIONARY.ALL_WORDS.MAP[prefixStem]) {
                     console.log('clean match');
 
-                    const arr = ALL_WORDS.MAP[prefixStem];
+                    const arr = DICTIONARY.ALL_WORDS.MAP[prefixStem];
                     console.log(arr);
-                    const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
+                    const NcombinedGendersObject = GENDERS.combine(arr.genders) // Key-value pairs
                     console.log(NcombinedGendersObject);
 
 
@@ -1643,7 +1643,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
 
-                const stemMap = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
                 let stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
@@ -1699,7 +1699,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     const suffixCase = arr.affixCase;
                     const suffix = arr.affix;
 
-                    const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
                     for (const [gndr, def] of Object.entries(combinedGendersObject)) {
                         if (gndr === suffixGender) {
                             stemDifinition = def;
@@ -1724,7 +1724,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                 //added div vv
                 const prefix = affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix[0].affix; console.log(prefix);
-                const map = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix[0].affix]; console.log(map);
+                const map = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix[0].affix]; console.log(map);
                 const ppHtml = `
                                 <table style="margin-top:35px">
                                     <thead>
@@ -1762,18 +1762,18 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const prefix = array.affix;
                 const prefixStem = array.affixStem;
 
-                const pArray = ALL_WORDS.MAP[prefix];
+                const pArray = DICTIONARY.ALL_WORDS.MAP[prefix];
                 const pDefinition = pArray.definition;
                 const pUsage_notes = pArray.usage_notes;
                 console.log(array);
-                if (ALL_WORDS.MAP[prefixStem]) {
+                if (DICTIONARY.ALL_WORDS.MAP[prefixStem]) {
                     console.log('clean match');
 
                     let nounTblDiv = '';
                     let html = '';
 
-                    const arr = ALL_WORDS.MAP[prefixStem];
-                    const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
+                    const arr = DICTIONARY.ALL_WORDS.MAP[prefixStem];
+                    const NcombinedGendersObject = GENDERS.combine(arr.genders) // Key-value pairs
                     switch (prefix) {
                         case 'i':
                             html = `
@@ -1856,14 +1856,14 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 const particle = array.affix;
                 const particleStem = array.affixStem;
 
-                const pArray = ALL_WORDS.MAP[particle];
+                const pArray = DICTIONARY.ALL_WORDS.MAP[particle];
                 const pDefinition = pArray.definition;
                 const pUsage_notes = pArray.usage_notes;
                 //console.log(pArray);
-                if (ALL_WORDS.MAP[particleStem]) {
+                if (DICTIONARY.ALL_WORDS.MAP[particleStem]) {
                     console.log('clean match');
 
-                    const arr = ALL_WORDS.MAP[particleStem];
+                    const arr = DICTIONARY.ALL_WORDS.MAP[particleStem];
                     console.log(arr);
                     if (arr.type === 'adj') {
                         console.log('adj')
@@ -1964,7 +1964,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                                 break;
                         }
                     } else if (arr.type === 'n') {
-                        const NcombinedGendersObject = WORD_UTILS.combineGenders(arr.genders) // Key-value pairs
+                        const NcombinedGendersObject = GENDERS.combine(arr.genders) // Key-value pairs
                         //console.log(NcombinedGendersObject);
 
                         switch (particle) {
@@ -2048,7 +2048,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
 
-                const stemMap = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0].affixStem] || []; //console.log(stemMap);
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0].affixStem] || []; //console.log(stemMap);
                 let stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
@@ -2107,7 +2107,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     const suffixCase = arr.affixCase;
                     const suffix = arr.affix;
 
-                    const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
                     for (const [gndr, def] of Object.entries(combinedGendersObject)) {
                         if (gndr === suffixGender) {
                             stemDifinition = def;
@@ -2132,7 +2132,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                 //added div vv
                 const particle = affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix; //console.log(prefix);
-                const map = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix]; //console.log(map);
+                const map = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix]; //console.log(map);
                 const ppHtml = `
                     <table style="margin-top:35px">
                         <thead>
@@ -2166,7 +2166,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
 
-                const stemMap = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
                 let stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 
@@ -2222,7 +2222,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                     const suffixCase = arr.affixCase;
                     const suffix = arr.affix;
 
-                    const combinedGendersObject = WORD_UTILS.combineGenders(stemMap.genders) // Key-value pairs
+                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
                     for (const [gndr, def] of Object.entries(combinedGendersObject)) {
                         if (gndr === suffixGender) {
                             stemDifinition = def;
@@ -2247,7 +2247,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
 
                 //added div vv
                 const particle = affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix; //console.log(prefix);
-                const map = ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix]; //console.log(map);
+                const map = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix]; //console.log(map);
                 const ppHtml = `
                     <table style="margin-top:35px">
                         <thead>
@@ -2291,9 +2291,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             </theader>
                             <tbody>
                                 <td>${keyword}</td>
-                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].definition}</td>
-                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].usage_notes || '...'}</td>
-                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].type}</td>
+                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].definition}</td>
+                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].usage_notes || '...'}</td>
+                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].type}</td>
                             </tbody>
                         </table>
                     </div>
@@ -2345,9 +2345,9 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             </theader>
                             <tbody>
                                 <td>${keyword}</td>
-                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].definition}</td>
-                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].usage_notes || '...'}</td>
-                                <td>${ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].type}</td>
+                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].definition}</td>
+                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].usage_notes || '...'}</td>
+                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].type}</td>
                             </tbody>
                         </table>
                     </div>
@@ -2421,8 +2421,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                             <tbody>
                                 <tr>
                                     <td>${keyword}</td>
-                                    <td>${ALL_WORDS.MAP[array.affixStem].definition}</td>
-                                    <td>${ALL_WORDS.MAP[array.affixStem].usage_notes}</td>
+                                    <td>${DICTIONARY.ALL_WORDS.MAP[array.affixStem].definition}</td>
+                                    <td>${DICTIONARY.ALL_WORDS.MAP[array.affixStem].usage_notes}</td>
                                     <td>${'Auxilary'}</td>
                                 </tr>
                             </tbody>
@@ -2457,13 +2457,13 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
         }
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
-            const searchHandler = ALL_WORDS.fetchByDefinition(keyword); // Array[]
+            const searchHandler = DICTIONARY.ALL_WORDS.fetchByDefinition(keyword); // Array[]
             console.log('3', 'searchHandler |', searchHandler);
             searchHandler.forEach(entry => {
 
                 // check for type === "n" then do for () {} else do normal thingi?
                 if (entry.type === "n") {
-                    for (const [gender, def] of Object.entries(WORD_UTILS.combineGenders(entry.genders))) {
+                    for (const [gender, def] of Object.entries(GENDERS.combine(entry.genders))) {
                         helperFunctions.matchtype3.extraTableRow(entry.word, `n ${entry.declension}`, gender, def, entry.usage_notes || '...');//TODO make <-- use insert tr instead of this goofy function.
                     }
                 } else {

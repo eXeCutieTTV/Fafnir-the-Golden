@@ -194,7 +194,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
     //console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll));
 
     let array = [];
-    const match = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll);
+    const match = AFFIXES.match(word, map, isPrefix, returnAll);
     //console.log(match);
     if (Array.isArray(match)) {
         array = match[0] || {};
@@ -271,7 +271,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
 
     switch (affixType) {
         case 'v':
-            if (isPrefix === true) {
+            if (isPrefix) {
                 const verbPrefResult = [];
                 match.forEach(arr => {
 
@@ -344,7 +344,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
                     affixNumber = arr[2][2][0];
 
                     const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                    const MAP = ALL_WORDS.MAP[affixStem];
+                    const MAP = DICTIONARY.ALL_WORDS.MAP[affixStem];
 
                     if (MAP && MAP.type === 'adj') { affixType = 'adj' }//check if adj
                     const matchResult = {
@@ -356,13 +356,13 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
                         affixCase,
                         affix,
                     }
-                    nounSuffResult.push(matchResult);
+                    DICTIONARY.nounSuffResult.push(matchResult);
                 });
-                return nounSuffResult;
+                return DICTIONARY.nounSuffResult;
             }
             break;
         case 'pp':
-            if (isPrefix === true) {
+            if (isPrefix) {
                 const ppResult = [];
                 match.forEach(arr => {
 
@@ -378,7 +378,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
             }
             break;
         case 'part':
-            if (isPrefix === true) {
+            if (isPrefix) {
                 const pResult = [];
                 match.forEach(arr => {
                     //console.log(arr);
@@ -424,7 +424,7 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
                     affixNumber = arr[2][2][0];
 
                     const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                    const MAP = ALL_WORDS.MAP[affixStem];
+                    const MAP = DICTIONARY.ALL_WORDS.MAP[affixStem];
 
                     const matchResult = {
                         affixType,
@@ -618,117 +618,86 @@ const type1extraTableRow = function type1extraTableRow(word, declension, forms, 
 
     return row;
 }
-const neoVerbTables = function neoVerbTables(affixState, word, wrapper) {
+const neoVerbTables = function neoVerbTables(isPrefix, word, wrapper) {
 
     const affixStateMap = {
-        1: { 1: 'Prefix', 2: VERBS.PREFIXES.MAP },
-        2: { 1: 'Suffix', 2: VERBS.SUFFIXES.MAP }
+        true: ['Prefix',],// ⟅(^‿^)⟆ - Shelf the elf
+        false: ['Suffix', DICTIONARY.VERBS.SUFFIXES.MAP]
+    } // ⟅(^‿^)⟆ - Shelf the elf
+
+
+    function affixHandlerGenders(isPrefix, word, person, number, hasBorder = false) {
+        let string = "";
+
+        for (const gender of GENDERS.FLAT.NAME) {
+            string += `<td${hasBorder ? " style = 'border-bottom: 1px solid var(--border)' " : ''}>${affixHandler(isPrefix, word, person, number, gender)}</td>\n`;
+        }
+
+        return string;
+    } // show me
+    
+
+    function affixHandler(isPrefix, word, person, number, gender) {// ⟅(^‿^)⟆ - Shelf the elf
+        return isPrefix 
+        ? CHARACTERS.entriesToText(AFFIXES.connectSplit(DICTIONARY.VERBS.PREFIXES.MAP[person][number][gender], word, '')[0])
+        : DICTIONARY.VERBS.SUFFIXES.MAP[person][number][gender];
     }
+
     const html = `
-        <table id="Verb-Table-${affixStateMap[affixState][1]}" style="margin-bottom: 10px;">
-            <tr>
-                <th colSpan = 2>${affixStateMap[affixState][1]}</th>
-                <th>Exalted</th>
-                <th>Rational</th>
-                <th>Monstrous</th>
-                <th>Irrational</th>
-                <th>Magical</th>
-                <th>Mundane</th>
-                <th>Abstract</th>
-            </tr>
-            <tr>
-                <th style = "width:86px" rowSpan = 3>Singular</th>
-                <th style = "width:14px">1.</th>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Exalted'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Exalted']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Rational'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Rational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Monstrous'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Monstrous']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Irrational'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Irrational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Magical'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Magical']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Mundane'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Mundane']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Singular['Abstract'], word, '')[0] : affixStateMap[affixState][2][1].Singular['Abstract']}</td>
-            </tr>
-            <tr>
-                <th>2.</th>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Exalted'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Exalted']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Rational'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Rational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Monstrous'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Monstrous']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Irrational'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Irrational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Magical'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Magical']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Mundane'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Mundane']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Singular['Abstract'], word, '')[0] : affixStateMap[affixState][2][2].Singular['Abstract']}</td>
-            </tr>
-            <tr>
-                <th>3.</th>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Exalted'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Exalted']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Rational'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Rational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Monstrous'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Monstrous']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Irrational'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Irrational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Magical'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Magical']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Mundane'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Mundane']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Singular['Abstract'], word, '')[0] : affixStateMap[affixState][2][3].Singular['Abstract']}</td>
-            </tr>
-            <tr>
-                <th rowSpan = 3>Dual</th>
-                <th>1.</th>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Exalted'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Exalted']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Rational'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Rational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Monstrous'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Monstrous']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Irrational'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Irrational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Magical'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Magical']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Dual['Mundane'], word, '')[0] : affixStateMap[affixState][2][1].Dual['Mundane']}</td>
-                <td>${affixStateMap[affixState][2][1].Dual['Abstract']}</td>
-            </tr>
-            <tr>
-                <th>2.</th>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Exalted'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Exalted']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Rational'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Rational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Monstrous'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Monstrous']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Irrational'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Irrational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Magical'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Magical']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Mundane'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Mundane']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Dual['Abstract'], word, '')[0] : affixStateMap[affixState][2][2].Dual['Abstract']}</td>
-            </tr>
-            <tr>
-                <th>3.</th>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Exalted'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Exalted']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Rational'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Rational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Monstrous'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Monstrous']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Irrational'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Irrational']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Magical'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Magical']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Mundane'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Mundane']}</td>
-                <td style = "border-bottom: 1px solid var(--border)">${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Dual['Abstract'], word, '')[0] : affixStateMap[affixState][2][3].Dual['Abstract']}</td>
-            </tr>
-            <tr>
-                <th rowSpan = 3>Plural</th>
-                <th>1.</th>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Exalted'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Exalted']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Rational'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Rational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Monstrous'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Monstrous']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Irrational'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Irrational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Magical'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Magical']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Mundane'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Mundane']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][1].Plural['Abstract'], word, '')[0] : affixStateMap[affixState][2][1].Plural['Abstract']}</td>
-            </tr>
-            <tr>
-                <th>2.</th>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Exalted'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Exalted']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Rational'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Rational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Monstrous'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Monstrous']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Irrational'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Irrational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Magical'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Magical']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Mundane'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Mundane']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][2].Plural['Abstract'], word, '')[0] : affixStateMap[affixState][2][2].Plural['Abstract']}</td>
-            </tr>
-            <tr>
-                <th>3.</th>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Exalted'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Exalted']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Rational'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Rational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Monstrous'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Monstrous']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Irrational'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Irrational']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Magical'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Magical']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Mundane'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Mundane']}</td>
-                <td>${affixState === 1 ? WORD_UTILS.axifyVowelCouples(affixStateMap[affixState][2][3].Plural['Abstract'], word, '')[0] : affixStateMap[affixState][2][3].Plural['Abstract']}</td>
-            </tr>
+        <table id="Verb-Table-${isPrefix ? 'Prefix' : 'Suffix'}" style="margin-bottom: 10px;">
+            <thead>
+                <tr>
+                    <th colSpan = 2>${affixStateMap[isPrefix][0]}</th>
+                    <th>Exalted</th>
+                    <th>Rational</th>
+                    <th>Monstrous</th>
+                    <th>Irrational</th>
+                    <th>Magical</th>
+                    <th>Mundane</th>
+                    <th>Abstract</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th style = "width:86px" rowSpan = 3>Singular</th>
+                    <th style = "width:14px">1.</th>
+                    ${affixHandlerGenders(isPrefix, word, 1, IDS.NUMBERS.S)}
+                </tr>
+                <tr>
+                    <th>2.</th>
+                    ${affixHandlerGenders(isPrefix, word, 2, IDS.NUMBERS.S)} 
+                </tr>
+                <tr>
+                    <th>3.</th>
+                    ${affixHandlerGenders(isPrefix, word, 3, IDS.NUMBERS.S, true)} 
+                </tr>
+                <tr>
+                    <th rowSpan = 3>Dual</th>
+                    <th>1.</th>
+                    ${affixHandlerGenders(isPrefix, word, 1, IDS.NUMBERS.D)}
+                </tr>
+                <tr>
+                    <th>2.</th>
+                    ${affixHandlerGenders(isPrefix, word, 2, IDS.NUMBERS.D)} 
+                </tr>
+                <tr>
+                    <th>3.</th>
+                    ${affixHandlerGenders(isPrefix, word, 3, IDS.NUMBERS.D, true)} 
+                </tr>
+                <tr>
+                    <th rowSpan = 3>Plural</th>
+                    <th>1.</th>
+                    ${affixHandlerGenders(isPrefix, word, 1, IDS.NUMBERS.P)}
+                </tr>
+                <tr>
+                    <th>2.</th>
+                    ${affixHandlerGenders(isPrefix, word, 2, IDS.NUMBERS.P)} 
+                </tr>
+                <tr>
+                    <th>3.</th>
+                    ${affixHandlerGenders(isPrefix, word, 3, IDS.NUMBERS.P, true)} 
+                </tr>
+            </tbody>
         </table>
         `;
     helperFunctions.standard.createDivById('', wrapper, html);
@@ -780,7 +749,7 @@ const neoNounTables = function neoNounTables(declension, mood, wrapper, combined
             }
             const mooooood = moodMap[mood];
             //inner
-            const entry = Object.entries(NOUNS.SUFFIXES.MAP[mooooood]);
+            const entry = Object.entries(DICTIONARY.NOUNS.SUFFIXES.MAP[mooooood]);
             for (const [gndr, array] of entry) {
                 if (gndr === gender) {
                     const numberKey = map[i + 1];
@@ -850,7 +819,7 @@ const neoAdjectiveTables = function neoAdjectiveTables(declension, mood, wrapper
             }
             const mooooood = moodMap[mood];
             //inner
-            const entry = Object.entries(NOUNS.SUFFIXES.MAP[mooooood]);
+            const entry = Object.entries(DICTIONARY.NOUNS.SUFFIXES.MAP[mooooood]);
             for (const [gndr, array] of entry) {
                 if (gndr === gender) {
                     const numberKey = map[i + 1];
@@ -928,8 +897,8 @@ const populateSummaryTables = function populateSummaryTables(keyword, tables) {
 
             // process raw
             let entries;
-            if (tables[tableId]) entries = WORD_UTILS.connectSplit(textInCell, keyword, "");
-            else entries = WORD_UTILS.connectSplit("", keyword, textInCell);
+            if (tables[tableId]) entries = AFFIXES.connectSplit(textInCell, keyword, "");
+            else entries = AFFIXES.connectSplit("", keyword, textInCell);
             td.innerHTML = `<strong>${CHARACTERS.entriesToText(entries[0])}</strong>${CHARACTERS.entriesToText(entries[1])}<strong>${CHARACTERS.entriesToText(entries[2])}</strong>`;
             // place keyword as prefix or suffix (you can change behavior per table)
         });
@@ -1011,7 +980,7 @@ const displayForms = function displayForms(allMatchesArray) {
         }
     }
     for (const [key, map] of Object.entries(allMatchesArray.type2)) {
-        if (map.state === true) {
+        if (map.state) {
             for (el of map.resultMap) {
                 el['key'] = key;
                 tempArray.type2.push(el);
@@ -1336,24 +1305,27 @@ function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
     let entries = WORD_UTILS.connectSplit("", 'lal', '(u)n');
     CHARACTERS.entriesToText(entries[2]); //'un'
 */
+
+//vv experimental. the one i sent to you on discord earlier.//////////////////////////////
 function testingChecker(keyword, map, isPrefix = true) {
+    const tempArray = [];
     for (const [personKey, personMap] of Object.entries(map)) {
         for (const [numberKey, numberMap] of Object.entries(personMap)) {
             for (const [genderKey, affix] of Object.entries(numberMap)) {
-                if (VERBS.SUFFIXES.MAP === map || VERBS.PREFIXES.MAP === map) {
+                if (DICTIONARY.VERBS.SUFFIXES.MAP === map || DICTIONARY.VERBS.PREFIXES.MAP === map) {
                     const result = {
                         variants: [],
                         person: personKey,
                         number: numberKey,
                         gender: genderKey,
-                        affixType: isPrefix === true ? 'Prefix' : 'Suffix',
+                        affixType: isPrefix ? 'Prefix' : 'Suffix',
                         affix: affix, //temp. overwritten later down.
                     };
-                    const optionalOnEntry = WORD_UTILS.connectSplit("", 'x', affix);
+                    const optionalOnEntry = AFFIXES.connectSplit("", 'x', affix);
                     const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
                     result.variants[0] = optionalOnText;
                     if (optionalOnEntry[2][0].prop[1] === 6) {
-                        const optionalOffEntry = WORD_UTILS.connectSplit("", 'a', affix);
+                        const optionalOffEntry = AFFIXES.connectSplit("", 'a', affix);
                         const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
                         result.variants[1] = optionalOffText;
                     }
@@ -1361,18 +1333,20 @@ function testingChecker(keyword, map, isPrefix = true) {
                         if (isPrefix === false) {
                             if (keyword.endsWith(el)) {
                                 result.affix = el;
-                                console.log(result);
-                                break; // stop further matches
+                                tempArray.push(result);
+                                //break; // stop further matches
                             }
-                        } else if (isPrefix === true) {
+                        } else if (isPrefix) {
                             if (keyword.startsWith(el)) {
                                 result.affix = el;
-                                console.log(result);
-                                break; // stop further matches
+                                tempArray.push(result);
+                                //break; // stop further matches
                             }
                         }
                     }
-                } else if (NOUNS.SUFFIXES.MAP === map) {
+                }
+            /*
+                else if (DICTIONARY.NOUNS.SUFFIXES.MAP === map) {
                     for (const [nounKey, nounAffix] of Object.entries(affix)) {
                         const result = {
                             variants: [],
@@ -1380,14 +1354,14 @@ function testingChecker(keyword, map, isPrefix = true) {
                             gender: numberKey,
                             number: nounKey,
                             declension: genderKey,
-                            affixType: isPrefix === true ? 'Prefix' : 'Suffix',
+                            affixType: isPrefix ? 'Prefix' : 'Suffix',
                             affix: nounAffix, //temp. overwritten later down.
                         };
-                        const optionalOnEntry = WORD_UTILS.connectSplit("", 'x', affix);
+                        const optionalOnEntry = AFFIXES.connectSplit("", 'x', affix);
                         const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
                         result.variants[0] = optionalOnText;
                         if (optionalOnEntry[2][0].prop[1] === 6) {
-                            const optionalOffEntry = WORD_UTILS.connectSplit("", 'a', affix);
+                            const optionalOffEntry = AFFIXES.connectSplit("", 'a', affix);
                             const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
                             result.variants[1] = optionalOffText;
                         }
@@ -1400,7 +1374,9 @@ function testingChecker(keyword, map, isPrefix = true) {
                         }
                     }
                 }
+            */
             }
         }
     }
+    console.log(tempArray);
 }
