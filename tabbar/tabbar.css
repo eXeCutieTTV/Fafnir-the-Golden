@@ -10,14 +10,17 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 56px;
+}
+
+.tab-bar:hover {
+    cursor: pointer;
 }
 
 .tabs {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: minmax(200px, auto);
-    /* here you edit minimum size */
+    /* here you edit minimum size where is*/
     justify-content: start;
     background: var(--bg1);
     border-top: 1px solid #ccc;
@@ -30,43 +33,13 @@
     overflow-y: hidden;
     scroll-behavior: smooth;
     text-wrap: nowrap;
-}
-
-#settings {
-    display: grid;
-    /* here you edit minimum size */
-    justify-content: start;
-    background: var(--bg1);
-    border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    z-index: 99999;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    grid-template-columns: 1fr;
-    width: 9.9%;
-    height: 55px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    text-wrap: nowrap;
-}
-
-#settings:hover {
-    cursor: pointer;
-}
-
-#modeToggle {
-    display: block;
-    width: 100%;
-    height: 100%;
+    height: 5.5%;
 }
 
 .tab {
     width: auto;
     padding: 10px 20px;
     text-align: center;
-    cursor: pointer;
     border-right: 1px solid #ccc;
     min-width: max-content;
 }
@@ -77,4 +50,25 @@
     border: 1px solid var(--accent);
     border-top: 2px solid var(--accent);
     border-bottom: 0px solid var(--accent);
+}
+
+#settings {
+    display: block;
+    background: var(--bg1);
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    z-index: 99999;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 9.9%;
+    text-wrap: nowrap;
+    height: 5.5%;
+}
+
+#modeToggle {
+    display: block;
+    height: 100%;
+    padding: 10px 20px;
+    text-align: center;
 }
