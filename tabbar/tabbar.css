@@ -23,7 +23,7 @@
     /* here you edit minimum size where is*/
     justify-content: start;
     background: var(--bg1);
-    border-top: 1px solid #ccc;
+    border-top: 0px solid #ccc;
     z-index: 99999;
     position: fixed;
     bottom: 0;
@@ -55,13 +55,13 @@
 #settings {
     display: block;
     background: var(--bg1);
-    border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
+    border-top: 0px solid var(--border);
+    border-right: 0px solid var(--border);
     z-index: 99999;
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 9.9%;
+    width: 10%;
     text-wrap: nowrap;
     height: 5.5%;
 }
@@ -69,6 +69,8 @@
 #modeToggle {
     display: block;
     height: 100%;
-    padding: 10px 20px;
+    padding-top: 10px;
     text-align: center;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
 }
