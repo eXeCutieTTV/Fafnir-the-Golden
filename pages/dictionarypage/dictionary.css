@@ -84,12 +84,6 @@
     background-color: rgb(202, 79, 79);
 }
 
-.tablesContainer {
-    margin: 0px;
-    margin-top: 10px;
-    padding: 0px;
-}
-
 #dirSummaryTable, #recSummaryTable {
     margin-bottom: 30px;
 }

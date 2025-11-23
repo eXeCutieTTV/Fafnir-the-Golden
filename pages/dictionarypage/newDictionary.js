@@ -1146,7 +1146,7 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 matchType = 2;
 
 
-                const stemMap = ALL_WORDS.MAP[affixTypesMap.verbPrefix.resultMap[0].affixStem] || [];
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbPrefix.resultMap[0].affixStem] || [];
                 const stemDifinition = stemMap.definition || '...';
                 const stemNotes = stemMap.usage_notes || '...';
 

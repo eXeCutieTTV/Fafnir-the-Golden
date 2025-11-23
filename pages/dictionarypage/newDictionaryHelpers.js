@@ -356,9 +356,9 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
                         affixCase,
                         affix,
                     }
-                    DICTIONARY.nounSuffResult.push(matchResult);
+                    nounSuffResult.push(matchResult);
                 });
-                return DICTIONARY.nounSuffResult;
+                return nounSuffResult;
             }
             break;
         case 'pp':
