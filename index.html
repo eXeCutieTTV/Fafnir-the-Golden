@@ -77,24 +77,23 @@
 
   <!-- Tab bar -->
   <include-html src="tabbar\tabbar.html"></include-html>
-  <script src="tabbar\tabbar.js"></script>
 </body>
+<script src="tabbar\tabbar.js"></script> <!-- Tab bar -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script> <!-- Excel thing -->
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
-<!-- APIs - Lirox -->
-<script src="https://draconicconlang.github.io/APIs/dialects/DialectLoader.js"></script>
+<!--vv APIs - Lirox vv-->
+<script src="https://draconicconlang.github.io/APIs/dialects/DialectLoader.js"></script> 
 
 <script>
   DIALECTS.load("dr_dr").then(DR => {
     Object.assign(globalThis, DR);
   });
 </script>
+<!--^^ APIs - Lirox ^^-->
 
-<!-- my js -->
-<script src="pages\dictionarypage\newDictionaryHelpers.js"></script> <!--helper functions link-->
-
-<script src="index.js"></script> <!--index.js link-->
+<!--vv my js vv-->
+<script src="pages\dictionarypage\newDictionaryHelpers.js"></script> <!-- helper functions -->
+<script src="index.js"></script> <!-- index.js -->
 
 </html>
 <!--TODO need to check if ALL of the data from the original doc is ported over-->
