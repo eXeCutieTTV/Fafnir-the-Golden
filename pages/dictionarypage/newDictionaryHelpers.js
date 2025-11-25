@@ -189,6 +189,158 @@ const standard = {
     betterTrInsert
 }
 
+const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
+    let tempArray = [];
+    //decide if applied or unapplied suffix is used
+    function appliedOrUnapplied(applied, unapplied, affixType) {
+        let affixUsed = '';
+
+        if (affixType === 'suffix') {
+            if (applied && unapplied) {
+                if (word.endsWith(applied)) {
+                    affixUsed = applied;
+                }
+                else if (word.endsWith(unapplied)) {
+                    affixUsed = unapplied;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (applied) {
+                affixUsed = applied;
+            }
+            else if (unapplied) {
+                affixUsed = unapplied;
+            }
+            if (!affixUsed) {
+                return null;
+            }
+            else {
+                return affixUsed;
+            }
+        } else if (affixType === 'prefix') {
+            if (applied && unapplied) {
+                if (word.startsWith(applied)) {
+                    affixUsed = applied;
+                }
+                else if (word.startsWith(unapplied)) {
+                    affixUsed = unapplied;
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (applied) {
+                affixUsed = applied;
+            }
+            else if (unapplied) {
+                affixUsed = unapplied;
+            }
+            if (!affixUsed) {
+                return null;
+            }
+            else {
+                return affixUsed;
+            }
+        }
+    }
+
+    let arrayPrefixes;
+    let arraySuffixes;
+    let wordclass;
+    if (isPrefix) {
+        arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
+        wordclass = arrayPrefixes[0][3];
+    } else {
+        arraySuffixes = AFFIXES.SUFFIXES.match(word, map, true);
+        wordclass = arraySuffixes[0][3];
+    }
+    console.log(wordclass);
+    switch (wordclass) {
+        case 'v':
+            if (isPrefix) {
+                console.log(arrayPrefixes);
+                for (entries of arrayPrefixes) {
+                    const paths = entries[1];
+                    const prefix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'prefix');
+                    console.log(paths, prefix);
+                    const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
+
+                    if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
+                        for (const path of paths) {
+                            console.log('path |', path);
+                            const result = {
+                                stem: stem,
+                                prefix: prefix,
+                                person: path[0],
+                                number: path[1],
+                                gender: path[2],
+                                affixState: 'prefix',
+                                wordclass: 'v'
+                            }
+                            tempArray[stem] ? null : tempArray[stem] = [];
+                            tempArray[stem].push(result);
+                        }
+                    }
+                }
+            } else {
+                console.log(arraySuffixes);
+                for (const entries of arraySuffixes) {
+                    const paths = entries[1];
+                    const suffix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'suffix');
+                    const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
+
+                    if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
+                        for (const path of paths) {
+                            console.log('path |', path);
+                            const result = {
+                                stem: stem,
+                                suffix: suffix,
+                                person: path[0],
+                                number: path[1],
+                                gender: path[2],
+                                affixState: 'suffix',
+                                wordclass: 'v'
+                            }
+                            tempArray[stem] ? null : tempArray[stem] = [];
+                            tempArray[stem].push(result);
+                        }
+                    }
+                }
+            }
+            break;
+        case 'n':
+            for (const entries of arraySuffixes) {
+                console.log(entries);
+                const paths = entries[1];
+                const suffix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'suffix');
+                const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
+
+                if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
+                    for (const path of paths) {
+                        console.log('path |', path);
+                        const result = {
+                            stem: stem,
+                            suffix: suffix,
+                            case: path[0],
+                            gender: path[1],
+                            person: path[2],
+                            number: path[3],
+                            affixState: 'suffix',
+                            wordclass: 'n'
+                        }
+                        tempArray[stem] ? null : tempArray[stem] = [];
+                        tempArray[stem].push(result);
+                    }
+                }
+            }
+            break;
+        default: console.warn(`${wordclass} is not a valid wordclass`);
+    }
+    return tempArray;
+}
+
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
 
     //console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll));
@@ -635,12 +787,12 @@ const neoVerbTables = function neoVerbTables(isPrefix, word, wrapper) {
 
         return string;
     } // show me
-    
+
 
     function affixHandler(isPrefix, word, person, number, gender) {// ⟅(^‿^)⟆ - Shelf the elf
-        return isPrefix 
-        ? CHARACTERS.entriesToText(AFFIXES.connectSplit(DICTIONARY.VERBS.PREFIXES.MAP[person][number][gender], word, '')[0])
-        : DICTIONARY.VERBS.SUFFIXES.MAP[person][number][gender];
+        return isPrefix
+            ? CHARACTERS.entriesToText(AFFIXES.connectSplit(DICTIONARY.VERBS.PREFIXES.MAP[person][number][gender], word, '')[0])
+            : DICTIONARY.VERBS.SUFFIXES.MAP[person][number][gender];
     }
 
     const html = `
@@ -1345,36 +1497,36 @@ function testingChecker(keyword, map, isPrefix = true) {
                         }
                     }
                 }
-            /*
-                else if (DICTIONARY.NOUNS.SUFFIXES.MAP === map) {
-                    for (const [nounKey, nounAffix] of Object.entries(affix)) {
-                        const result = {
-                            variants: [],
-                            case: personKey,
-                            gender: numberKey,
-                            number: nounKey,
-                            declension: genderKey,
-                            affixType: isPrefix ? 'Prefix' : 'Suffix',
-                            affix: nounAffix, //temp. overwritten later down.
-                        };
-                        const optionalOnEntry = AFFIXES.connectSplit("", 'x', affix);
-                        const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
-                        result.variants[0] = optionalOnText;
-                        if (optionalOnEntry[2][0].prop[1] === 6) {
-                            const optionalOffEntry = AFFIXES.connectSplit("", 'a', affix);
-                            const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
-                            result.variants[1] = optionalOffText;
-                        }
-                        for (const el of result.variants) {
-                            if (keyword.endsWith(el)) {
-                                result.affix = el;
-                                console.log(result);
-                                break; // stop further matches
+                /*
+                    else if (DICTIONARY.NOUNS.SUFFIXES.MAP === map) {
+                        for (const [nounKey, nounAffix] of Object.entries(affix)) {
+                            const result = {
+                                variants: [],
+                                case: personKey,
+                                gender: numberKey,
+                                number: nounKey,
+                                declension: genderKey,
+                                affixType: isPrefix ? 'Prefix' : 'Suffix',
+                                affix: nounAffix, //temp. overwritten later down.
+                            };
+                            const optionalOnEntry = AFFIXES.connectSplit("", 'x', affix);
+                            const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
+                            result.variants[0] = optionalOnText;
+                            if (optionalOnEntry[2][0].prop[1] === 6) {
+                                const optionalOffEntry = AFFIXES.connectSplit("", 'a', affix);
+                                const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
+                                result.variants[1] = optionalOffText;
+                            }
+                            for (const el of result.variants) {
+                                if (keyword.endsWith(el)) {
+                                    result.affix = el;
+                                    console.log(result);
+                                    break; // stop further matches
+                                }
                             }
                         }
                     }
-                }
-            */
+                */
             }
         }
     }

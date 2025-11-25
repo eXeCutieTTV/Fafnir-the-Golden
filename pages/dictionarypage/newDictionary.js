@@ -1,8 +1,5 @@
-function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. not only verbs & nouns :sob:
+function dictionaryPage() {
     // /\(/o.o\)/\ - Spooky the spider
-    for (key of Object.values(DICTIONARY.ADJECTIVES.SUFFIXES.MATCHES)) {
-        if (key[3] === 'n') { key[3] = 'adj' }
-    }//also. can't you do this -line3-5 - on your end perhaps? its cause you do adjsuffixes=nounsuffixes.
     let searchBTN = document.getElementById('search_button');
     let searchFLD = document.getElementById('search_field');
 
@@ -1140,6 +1137,8 @@ function dictionaryPage() {//TODO finally add more wordclasses to type1/type2. n
                 }
             }
 
+            console.log(allMatchesArray);
+            return
             //page logic vv
             if (affixTypesMap.verbPrefix.state) {
                 console.log('--verb prefix--');
