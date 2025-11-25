@@ -250,21 +250,32 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     let arraySuffixes;
     let wordclass;
     if (isPrefix) {
-        arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
-        wordclass = arrayPrefixes[0][3];
+        const temp = AFFIXES.PREFIXES.match(word, map, false);
+        let bool;
+
+        if (temp.type) {
+            arrayPrefixes = AFFIXES.PREFIXES.match(word, map, false);
+            bool = true;
+        } else {
+            arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
+            bool = false;
+        }
+
+        bool
+            ? wordclass = arrayPrefixes.type
+            : wordclass = arrayPrefixes[0][3];
+
     } else {
         arraySuffixes = AFFIXES.SUFFIXES.match(word, map, true);
-        wordclass = arraySuffixes[0][3];
+        wordclass = arraySuffixes[0][3] || arraySuffixes.type;
     }
     console.log(wordclass);
     switch (wordclass) {
         case 'v':
             if (isPrefix) {
-                console.log(arrayPrefixes);
                 for (entries of arrayPrefixes) {
                     const paths = entries[1];
                     const prefix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'prefix');
-                    console.log(paths, prefix);
                     const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
 
                     if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
@@ -335,6 +346,49 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                     }
                 }
             }
+            break;
+        case 'adj':
+            for (const entries of arraySuffixes) {
+                const paths = entries[1];
+                const suffix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'suffix');
+                const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
+
+                if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
+                    for (const path of paths) {
+                        console.log('path |', path);
+                        const result = {
+                            stem: stem,
+                            suffix: suffix,
+                            case: path[0],
+                            gender: path[1],
+                            person: path[2],
+                            number: path[3],
+                            affixState: 'suffix',
+                            wordclass: 'adj'
+                        }
+                        tempArray[stem] ? null : tempArray[stem] = [];
+                        tempArray[stem].push(result);
+                    }
+                }
+            }
+            break;
+        case 'pp':
+            const prefix = arrayPrefixes.word;
+            const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
+
+            if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
+                const result = {
+                    stem: stem,
+                    prefix: prefix,
+                    affixState: 'prefix',
+                    wordclass: 'pp'
+                }
+                tempArray[stem] ? null : tempArray[stem] = [];
+                tempArray[stem].push(result);
+            }
+            break;
+        case 'part':
+            
             break;
         default: console.warn(`${wordclass} is not a valid wordclass`);
     }
