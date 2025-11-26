@@ -314,26 +314,24 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     let arrayPrefixes;
     let arraySuffixes;
     let wordclass;
-    let temp;
-    isPrefix
-        ? temp = AFFIXES.PREFIXES.match(word, map, false)
-        : temp = AFFIXES.SUFFIXES.match(word, map, false);
+    const arr = isPrefix
+        ? AFFIXES.PREFIXES.match(word, map, false)
+        : AFFIXES.SUFFIXES.match(word, map, false);
 
-    let bool;
-
-    if (temp.type) {
-        arrayPrefixes = AFFIXES.PREFIXES.match(word, map, false);
-        bool = true;
-    } else {
-        arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
-        bool = false;
+    const hasType = arr && Object.prototype.hasOwnProperty.call(arr, 'type');
+    
+    console.log(hasType);
+    if (hasType && isPrefix) {
+        wordclass = arrayPrefixes.type;
+    } else if (hasType && isPrefix === false) {
+        wordclass = arraySuffixes.type
+    } else if (hasType === false && isPrefix) {
+        wordclass = arrayPrefixes[0][3]
+    } else if (hasType === false && isPrefix === false) {
+        wordclass = arraySuffixes[0][3];
     }
-
-    bool
-        ? wordclass = arrayPrefixes.type
-        : wordclass = arrayPrefixes[0][3];
-
     console.log(wordclass);
+    return
     switch (wordclass) {
         case 'v':
             if (isPrefix) {
@@ -471,15 +469,46 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             break;
         case 'part':
             console.log('is part');
+            if (isPrefix) {
+                const prefix = arrayPrefixes.word;
+                const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
+                if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
+                    const result = {
+                        stem: stem,
+                        prefix: prefix,
+                        affixState: 'prefix',
+                        wordclass: 'part',
+                        short_path: ''//no path for parts
+                    }
+                    tempArray[stem] ? null : tempArray[stem] = [];
+                    tempArray[stem].push(result);
+                }
+            } else {
+                const suffix = arraySuffixes.word;
+                const { slice1: usedSuffix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, suffix.length);
+                if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
+                    const result = {
+                        stem: stem,
+                        suffix: suffix,
+                        affixState: 'suffix',
+                        wordclass: 'part',
+                        short_path: ''//no path for parts
+                    }
+                    tempArray[stem] ? null : tempArray[stem] = [];
+                    tempArray[stem].push(result);
+                }
+            }
             break;
         default: console.warn(`${wordclass} is not a valid wordclass`);
     }
-    console.log(tempArray.length, tempArray);
+    //console.log(tempArray.length, tempArray);
+    /*
     if (tempArray.length > 0) {
         return tempArray;
     } else {
         return false;
-    }
+    }*/
+    return tempArray;
 }
 
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
