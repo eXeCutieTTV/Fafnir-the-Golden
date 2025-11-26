@@ -360,6 +360,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
+                            tempArray.length++;
                         }
                     }
                 }
@@ -387,6 +388,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
+                            tempArray.length++;
                         }
                     }
                 }
@@ -431,7 +433,6 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                 if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
                     for (const path of paths) {
                         if (DICTIONARY.ALL_WORDS.MAP[stem].declension === path[3]) {//only push if declension is correct. each noun only has 1 declension.
-
                             console.log('path |', path);
                             const result = {
                                 stem: stem,
@@ -462,7 +463,8 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                     stem: stem,
                     prefix: prefix,
                     affixState: 'prefix',
-                    wordclass: 'pp'
+                    wordclass: 'pp',
+                    short_path: ''//no path for pps
                 }
                 tempArray[stem] ? null : tempArray[stem] = [];
                 tempArray[stem].push(result);
@@ -473,7 +475,12 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             break;
         default: console.warn(`${wordclass} is not a valid wordclass`);
     }
-    return tempArray;
+    console.log(tempArray.length,tempArray);
+    if (tempArray.length > 0) {
+        return tempArray;
+    } else {
+        return false;
+    }
 }
 
 const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {

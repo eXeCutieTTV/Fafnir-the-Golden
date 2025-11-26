@@ -257,16 +257,18 @@ function dictionaryPage() {
 
         // for type2
         const type2AffixesMap = {
-            verbPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.VERBS.PREFIXES.MATCHES, true, true) || [],
-            ppPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.PREPOSITIONS.MAP, true, true) || [],
-            verbSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.VERBS.SUFFIXES.MATCHES, false, true) || [],
-            nounSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [],
-            adjSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.ADJECTIVES.SUFFIXES.MATCHES, false, true) || [],
-            pPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.PARTICLES.MAP, true, true) || [],
-            pSuffix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.PARTICLES.MAP, false, true) || [],
-            auxPrefix: helperFunctions.matchtype2.affixChecker(keyword, DICTIONARY.VERBS.PREFIXES.MATCHES, true, true) || [],
+            verbPrefix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.VERBS.PREFIXES.MATCHES, true) || [],
+            ppPrefix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.PREPOSITIONS.MAP, true) || [],
+            verbSuffix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.VERBS.SUFFIXES.MATCHES, false) || [],
+            nounSuffix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false) || [],
+            adjSuffix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.ADJECTIVES.SUFFIXES.MATCHES, false) || [],
+            pPrefix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.PARTICLES.MAP, true) || [],
+            pSuffix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.PARTICLES.MAP, false) || [],
+            auxPrefix: helperFunctions.matchtype2.neoAffixChecker(keyword, DICTIONARY.VERBS.PREFIXES.MATCHES, true) || [],
             detSuffix: [], //<---
         }
+        console.log(type2AffixesMap);
+        return
         helperFunctions.standard.clearPageById('page97'); //type 1
         helperFunctions.standard.clearPageById('page95'); //type 1.1
         helperFunctions.standard.clearPageById('page96'); //type 2
