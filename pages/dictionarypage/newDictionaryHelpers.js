@@ -189,6 +189,70 @@ const standard = {
     betterTrInsert
 }
 
+const shorten_path = function shorten_path(wordclass, {
+    aspect = 'Episodic',
+    number = null,
+    tense = 'Non-Past',
+    gender = null,
+    person = null,
+    Case = null,
+    declension = null
+} = {}) {
+    let result;
+    const tempArray = [];
+    switch (wordclass) {
+        case 'v':
+            //console.log(aspect, number, tense, gender, person);
+
+            const mapArrayV = [IDS.ASPECT, IDS.NUMBERS, IDS.TENSE];
+            mapArrayV.forEach(el => {
+                for (const [short, long] of Object.entries(el)) {
+                    if (aspect === long) {
+                        tempArray.push(short);
+                    }
+                    if (tense === long) {
+                        tempArray.push(short);
+                    }
+                    if (number === long) {
+                        tempArray.push(short);
+                    }
+                }
+            });
+
+            for (entry of Object.values(GENDERS.MAP)) {
+                if (entry.NAME === gender) {
+                    tempArray.push(entry.SHORT);
+                }
+            }
+            result = `${tempArray[0]}.${tempArray[3]}.${tempArray[1]}.${person}.${tempArray[2]}`;//aspect.gender.number.person.tense.
+            break;
+        case 'n':
+            //console.log(declension, gender, Case, number);
+
+            const mapArrayN = [IDS.MOODS, IDS.NUMBERS];
+            for (el of mapArrayN) {
+                for (const [short, long] of Object.entries(el)) {
+                    if (number === long) {
+                        tempArray.push(short);
+                    }
+                    if (Case === long) {
+                        tempArray.push(short);
+                    }
+                }
+            }
+
+            for (entry of Object.values(GENDERS.MAP)) {
+                if (entry.NAME === gender) {
+                    tempArray.push(entry.SHORT);
+                }
+            }
+            result = `${declension}.${tempArray[0]}.${tempArray[2]}.${tempArray[1]}`;//declension.case.gender.number
+            break;
+    }
+
+    return result;
+}
+
 const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     let tempArray = [];
     //decide if applied or unapplied suffix is used
@@ -282,13 +346,16 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                         for (const path of paths) {
                             console.log('path |', path);
                             const result = {
+                                path: {
+                                    person: path[0],
+                                    number: path[1],
+                                    gender: path[2],
+                                },
                                 stem: stem,
                                 prefix: prefix,
-                                person: path[0],
-                                number: path[1],
-                                gender: path[2],
                                 affixState: 'prefix',
-                                wordclass: 'v'
+                                wordclass: 'v',
+                                short_path: shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
@@ -306,13 +373,16 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                         for (const path of paths) {
                             console.log('path |', path);
                             const result = {
+                                path: {
+                                    person: path[0],
+                                    number: path[1],
+                                    gender: path[2],
+                                },
                                 stem: stem,
                                 suffix: suffix,
-                                person: path[0],
-                                number: path[1],
-                                gender: path[2],
                                 affixState: 'suffix',
-                                wordclass: 'v'
+                                wordclass: 'v',
+                                short_path: shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
@@ -333,13 +403,16 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                         console.log('path |', path);
                         const result = {
                             stem: stem,
+                            path: {
+                                case: path[0],
+                                gender: path[1],
+                                number: path[2],
+                                declension: path[3],
+                            },
                             suffix: suffix,
-                            case: path[0],
-                            gender: path[1],
-                            person: path[2],
-                            number: path[3],
                             affixState: 'suffix',
-                            wordclass: 'n'
+                            wordclass: 'n',
+                            short_path: shorten_path('n', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
                         }
                         tempArray[stem] ? null : tempArray[stem] = [];
                         tempArray[stem].push(result);
@@ -358,11 +431,13 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                         console.log('path |', path);
                         const result = {
                             stem: stem,
+                            path: {
+                                case: path[0],
+                                gender: path[1],
+                                number: path[2],
+                                declension: path[3],
+                            },
                             suffix: suffix,
-                            case: path[0],
-                            gender: path[1],
-                            person: path[2],
-                            number: path[3],
                             affixState: 'suffix',
                             wordclass: 'adj'
                         }
@@ -388,7 +463,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             }
             break;
         case 'part':
-            
+            console.log('is part');
             break;
         default: console.warn(`${wordclass} is not a valid wordclass`);
     }
@@ -651,9 +726,9 @@ const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
     }
 }
 
-
 const matchtype2 = {
     affixChecker,
+    neoAffixChecker
 }
 
 
