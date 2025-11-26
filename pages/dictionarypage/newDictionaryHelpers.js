@@ -314,26 +314,25 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     let arrayPrefixes;
     let arraySuffixes;
     let wordclass;
-    if (isPrefix) {
-        const temp = AFFIXES.PREFIXES.match(word, map, false);
-        let bool;
+    let temp;
+    isPrefix
+        ? temp = AFFIXES.PREFIXES.match(word, map, false)
+        : temp = AFFIXES.SUFFIXES.match(word, map, false);
 
-        if (temp.type) {
-            arrayPrefixes = AFFIXES.PREFIXES.match(word, map, false);
-            bool = true;
-        } else {
-            arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
-            bool = false;
-        }
+    let bool;
 
-        bool
-            ? wordclass = arrayPrefixes.type
-            : wordclass = arrayPrefixes[0][3];
-
+    if (temp.type) {
+        arrayPrefixes = AFFIXES.PREFIXES.match(word, map, false);
+        bool = true;
     } else {
-        arraySuffixes = AFFIXES.SUFFIXES.match(word, map, true);
-        wordclass = arraySuffixes[0][3] || arraySuffixes.type;
+        arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
+        bool = false;
     }
+
+    bool
+        ? wordclass = arrayPrefixes.type
+        : wordclass = arrayPrefixes[0][3];
+
     console.log(wordclass);
     switch (wordclass) {
         case 'v':
@@ -475,7 +474,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             break;
         default: console.warn(`${wordclass} is not a valid wordclass`);
     }
-    console.log(tempArray.length,tempArray);
+    console.log(tempArray.length, tempArray);
     if (tempArray.length > 0) {
         return tempArray;
     } else {
