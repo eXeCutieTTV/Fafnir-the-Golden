@@ -226,6 +226,7 @@ const shorten_path = function shorten_path(wordclass, {
             }
             result = `${tempArray[0]}.${tempArray[3]}.${tempArray[1]}.${person}.${tempArray[2]}`;//aspect.gender.number.person.tense.
             break;
+        case 'adj':
         case 'n':
             //console.log(declension, gender, Case, number);
 
@@ -355,7 +356,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                                 prefix: prefix,
                                 affixState: 'prefix',
                                 wordclass: 'v',
-                                short_path: shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
+                                short_path: helperFunctions.formatting.shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
@@ -382,7 +383,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                                 suffix: suffix,
                                 affixState: 'suffix',
                                 wordclass: 'v',
-                                short_path: shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
+                                short_path: helperFunctions.formatting.shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
@@ -393,29 +394,30 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             break;
         case 'n':
             for (const entries of arraySuffixes) {
-                console.log(entries);
                 const paths = entries[1];
                 const suffix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'suffix');
                 const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
 
                 if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
                     for (const path of paths) {
-                        console.log('path |', path);
-                        const result = {
-                            stem: stem,
-                            path: {
-                                case: path[0],
-                                gender: path[1],
-                                number: path[2],
-                                declension: path[3],
-                            },
-                            suffix: suffix,
-                            affixState: 'suffix',
-                            wordclass: 'n',
-                            short_path: shorten_path('n', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
+                        if (DICTIONARY.ALL_WORDS.MAP[stem].declension === path[3]) {//only push if declension is correct. each noun only has 1 declension.
+                            console.log('path |', path);
+                            const result = {
+                                stem: stem,
+                                path: {
+                                    case: path[0],
+                                    gender: path[1],
+                                    number: path[2],
+                                    declension: path[3],
+                                },
+                                suffix: suffix,
+                                affixState: 'suffix',
+                                wordclass: 'n',
+                                short_path: helperFunctions.formatting.shorten_path('n', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
+                            }
+                            tempArray[stem] ? null : tempArray[stem] = [];
+                            tempArray[stem].push(result);
                         }
-                        tempArray[stem] ? null : tempArray[stem] = [];
-                        tempArray[stem].push(result);
                     }
                 }
             }
@@ -428,21 +430,25 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
 
                 if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
                     for (const path of paths) {
-                        console.log('path |', path);
-                        const result = {
-                            stem: stem,
-                            path: {
-                                case: path[0],
-                                gender: path[1],
-                                number: path[2],
-                                declension: path[3],
-                            },
-                            suffix: suffix,
-                            affixState: 'suffix',
-                            wordclass: 'adj'
+                        if (DICTIONARY.ALL_WORDS.MAP[stem].declension === path[3]) {//only push if declension is correct. each noun only has 1 declension.
+
+                            console.log('path |', path);
+                            const result = {
+                                stem: stem,
+                                path: {
+                                    case: path[0],
+                                    gender: path[1],
+                                    number: path[2],
+                                    declension: path[3],
+                                },
+                                suffix: suffix,
+                                affixState: 'suffix',
+                                wordclass: 'adj',
+                                short_path: helperFunctions.formatting.shorten_path('adj', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
+                            }
+                            tempArray[stem] ? null : tempArray[stem] = [];
+                            tempArray[stem].push(result);
                         }
-                        tempArray[stem] ? null : tempArray[stem] = [];
-                        tempArray[stem].push(result);
                     }
                 }
             }
@@ -1219,7 +1225,8 @@ const removeParensSpacesAndDigits = function removeParensSpacesAndDigits(str) {
 
 const formatting = {
     keepDigitsOnly,
-    removeParensSpacesAndDigits
+    removeParensSpacesAndDigits,
+    shorten_path
 }
 
 
