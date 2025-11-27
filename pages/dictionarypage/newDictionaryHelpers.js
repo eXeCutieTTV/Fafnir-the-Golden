@@ -314,24 +314,16 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     let arrayPrefixes;
     let arraySuffixes;
     let wordclass;
-    const arr = isPrefix
-        ? AFFIXES.PREFIXES.match(word, map, false)
-        : AFFIXES.SUFFIXES.match(word, map, false);
-
-    const hasType = arr && Object.prototype.hasOwnProperty.call(arr, 'type');
-    
-    console.log(hasType);
-    if (hasType && isPrefix) {
-        wordclass = arrayPrefixes.type;
-    } else if (hasType && isPrefix === false) {
-        wordclass = arraySuffixes.type
-    } else if (hasType === false && isPrefix) {
-        wordclass = arrayPrefixes[0][3]
-    } else if (hasType === false && isPrefix === false) {
-        wordclass = arraySuffixes[0][3];
+    if (isPrefix) {
+        arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
+        wordclass = arrayPrefixes[0].type;
+        console.log(arrayPrefixes);
+    } else {// ⟅(^‿^)⟆ - Shelf the elf
+        arraySuffixes = AFFIXES.SUFFIXES.match(word, map, true);
+        wordclass = arraySuffixes[0].type;
+        console.log(arraySuffixes);
     }
     console.log(wordclass);
-    return
     switch (wordclass) {
         case 'v':
             if (isPrefix) {
