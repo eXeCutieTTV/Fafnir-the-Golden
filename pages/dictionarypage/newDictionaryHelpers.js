@@ -327,9 +327,9 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     switch (wordclass) {
         case 'v':
             if (isPrefix) {
-                for (entries of arrayPrefixes) {
-                    const paths = entries[1];
-                    const prefix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'prefix');
+                for (const entries of arrayPrefixes) {
+                    const paths = entries.paths;
+                    const prefix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'prefix');
                     const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
 
                     if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
@@ -349,15 +349,16 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
-                            tempArray.length++;
+                            //tempArray.length++;
+                            arrayLength++;
                         }
                     }
                 }
             } else {
                 console.log(arraySuffixes);
                 for (const entries of arraySuffixes) {
-                    const paths = entries[1];
-                    const suffix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'suffix');
+                    const paths = entries.paths;
+                    const suffix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'suffix');
                     const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
 
                     if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
@@ -377,7 +378,8 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
-                            tempArray.length++;
+                            //tempArray.length++;
+                            console.log(tempArray);
                         }
                     }
                 }
@@ -385,8 +387,8 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             break;
         case 'n':
             for (const entries of arraySuffixes) {
-                const paths = entries[1];
-                const suffix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'suffix');
+                const paths = entries.paths;
+                const suffix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'suffix');
                 const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
 
                 if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
@@ -415,8 +417,8 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             break;
         case 'adj':
             for (const entries of arraySuffixes) {
-                const paths = entries[1];
-                const suffix = appliedOrUnapplied(entries[2][0], entries[2][1] || "doesn't distinguish", 'suffix');
+                const paths = entries.paths;
+                const suffix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'suffix');
                 const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
 
                 if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
@@ -493,13 +495,11 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             break;
         default: console.warn(`${wordclass} is not a valid wordclass`);
     }
-    //console.log(tempArray.length, tempArray);
-    /*
-    if (tempArray.length > 0) {
-        return tempArray;
-    } else {
-        return false;
-    }*/
+    let count = 0;
+    for (arr in tempArray) {
+        count++;
+        tempArray['arrayLength'] = count;
+    }
     return tempArray;
 }
 
