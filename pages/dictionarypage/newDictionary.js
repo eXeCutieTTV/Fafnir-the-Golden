@@ -268,7 +268,6 @@ function dictionaryPage() {
             detSuffix: [], //<---
         }
         console.log(type2AffixesMap);
-        return
         helperFunctions.standard.clearPageById('page97'); //type 1
         helperFunctions.standard.clearPageById('page95'); //type 1.1
         helperFunctions.standard.clearPageById('page96'); //type 2
@@ -993,148 +992,164 @@ function dictionaryPage() {
                 nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
                 nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
                 adjSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
+                adjSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
             }
             //console.log(affixTypesMap);
             allMatchesArray.type2 = affixTypesMap;
 
             //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
-            if (affixTypesMap.verbPrefix.rawMap) {
-                for (entry of Object.values(affixTypesMap.verbPrefix.rawMap)) {
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && DICTIONARY.ALL_WORDS.MAP[entry.affixStem].type === 'v') {
-                        affixTypesMap.verbPrefix.resultMap.push(entry);
-                        affixTypesMap.verbPrefix.state = true;
-                    } else {
-                        verbSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.VERBS.SUFFIXES.MATCHES, false, true) || [];
-                        if (verbSuffix.length > 0) {
-                            for (entry2 of Object.values(verbSuffix)) {
-                                //console.log(entry, entry2);
-                                //const { slice1:v1, slice2:v2 } = helperFunctions.standard.sliceKeywordNegative(entry.affixStem, entry2.affix.length);
-                                //console.log(v1, v2);
-                                //entry.affixStem = v1;
-                                if (DICTIONARY.ALL_WORDS.MAP[entry2.affixStem]) {
-                                    //console.log(entry);
-                                    //console.log(entry2);
+            if (affixTypesMap.verbPrefix.rawMap.arrayLength) {
+                for (entries of Object.values(affixTypesMap.verbPrefix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
+                            affixTypesMap.verbPrefix.resultMap.push(entry);
+                            affixTypesMap.verbPrefix.state = true;
+                        } else {
+                            verbSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.VERBS.SUFFIXES.MATCHES, false) || [];
+                            if (verbSuffix.arrayLength > 0) {
+                                for (const entries2 of Object.values(verbSuffix)) {
+                                    for (const entry2 of Object.values(entries2)) {
+                                        if (DICTIONARY.ALL_WORDS.MAP[entry2.stem]) {
 
-                                    entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
+                                            entry.stem = entry2.stem;//fix affixStem for prefix.
 
-                                    affixTypesMap.verbBothAffixes.resultMap.prefix.push(entry);
-                                    affixTypesMap.verbBothAffixes.resultMap.suffix.push(entry2);
-                                    affixTypesMap.verbBothAffixes.state = true;
+                                            affixTypesMap.verbBothAffixes.resultMap.prefix.push(entry);
+                                            affixTypesMap.verbBothAffixes.resultMap.suffix.push(entry2);
+                                            affixTypesMap.verbBothAffixes.state = true;
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            if (affixTypesMap.verbSuffix.rawMap) {
-                for (entry of Object.values(affixTypesMap.verbSuffix.rawMap)) {
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
-                        affixTypesMap.verbSuffix.resultMap.push(entry);
-                        affixTypesMap.verbSuffix.state = true;
+            if (affixTypesMap.verbSuffix.rawMap.arrayLength) {
+                for (entries of Object.values(affixTypesMap.verbSuffix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
+                            affixTypesMap.verbSuffix.resultMap.push(entry);
+                            affixTypesMap.verbSuffix.state = true;
+                        }
                     }
                 }
             }
-            if (affixTypesMap.nounSuffix.rawMap) {
-                for (entry of Object.values(affixTypesMap.nounSuffix.rawMap)) {
-                    //console.log(entry);
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'n') {
-                        affixTypesMap.nounSuffix.resultMap.push(entry);
-                        affixTypesMap.nounSuffix.state = true;
-                    } else {
-                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.PARTICLES.MAP, false, true) || [];
-                        for (entry2 of Object.values(pSuffix)) {
-                            if (DICTIONARY.ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'n') {
+            if (affixTypesMap.nounSuffix.rawMap.arrayLength) {
+                for (const entries of Object.values(affixTypesMap.nounSuffix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
 
-                                entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
+                        //console.log(entry);
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && entry.wordclass === 'n') {
+                            affixTypesMap.nounSuffix.resultMap.push(entry);
+                            affixTypesMap.nounSuffix.state = true;
+                        } else {
+                            pSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, true) || [];
+                            for (const entries2 of Object.values(pSuffix)) {
+                                for (const entry2 of Object.values(entries2)) {
+                                    if (DICTIONARY.ALL_WORDS.MAP[entry2.stem] && entry.wordclass === 'n') {
 
-                                affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
-                                affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
+                                        entry.stem = entry2.stem;//fix affixStem for prefix.
+
+                                        affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
+                                        affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
+                                        affixTypesMap.nounSuffixANDpSuffix.state = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (affixTypesMap.ppPrefix.rawMap.arrayLength) {
+                for (const entries of Object.values(affixTypesMap.ppPrefix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
+                            affixTypesMap.ppPrefix.resultMap.push(entry);
+                            affixTypesMap.ppPrefix.state = true;
+                        } else {
+                            nounSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false) || [];
+                            if (nounSuffix.arrayLength > 0) {
+                                affixTypesMap.nounSuffixANDppPrefix.resultMap.preposition.push(entry);
+                                for (obj of Object.values(nounSuffix)) {
+                                    entry.stem = obj.stem; //fix stem.
+                                    affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
+                                }
+                                affixTypesMap.nounSuffixANDppPrefix.state = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (affixTypesMap.pPrefix.rawMap.arrayLength) {
+                for (const entries of Object.values(affixTypesMap.pPrefix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
+                            affixTypesMap.pPrefix.resultMap.push(entry);
+                            affixTypesMap.pPrefix.state = true;
+                        } else {
+                            nounSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false) || [];
+                            if (nounSuffix.length > 0) {
+                                affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
+                                for (obj of Object.values(nounSuffix)) {
+                                    entry.stem = obj.stem; //fix stem.
+                                    affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(obj);
+                                }
+                                affixTypesMap.nounSuffixANDpPrefix.state = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (affixTypesMap.pSuffix.rawMap.arrayLength) {
+                for (const entries of Object.values(affixTypesMap.pSuffix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
+                            affixTypesMap.pSuffix.resultMap.push(entry);
+                            affixTypesMap.pSuffix.state = true;
+                        } else {
+                            nounSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false) || [];
+                            if (nounSuffix.arrayLength > 0) {
+                                affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry);
+                                for (obj of Object.values(nounSuffix)) {
+                                    entry.stem = obj.stem; //fix stem.
+                                    affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(obj);
+                                }
                                 affixTypesMap.nounSuffixANDpSuffix.state = true;
                             }
                         }
                     }
                 }
             }
-            if (affixTypesMap.ppPrefix.rawMap/* && affixTypesMap.ppPrefix.rawMap[0].affixStem*/) {
-                for (entry of Object.values(affixTypesMap.ppPrefix.rawMap)) {
+            if (affixTypesMap.adjSuffix.rawMap.arrayLength) {
+                for (const entries of Object.values(affixTypesMap.adjSuffix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
+                            affixTypesMap.adjSuffix.resultMap.push(entry);
+                            affixTypesMap.adjSuffix.state = true;
+                        } else {
+                            pPrefix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, true) || [];
+                            for (const entries2 of Object.values(pPrefix)) {
+                                for (const entry2 of Object.values(entries2)) {
+                                    entry.stem = entry2.stem;//fix affixStem for prefix.
+                                    if (DICTIONARY.ALL_WORDS.MAP[entry2.stem]) {
 
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
-                        affixTypesMap.ppPrefix.resultMap.push(entry);
-                        affixTypesMap.ppPrefix.state = true;
-                    } else {
-                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [];
-                        if (nounSuffix.length > 0) {
-                            affixTypesMap.nounSuffixANDppPrefix.resultMap.preposition.push(entry);
-                            for (obj of Object.values(nounSuffix)) {
-                                entry.affixStem = obj.affixStem; //fix stem.
-                                affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.push(obj);
-                            }
-                            affixTypesMap.nounSuffixANDppPrefix.state = true;
-                        }
-                    }
-                }
-            }
-            if (affixTypesMap.pPrefix.rawMap) {
-                for (entry of Object.values(affixTypesMap.pPrefix.rawMap)) {
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
-                        affixTypesMap.pPrefix.resultMap.push(entry);
-                        affixTypesMap.pPrefix.state = true;
-                    } else {
-                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [];
-                        if (nounSuffix.length > 0) {
-                            affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
-                            for (obj of Object.values(nounSuffix)) {
-                                entry.affixStem = obj.affixStem; //fix stem.
-                                affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(obj);
-                            }
-                            affixTypesMap.nounSuffixANDpPrefix.state = true;
-                        }
-                    }
-                }
-            }
-            if (affixTypesMap.pSuffix.rawMap) {
-                for (entry of Object.values(affixTypesMap.pSuffix.rawMap)) {
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem]) {
-                        affixTypesMap.pSuffix.resultMap.push(entry);
-                        affixTypesMap.pSuffix.state = true;
-                    } else {
-                        nounSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false, true) || [];
-                        if (nounSuffix.length > 0) {
-                            affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry);
-                            for (obj of Object.values(nounSuffix)) {
-                                entry.affixStem = obj.affixStem; //fix stem.
-                                affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(obj);
-                            }
-                            affixTypesMap.nounSuffixANDpSuffix.state = true;
-                        }
-                    }
-                }
-            }
-            if (affixTypesMap.adjSuffix.rawMap) {
-                for (entry of Object.values(affixTypesMap.adjSuffix.rawMap)) {
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && entry.affixType === 'adj') {
-                        affixTypesMap.adjSuffix.resultMap.push(entry);
-                        affixTypesMap.adjSuffix.state = true;
-                    } else {
-                        pSuffix = helperFunctions.matchtype2.affixChecker(entry.affixStem, DICTIONARY.PARTICLES.MAP, false, true) || [];
-                        for (entry2 of Object.values(pSuffix)) {
-                            if (DICTIONARY.ALL_WORDS.MAP[entry2.affixStem] && entry.affixType === 'adj') {
-
-                                entry.affixStem = entry2.affixStem;//fix affixStem for prefix.
-
-                                affixTypesMap.adjSuffixANDpSuffix.resultMap.particle.push(entry2);
-                                affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix.push(entry);
-                                affixTypesMap.adjSuffixANDpSuffix.state = true;
+                                        affixTypesMap.adjSuffixANDpPrefix.resultMap.particle.push(entry2);
+                                        affixTypesMap.adjSuffixANDpPrefix.resultMap.suffix.push(entry);
+                                        affixTypesMap.adjSuffixANDpPrefix.state = true;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-            if (affixTypesMap.auxPrefix.rawMap) {
-                for (entry of Object.values(affixTypesMap.auxPrefix.rawMap)) {
-                    if (DICTIONARY.ALL_WORDS.MAP[entry.affixStem] && DICTIONARY.ALL_WORDS.MAP[entry.affixStem].type === 'aux') {
-                        affixTypesMap.auxPrefix.resultMap.push(entry);
-                        affixTypesMap.auxPrefix.state = true;
+            if (affixTypesMap.auxPrefix.rawMap.arrayLength) {
+                for (const entries of Object.values(affixTypesMap.auxPrefix.rawMap)) {
+                    for (const entry of Object.values(entries)) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'aux') {
+                            affixTypesMap.auxPrefix.resultMap.push(entry);
+                            affixTypesMap.auxPrefix.state = true;
+                        }
                     }
                 }
             }

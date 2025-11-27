@@ -316,14 +316,15 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     let wordclass;
     if (isPrefix) {
         arrayPrefixes = AFFIXES.PREFIXES.match(word, map, true);
-        wordclass = arrayPrefixes[0].type;
-        console.log(arrayPrefixes);
+        wordclass = arrayPrefixes === null ? 'error' : arrayPrefixes[0].type; //when i search. look at l259 in other js. it does each thing. but it dies
+        //console.log(arrayPrefixes);
     } else {// ⟅(^‿^)⟆ - Shelf the elf
         arraySuffixes = AFFIXES.SUFFIXES.match(word, map, true);
-        wordclass = arraySuffixes[0].type;
-        console.log(arraySuffixes);
+        wordclass = arraySuffixes === null ? 'error' : arraySuffixes[0].type;
+        //console.log(arraySuffixes);
     }
-    console.log(wordclass);
+    if (wordclass === 'error') return
+    //console.log(wordclass);
     switch (wordclass) {
         case 'v':
             if (isPrefix) {
@@ -332,30 +333,25 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                     const prefix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'prefix');
                     const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
 
-                    if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
-                        for (const path of paths) {
-                            console.log('path |', path);
-                            const result = {
-                                path: {
-                                    person: path[0],
-                                    number: path[1],
-                                    gender: path[2],
-                                },
-                                stem: stem,
-                                prefix: prefix,
-                                affixState: 'prefix',
-                                wordclass: 'v',
-                                short_path: helperFunctions.formatting.shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
-                            }
-                            tempArray[stem] ? null : tempArray[stem] = [];
-                            tempArray[stem].push(result);
-                            //tempArray.length++;
-                            arrayLength++;
+                    for (const path of paths) {
+                        //console.log('path |', path);
+                        const result = {
+                            path: {
+                                person: path[0],
+                                number: path[1],
+                                gender: path[2],
+                            },
+                            stem: stem,
+                            prefix: prefix,
+                            affixState: 'prefix',
+                            wordclass: 'v',
+                            short_path: helperFunctions.formatting.shorten_path('v', { number: path[1], person: path[0], gender: path[2] })
                         }
+                        tempArray[stem] ? null : tempArray[stem] = [];
+                        tempArray[stem].push(result);
                     }
                 }
             } else {
-                console.log(arraySuffixes);
                 for (const entries of arraySuffixes) {
                     const paths = entries.paths;
                     const suffix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'suffix');
@@ -363,7 +359,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
 
                     if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
                         for (const path of paths) {
-                            console.log('path |', path);
+                            //console.log('path |', path);
                             const result = {
                                 path: {
                                     person: path[0],
@@ -378,8 +374,6 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                             }
                             tempArray[stem] ? null : tempArray[stem] = [];
                             tempArray[stem].push(result);
-                            //tempArray.length++;
-                            console.log(tempArray);
                         }
                     }
                 }
@@ -391,27 +385,23 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                 const suffix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'suffix');
                 const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
 
-                if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
-                    for (const path of paths) {
-                        if (DICTIONARY.ALL_WORDS.MAP[stem].declension === path[3]) {//only push if declension is correct. each noun only has 1 declension.
-                            console.log('path |', path);
-                            const result = {
-                                stem: stem,
-                                path: {
-                                    case: path[0],
-                                    gender: path[1],
-                                    number: path[2],
-                                    declension: path[3],
-                                },
-                                suffix: suffix,
-                                affixState: 'suffix',
-                                wordclass: 'n',
-                                short_path: helperFunctions.formatting.shorten_path('n', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
-                            }
-                            tempArray[stem] ? null : tempArray[stem] = [];
-                            tempArray[stem].push(result);
-                        }
+                for (const path of paths) {
+                    //console.log('path |', path);
+                    const result = {
+                        stem: stem,
+                        path: {
+                            case: path[0],
+                            gender: path[1],
+                            number: path[2],
+                            declension: path[3],
+                        },
+                        suffix: suffix,
+                        affixState: 'suffix',
+                        wordclass: 'n',
+                        short_path: helperFunctions.formatting.shorten_path('n', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
                     }
+                    tempArray[stem] ? null : tempArray[stem] = [];
+                    tempArray[stem].push(result);
                 }
             }
             break;
@@ -421,35 +411,31 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                 const suffix = appliedOrUnapplied(entries.variants[0], entries.variants[1] || "doesn't distinguish", 'suffix');
                 const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
 
-                if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
-                    for (const path of paths) {
-                        if (DICTIONARY.ALL_WORDS.MAP[stem].declension === path[3]) {//only push if declension is correct. each noun only has 1 declension.
-                            console.log('path |', path);
-                            const result = {
-                                stem: stem,
-                                path: {
-                                    case: path[0],
-                                    gender: path[1],
-                                    number: path[2],
-                                    declension: path[3],
-                                },
-                                suffix: suffix,
-                                affixState: 'suffix',
-                                wordclass: 'adj',
-                                short_path: helperFunctions.formatting.shorten_path('adj', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
-                            }
-                            tempArray[stem] ? null : tempArray[stem] = [];
-                            tempArray[stem].push(result);
-                        }
+                for (const path of paths) {
+                    //console.log('path |', path);
+                    const result = {
+                        stem: stem,
+                        path: {
+                            case: path[0],
+                            gender: path[1],
+                            number: path[2],
+                            declension: path[3],
+                        },
+                        suffix: suffix,
+                        affixState: 'suffix',
+                        wordclass: 'adj',
+                        short_path: helperFunctions.formatting.shorten_path('adj', { declension: path[3], number: path[2], gender: path[1], Case: path[0] })
                     }
+                    tempArray[stem] ? null : tempArray[stem] = [];
+                    tempArray[stem].push(result);
                 }
             }
             break;
         case 'pp':
-            const prefix = arrayPrefixes.word;
-            const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
+            for (const entries of Object.values(arrayPrefixes)) {
+                const prefix = entries.word;
+                const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
 
-            if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
                 const result = {
                     stem: stem,
                     prefix: prefix,
@@ -462,11 +448,11 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
             }
             break;
         case 'part':
-            console.log('is part');
             if (isPrefix) {
-                const prefix = arrayPrefixes.word;
-                const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
-                if (DICTIONARY.ALL_WORDS.MAP[stem] && prefix === usedPrefix) {
+                for (const entries of Object.values(arrayPrefixes)) {
+                    const prefix = entries.word;
+                    const { slice1: usedPrefix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, prefix.length);
+
                     const result = {
                         stem: stem,
                         prefix: prefix,
@@ -478,9 +464,10 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                     tempArray[stem].push(result);
                 }
             } else {
-                const suffix = arraySuffixes.word;
-                const { slice1: usedSuffix, slice2: stem } = helperFunctions.standard.sliceKeywordPositive(word, suffix.length);
-                if (DICTIONARY.ALL_WORDS.MAP[stem] && suffix === usedSuffix) {
+                for (const entries of Object.values(arraySuffixes)) {
+                    const suffix = entries.word;
+                    const { slice1: stem, slice2: usedSuffix } = helperFunctions.standard.sliceKeywordNegative(word, suffix.length);
+
                     const result = {
                         stem: stem,
                         suffix: suffix,
@@ -1613,85 +1600,4 @@ function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
     return best;
 };
 
-/*
-    let entries = WORD_UTILS.connectSplit("", 'la', '(u)n');
-    CHARACTERS.entriesToText(entries[2]); //'n'
-
-    let entries = WORD_UTILS.connectSplit("", 'lal', '(u)n');
-    CHARACTERS.entriesToText(entries[2]); //'un'
-*/
-
-//vv experimental. the one i sent to you on discord earlier.//////////////////////////////
-function testingChecker(keyword, map, isPrefix = true) {
-    const tempArray = [];
-    for (const [personKey, personMap] of Object.entries(map)) {
-        for (const [numberKey, numberMap] of Object.entries(personMap)) {
-            for (const [genderKey, affix] of Object.entries(numberMap)) {
-                if (DICTIONARY.VERBS.SUFFIXES.MAP === map || DICTIONARY.VERBS.PREFIXES.MAP === map) {
-                    const result = {
-                        variants: [],
-                        person: personKey,
-                        number: numberKey,
-                        gender: genderKey,
-                        affixType: isPrefix ? 'Prefix' : 'Suffix',
-                        affix: affix, //temp. overwritten later down.
-                    };
-                    const optionalOnEntry = AFFIXES.connectSplit("", 'x', affix);
-                    const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
-                    result.variants[0] = optionalOnText;
-                    if (optionalOnEntry[2][0].prop[1] === 6) {
-                        const optionalOffEntry = AFFIXES.connectSplit("", 'a', affix);
-                        const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
-                        result.variants[1] = optionalOffText;
-                    }
-                    for (const el of result.variants) {
-                        if (isPrefix === false) {
-                            if (keyword.endsWith(el)) {
-                                result.affix = el;
-                                tempArray.push(result);
-                                //break; // stop further matches
-                            }
-                        } else if (isPrefix) {
-                            if (keyword.startsWith(el)) {
-                                result.affix = el;
-                                tempArray.push(result);
-                                //break; // stop further matches
-                            }
-                        }
-                    }
-                }
-                /*
-                    else if (DICTIONARY.NOUNS.SUFFIXES.MAP === map) {
-                        for (const [nounKey, nounAffix] of Object.entries(affix)) {
-                            const result = {
-                                variants: [],
-                                case: personKey,
-                                gender: numberKey,
-                                number: nounKey,
-                                declension: genderKey,
-                                affixType: isPrefix ? 'Prefix' : 'Suffix',
-                                affix: nounAffix, //temp. overwritten later down.
-                            };
-                            const optionalOnEntry = AFFIXES.connectSplit("", 'x', affix);
-                            const optionalOnText = CHARACTERS.entriesToText(optionalOnEntry[2]);
-                            result.variants[0] = optionalOnText;
-                            if (optionalOnEntry[2][0].prop[1] === 6) {
-                                const optionalOffEntry = AFFIXES.connectSplit("", 'a', affix);
-                                const optionalOffText = CHARACTERS.entriesToText(optionalOffEntry[2]);
-                                result.variants[1] = optionalOffText;
-                            }
-                            for (const el of result.variants) {
-                                if (keyword.endsWith(el)) {
-                                    result.affix = el;
-                                    console.log(result);
-                                    break; // stop further matches
-                                }
-                            }
-                        }
-                    }
-                */
-            }
-        }
-    }
-    console.log(tempArray);
-}
+//make function for each wordclass' tablegen
