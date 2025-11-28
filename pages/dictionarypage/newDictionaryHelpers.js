@@ -176,6 +176,53 @@ const searchableTable = function searchableTable(wordclass) {//turns the tables 
     }
 }
 
+const nounTable = function nounTable() {
+
+}
+
+const verbTable = function verbTable(affix, gender, number, person, wrapper) {
+
+    if (!affix || !gender || !number || !person || !wrapper) return;
+
+    const tbody = document.getElementById('tbody') || '';
+    if (tbody === '') {
+        const html = `
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:116px">...</th>
+                            <th>Prefix</th>
+                            <th>Gender</th>
+                            <th>Number</th>
+                            <th>Person</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        `;
+        helperFunctions.standard.createDivById('verbTable', wrapper, html);
+    }
+
+    const html = `
+        <tr>
+            <th>Info</th>
+            <td>${affix}</td>
+            <td>${gender}</td>
+            <td>${number}</td>
+            <td>${person}</td>
+        </tr>
+    `;
+
+    helperFunctions.standard.insertTrIntoTableById('tbody', html);
+}
+
+const resultTables = {
+    nounTable,
+    verbTable
+}
+
 const standard = {
     test,
     clearPageById,
@@ -186,7 +233,8 @@ const standard = {
     reverseSearchIdsOnSearch,
     insertTrIntoTableById,
     searchableTable,
-    betterTrInsert
+    betterTrInsert,
+    resultTables
 }
 
 const shorten_path = function shorten_path(wordclass, {
@@ -1572,7 +1620,7 @@ const helperFunctions =
     formatting,
     final
 }
-
+/*
 function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
     if (!input || typeof input !== "string") return null;
 
@@ -1599,5 +1647,5 @@ function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
     if (returnAll) return matches.length ? matches : null;
     return best;
 };
-
+*/
 //make function for each wordclass' tablegen
