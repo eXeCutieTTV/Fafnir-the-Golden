@@ -1225,8 +1225,7 @@ function dictionaryPage() {
                 console.log('--verb suffix--');
                 matchType = 2;
 
-
-                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbSuffix.resultMap[0].affixStem] || [];
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbSuffix.resultMap[0].stem] || [];
                 const definition = stemMap.definition || '...';
                 const notes = stemMap.usage_notes || '...';
 
@@ -1236,6 +1235,7 @@ function dictionaryPage() {
                 }; //console.log(wordclass);
 
                 const html = `
+                    <div>
                         <div>
                             <table>
                                 <tr>
@@ -1257,13 +1257,16 @@ function dictionaryPage() {
                             </table>
                         </div>
                         <div id="verbTableWrapper" style="margin-top:10px"></div>
-                        <div id="prefixtable" style="margin-top:50px"></div>
-                    `;
+                        <div id="suffixtable" style="margin-top:50px"></div>
+                    </div>
+                `;
                 helperFunctions.standard.createPageById('page96', html);
                 const verbTableWrapper = document.getElementById('verbTableWrapper');
-                for (const result of affixTypesMap.verbPrefix.resultMap) {
-                    const path = result.path;
-                    helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, verbTableWrapper);
+                if (verbTableWrapper) {
+                    for (const result of affixTypesMap.verbSuffix.resultMap) {
+                        const path = result.path;
+                        helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, verbTableWrapper);
+                    }
                 }
                 /*
                 affixTypesMap.verbSuffix.resultMap.forEach(arr => {
@@ -1316,9 +1319,9 @@ function dictionaryPage() {
                         search(keyword);
                     });
                 }
-                const prefixtable = document.getElementById('prefixtable');
-                if (prefixtable) {
-                    helperFunctions.matchtype1.neoVerbTables(true, keyword, prefixtable);
+                const suffixtable = document.getElementById('suffixtable');
+                if (suffixtable) {
+                    helperFunctions.matchtype1.neoVerbTables(true, keyword, suffixtable);
 
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
