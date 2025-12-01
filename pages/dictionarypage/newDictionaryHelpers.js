@@ -251,9 +251,43 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, aff
     helperFunctions.standard.insertTrIntoTableById(`tbody-${affixState}`, html);
 }
 
+const prepositionTable = function prepositionTable(affix, definition, notes, wrapper) {
+    if (!affix || !definition || !notes) return;
+
+    const tbody = document.getElementById('tbody') || '';
+    if (tbody === '') {
+        const html = `
+            <div style="margin-top:15px">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:116px">...</th>
+                            <th>Preposition</th>
+                            <th>Definition</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        `;
+        helperFunctions.standard.createDivById('prepositionTable', wrapper, html);
+    }
+    const html = `
+        <tr>
+            <th>Info</th>
+            <td>${affix}</td>
+            <td>${definition}</td>
+            <td>${notes}</td>
+        </tr>
+    `;
+    helperFunctions.standard.insertTrIntoTableById('tbody', html);
+}
+
 const resultTables = {
     nounTable,
-    verbTable
+    verbTable,
+    prepositionTable
 }
 
 const standard = {
@@ -1682,3 +1716,31 @@ function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
 };
 */
 //make function for each wordclass' tablegen
+
+
+
+function defsToSingleString(gendersArray) {
+    const gendersCombined = GENDERS.combine(gendersArray) // Key-value pairs
+    let html = '';
+    const arr = [];
+    //console.log(gendersCombined);
+    for (const [gender, def] of Object.entries(gendersCombined)) {
+        //console.log(gender, def);
+        for (const key of Object.values(GENDERS.MAP)) {
+            if (key.NAME === gender) {
+                //console.log(key.SHORT);
+                arr.push({
+                    gender: key.SHORT,
+                    definition: def
+                });
+            }
+        }
+    }
+
+    for (let i = 0; i < arr.length; i++) {
+        const entry = arr[i];
+        html += `(${entry.gender}) - ${entry.definition}.`;
+        if (i < arr.length - 1) html += ' <br>';
+    }
+    return html;
+}
