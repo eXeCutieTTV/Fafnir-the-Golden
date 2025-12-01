@@ -182,7 +182,7 @@ const nounTable = function nounTable(affix, declension, gender, number, Case, de
     const tbody = document.getElementById(`tbody-${affixState}`) || '';
     if (tbody === '') {
         const html = `
-            <div>
+            <div style="margin-top:15px">
                 <table>
                     <tr>
                         <thead>

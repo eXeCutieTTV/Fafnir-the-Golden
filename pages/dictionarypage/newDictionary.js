@@ -268,11 +268,18 @@ function dictionaryPage() {
             detSuffix: [], //<---
         }
         console.log(type2AffixesMap);
-        helperFunctions.standard.clearPageById('page97'); //type 1
-        helperFunctions.standard.clearPageById('page95'); //type 1.1
-        helperFunctions.standard.clearPageById('page96'); //type 2
-        helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
 
+        const pagesToClear = ['page97', 'page95', 'page96', 'dictionaryTable'];
+        for (const page of pagesToClear) {
+            helperFunctions.standard.clearPageById(page);
+            //console.log(`page by id ${page} has been cleared`);
+        }
+        /*
+            helperFunctions.standard.clearPageById('page97'); //type 1
+            helperFunctions.standard.clearPageById('page95'); //type 1.1
+            helperFunctions.standard.clearPageById('page96'); //type 2
+            helperFunctions.standard.clearPageById('dictionaryTable'); //type 3
+        */
         if (//type 1
             DICTIONARY.ALL_WORDS.MAP[keyword] && DICTIONARY.ALL_WORDS.MAP[keyword].word.length > 0
         ) {
@@ -1167,6 +1174,7 @@ function dictionaryPage() {
             if (affixTypesMap.verbPrefix.state) {
                 console.log('--verb prefix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbPrefix.resultMap[0].stem] || [];
                 const definition = stemMap.definition || '...';
@@ -1231,6 +1239,7 @@ function dictionaryPage() {
             if (affixTypesMap.verbSuffix.state) {
                 console.log('--verb suffix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbSuffix.resultMap[0].stem] || [];
                 const definition = stemMap.definition || '...';
@@ -1294,6 +1303,7 @@ function dictionaryPage() {
             if (affixTypesMap.verbBothAffixes.state) {
                 console.log('--both verb affixes--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbBothAffixes.resultMap.prefix[0].stem] || [];
@@ -1359,6 +1369,7 @@ function dictionaryPage() {
             if (affixTypesMap.nounSuffix.state) {
                 console.log('--noun suffix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffix.resultMap[0].stem] || [];
