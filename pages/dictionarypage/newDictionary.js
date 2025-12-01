@@ -1428,6 +1428,7 @@ function dictionaryPage() {
             else if (affixTypesMap.ppPrefix.state) {
                 console.log('--prepositional prefix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const array = affixTypesMap.ppPrefix.resultMap[0];
@@ -1517,6 +1518,7 @@ function dictionaryPage() {
             else if (affixTypesMap.nounSuffixANDppPrefix.state) {
                 console.log('--noun with pp and suffix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
@@ -1632,6 +1634,7 @@ function dictionaryPage() {
             else if (affixTypesMap.pPrefix.state) {
                 console.log('--noun with particle--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const array = affixTypesMap.pPrefix.resultMap[0];
@@ -1726,6 +1729,7 @@ function dictionaryPage() {
             else if (affixTypesMap.pSuffix.state) {
                 console.log('--p suffix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const array = affixTypesMap.pSuffix.resultMap[0];
@@ -1922,6 +1926,7 @@ function dictionaryPage() {
             else if (affixTypesMap.nounSuffixANDpPrefix.state) {
                 console.log('--noun with particle prefix and suffix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0].affixStem] || []; //console.log(stemMap);
@@ -2040,6 +2045,7 @@ function dictionaryPage() {
             else if (affixTypesMap.nounSuffixANDpSuffix.state) {
                 console.log('--noun with particle suffix and suffix--');
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
@@ -2153,6 +2159,7 @@ function dictionaryPage() {
             }
             else if (affixTypesMap.adjSuffix.state) {
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
                 const html = `
                     <div>
@@ -2207,6 +2214,7 @@ function dictionaryPage() {
             }
             else if (affixTypesMap.adjSuffixANDpSuffix.state) {
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
 
                 const html = `
                     <div>
@@ -2281,6 +2289,7 @@ function dictionaryPage() {
             }
             else if (affixTypesMap.auxPrefix.state) {
                 matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
                 const array = affixTypesMap.auxPrefix.resultMap[0];
 
                 const html = `
