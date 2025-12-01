@@ -1013,7 +1013,7 @@ function dictionaryPage() {
                         if (typeof (entry) === 'object') {
                             //    console.log(entry);
 
-                            if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
+                            if (DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
                                 //     console.log(entry);
                                 affixTypesMap.verbPrefix.resultMap.push(entry);
                                 affixTypesMap.verbPrefix.state = true;
@@ -1023,7 +1023,7 @@ function dictionaryPage() {
                                     for (const entries2 of Object.values(verbSuffix)) {
                                         for (const entry2 of Object.values(entries2)) {
                                             console.log(entry);
-                                            if (DICTIONARY.ALL_WORDS.MAP[entry2.stem]) {
+                                            if (DICTIONARY.ALL_WORDS.MAP[entry2.stem].type === 'v') {
 
                                                 entry.stem = entry2.stem;//fix affixStem for prefix.
 
@@ -1040,9 +1040,9 @@ function dictionaryPage() {
                 }
             }
             if (affixTypesMap.verbSuffix.rawMap.arrayLength) {
-                for (entries of Object.values(affixTypesMap.verbSuffix.rawMap)) {
+                for (const entries of Object.values(affixTypesMap.verbSuffix.rawMap)) {
                     for (const entry of Object.values(entries)) {
-                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
                             affixTypesMap.verbSuffix.resultMap.push(entry);
                             affixTypesMap.verbSuffix.state = true;
                         }
@@ -1236,7 +1236,7 @@ function dictionaryPage() {
 
                 openPageOld('page96');
             }
-            if (affixTypesMap.verbSuffix.state) {
+            else if (affixTypesMap.verbSuffix.state) {
                 console.log('--verb suffix--');
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
@@ -1300,7 +1300,7 @@ function dictionaryPage() {
                 }
                 openPageOld('page96');
             }
-            if (affixTypesMap.verbBothAffixes.state) {
+            else if (affixTypesMap.verbBothAffixes.state) {
                 console.log('--both verb affixes--');
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
@@ -1366,7 +1366,7 @@ function dictionaryPage() {
 
                 openPageOld('page96');
             }
-            if (affixTypesMap.nounSuffix.state) {
+            else if (affixTypesMap.nounSuffix.state) {
                 console.log('--noun suffix--');
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
@@ -1400,7 +1400,7 @@ function dictionaryPage() {
                         </table>
                     </div>
                     <div id="nounTable"></div>
-                    `;
+                `;
                 helperFunctions.standard.createPageById('page96', html);
                 const nounTable = document.getElementById('nounTable');
                 for (const result of affixTypesMap.nounSuffix.resultMap) {
@@ -1415,7 +1415,7 @@ function dictionaryPage() {
                     const path = result.path;
                     helperFunctions.standard.resultTables.nounTable(result.suffix, path.declension, path.gender, path.number, path.case, definition(), nounTable, 'suffix');
                 }
-                const stemTd = document.querySelector('#type2SuffixONLYStem');
+                const stemTd = document.querySelector('#stem');
                 if (stemTd) {
                     stemTd.style.cursor = 'pointer';
                     stemTd.addEventListener('click', () => {
@@ -1423,11 +1423,9 @@ function dictionaryPage() {
                         search(keyword);
                     });
                 }
-
                 openPageOld('page96');
             }
-            return;
-            if (affixTypesMap.ppPrefix.state) {
+            else if (affixTypesMap.ppPrefix.state) {
                 console.log('--prepositional prefix--');
                 matchType = 2;
 
@@ -1516,7 +1514,7 @@ function dictionaryPage() {
                     openPageOld('page96');
                 }
             }
-            if (affixTypesMap.nounSuffixANDppPrefix.state) {
+            else if (affixTypesMap.nounSuffixANDppPrefix.state) {
                 console.log('--noun with pp and suffix--');
                 matchType = 2;
 
@@ -1631,7 +1629,7 @@ function dictionaryPage() {
 
                 openPageOld('page96');
             }
-            if (affixTypesMap.pPrefix.state) {
+            else if (affixTypesMap.pPrefix.state) {
                 console.log('--noun with particle--');
                 matchType = 2;
 
@@ -1725,7 +1723,7 @@ function dictionaryPage() {
                     openPageOld('page96');
                 }
             }
-            if (affixTypesMap.pSuffix.state) {
+            else if (affixTypesMap.pSuffix.state) {
                 console.log('--p suffix--');
                 matchType = 2;
 
@@ -1921,7 +1919,7 @@ function dictionaryPage() {
                     }
                 }
             }
-            if (affixTypesMap.nounSuffixANDpPrefix.state) {
+            else if (affixTypesMap.nounSuffixANDpPrefix.state) {
                 console.log('--noun with particle prefix and suffix--');
                 matchType = 2;
 
@@ -2039,7 +2037,7 @@ function dictionaryPage() {
 
                 openPageOld('page96');
             }
-            if (affixTypesMap.nounSuffixANDpSuffix.state) {
+            else if (affixTypesMap.nounSuffixANDpSuffix.state) {
                 console.log('--noun with particle suffix and suffix--');
                 matchType = 2;
 
@@ -2153,7 +2151,7 @@ function dictionaryPage() {
 
                 openPageOld('page96');
             }
-            if (affixTypesMap.adjSuffix.state) {
+            else if (affixTypesMap.adjSuffix.state) {
                 matchType = 2;
 
                 const html = `
@@ -2207,7 +2205,7 @@ function dictionaryPage() {
                 });
                 openPageOld('page96');
             }
-            if (affixTypesMap.adjSuffixANDpSuffix.state) {
+            else if (affixTypesMap.adjSuffixANDpSuffix.state) {
                 matchType = 2;
 
                 const html = `
@@ -2281,7 +2279,7 @@ function dictionaryPage() {
                 });
                 openPageOld('page96');
             }
-            if (affixTypesMap.auxPrefix.state) {
+            else if (affixTypesMap.auxPrefix.state) {
                 matchType = 2;
                 const array = affixTypesMap.auxPrefix.resultMap[0];
 
@@ -2333,6 +2331,7 @@ function dictionaryPage() {
                 openPageOld('page96');
             }
         }
+        return;
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
             const searchHandler = DICTIONARY.ALL_WORDS.fetchByDefinition(keyword); // Array[]
