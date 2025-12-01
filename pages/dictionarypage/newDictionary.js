@@ -1434,12 +1434,13 @@ function dictionaryPage() {
 
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.ppPrefix.resultMap[0].stem] || [];
                 const notes = stemMap.usage_notes || '...';
+                const stem = affixTypesMap.ppPrefix.resultMap[0].stem;
 
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n') { wordclass = key.NAME }
                 };
-
+                
 
                 const html = `
                     <div>
@@ -1448,6 +1449,7 @@ function dictionaryPage() {
                                 <th style="width:116px">...</th>
                                 <th>Word</th>
                                 <th>Stem</th>
+                                <th>Declension</th>
                                 <th>Wordclass</th>
                                 <th>Definition</th>
                                 <th>Usage Notes</th>
@@ -1455,14 +1457,15 @@ function dictionaryPage() {
                             <tr>
                                 <th>Info</th>
                                 <td>${keyword}</td>
-                                <td id="stem">${affixTypesMap.ppPrefix.resultMap[0].stem}</td>
+                                <td id="stem">${stem}</td>
+                                <td>${DICTIONARY.ALL_WORDS.MAP[stem].declension}</td>
                                 <td>${wordclass}</td>
-                                <td id="definition">${''}</td>
+                                <td id="definition">${'placeholder'}</td>
                                 <td>${notes}</td>
                             </tr>
                         </table>
                     </div>
-                    <div id="prepositionTableWrapper"></div>
+                    <div id="prepositionTableWrapper" style="margin-bottom:25px"></div>
                     <div id="prepositionTableSuffixes"></div>
                 `;
                 helperFunctions.standard.createPageById('page96', html);
