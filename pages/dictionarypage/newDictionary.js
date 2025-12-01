@@ -1000,25 +1000,32 @@ function dictionaryPage() {
 
             //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
             if (affixTypesMap.verbPrefix.rawMap.arrayLength) {
-                for (entries of Object.values(affixTypesMap.verbPrefix.rawMap)) {
+                for (const entries of Object.values(affixTypesMap.verbPrefix.rawMap)) {
+                    //console.log(entries);
                     for (const entry of Object.values(entries)) {
-                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
-                            affixTypesMap.verbPrefix.resultMap.push(entry);
-                            affixTypesMap.verbPrefix.state = true;
-                        } else {
-                            verbSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.VERBS.SUFFIXES.MATCHES, false) || [];
-                            if (verbSuffix.arrayLength > 0) {
-                                for (const entries2 of Object.values(verbSuffix)) {
-                                    for (const entry2 of Object.values(entries2)) {
-                                        if (DICTIONARY.ALL_WORDS.MAP[entry2.stem]) {
+                        if (typeof (entry) === 'object') {
+                            //    console.log(entry);
 
-                                            entry.stem = entry2.stem;//fix affixStem for prefix.
+                            if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
+                                //     console.log(entry);
+                                affixTypesMap.verbPrefix.resultMap.push(entry);
+                                affixTypesMap.verbPrefix.state = true;
+                            } else {
+                                verbSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.VERBS.SUFFIXES.MATCHES, false) || [];
+                                if (verbSuffix.arrayLength > 0) {
+                                    for (const entries2 of Object.values(verbSuffix)) {
+                                        for (const entry2 of Object.values(entries2)) {
+                                            console.log(entry);
+                                            if (DICTIONARY.ALL_WORDS.MAP[entry2.stem]) {
 
-                                            affixTypesMap.verbBothAffixes.resultMap.prefix.push(entry);
-                                            affixTypesMap.verbBothAffixes.resultMap.suffix.push(entry2);
-                                            affixTypesMap.verbBothAffixes.state = true;
+                                                entry.stem = entry2.stem;//fix affixStem for prefix.
+
+                                                affixTypesMap.verbBothAffixes.resultMap.suffix.push(entry2);
+                                                affixTypesMap.verbBothAffixes.state = true;
+                                            }
                                         }
                                     }
+                                    affixTypesMap.verbBothAffixes.resultMap.prefix.push(entry); //push prefix result outside of loop
                                 }
                             }
                         }
@@ -1328,12 +1335,12 @@ function dictionaryPage() {
                 const prefixVerbTableWrapper = document.getElementById('prefixVerbTableWrapper');
                 const suffixVerbTableWrapper = document.getElementById('suffixVerbTableWrapper');
                 for (const result of affixTypesMap.verbBothAffixes.resultMap.prefix) {
-                    console.log(result);
+                    //console.log(result);
                     const path = result.path;
                     helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, prefixVerbTableWrapper, true);
                 }
                 for (const result of affixTypesMap.verbBothAffixes.resultMap.suffix) {
-                    console.log(result);
+                    //console.log(result);
                     const path = result.path;
                     helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, suffixVerbTableWrapper, false);
                 }

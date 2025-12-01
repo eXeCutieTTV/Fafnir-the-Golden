@@ -205,7 +205,6 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, isP
             `;
             helperFunctions.standard.createDivById('verbTablePrefix', wrapper, html);
         }
-
         const html = `
             <tr>
                 <th>Info</th>
@@ -215,10 +214,8 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, isP
                 <td>${person}</td>
             </tr>
         `;
-
         helperFunctions.standard.insertTrIntoTableById('tbodyPrefix', html);
     } else if (isPrefix === false) {
-
         const tbody = document.getElementById('tbodySuffix') || '';
 
         if (tbody === '') {
@@ -240,7 +237,6 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, isP
             `;
             helperFunctions.standard.createDivById('verbTableSuffix', wrapper, html);
         }
-
         const html = `
             <tr>
                 <th>Info</th>
@@ -250,7 +246,6 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, isP
                 <td>${person}</td>
             </tr>
         `;
-
         helperFunctions.standard.insertTrIntoTableById('tbodySuffix', html);
     }
 }
