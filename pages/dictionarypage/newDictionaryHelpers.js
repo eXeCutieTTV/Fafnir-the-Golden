@@ -176,8 +176,43 @@ const searchableTable = function searchableTable(wordclass) {//turns the tables 
     }
 }
 
-const nounTable = function nounTable() {
+const nounTable = function nounTable(affix, declension, gender, number, Case, definition, wrapper, affixState) {
+    if (!affix || !declension || !gender || !number || !Case || !definition) return;
 
+    const tbody = document.getElementById(`tbody-${affixState}`) || '';
+    if (tbody === '') {
+        const html = `
+            <div>
+                <table>
+                    <tr>
+                        <thead>
+                            <th style="width:116px">...</th>
+                            <th>Suffix</th>
+                            <th>Declension</th>
+                            <th>Gender</th>
+                            <th>Number</th>
+                            <th>Case</th>
+                            <th>Definition</th>
+                        </thead>
+                    </tr>
+                    <tbody id="tbody-${affixState}"></tbody>
+                </table>
+            </div>
+        `;
+        helperFunctions.standard.createDivById(`nounTable-${affixState}`, wrapper, html);
+    }
+    const html = `
+        <tr>
+            <th>Info</th>
+            <td>${affix}</td>
+            <td>${declension}</td>
+            <td>${gender}</td>
+            <td>${number}</td>
+            <td>${Case}</td>
+            <td>${definition}</td>
+        </tr>
+    `;
+    helperFunctions.standard.insertTrIntoTableById(`tbody-${affixState}`, html);
 }
 
 const verbTable = function verbTable(affix, gender, number, person, wrapper, affixState) {
@@ -187,32 +222,32 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, aff
 
     if (tbody === '') {
         const html = `
-                <div style="margin-top:15px">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width:116px">...</th>
-                                <th>${affixState}</th>
-                                <th>Gender</th>
-                                <th>Number</th>
-                                <th>Person</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-${affixState}"></tbody>
-                    </table>
-                </div>
-            `;
+            <div style="margin-top:15px">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:116px">...</th>
+                            <th>${affixState}</th>
+                            <th>Gender</th>
+                            <th>Number</th>
+                            <th>Person</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-${affixState}"></tbody>
+                </table>
+            </div>
+        `;
         helperFunctions.standard.createDivById(`verbTable-${affixState}`, wrapper, html);
     }
     const html = `
-            <tr>
-                <th>Info</th>
-                <td>${affix}</td>
-                <td>${gender}</td>
-                <td>${number}</td>
-                <td>${person}</td>
-            </tr>
-        `;
+        <tr>
+            <th>Info</th>
+            <td>${affix}</td>
+            <td>${gender}</td>
+            <td>${number}</td>
+            <td>${person}</td>
+        </tr>
+    `;
     helperFunctions.standard.insertTrIntoTableById(`tbody-${affixState}`, html);
 }
 

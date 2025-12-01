@@ -1356,15 +1356,13 @@ function dictionaryPage() {
 
                 openPageOld('page96');
             }
-            return;
             if (affixTypesMap.nounSuffix.state) {
                 console.log('--noun suffix--');
                 matchType = 2;
 
 
-                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffix.resultMap[0].affixStem] || []; console.log(stemMap);
-                let stemDifinition = stemMap.definition || '...';
-                const stemNotes = stemMap.usage_notes || '...';
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffix.resultMap[0].stem] || [];
+                const notes = stemMap.usage_notes || '...';
 
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
@@ -1384,62 +1382,28 @@ function dictionaryPage() {
                             <tr>
                                 <th>Info</th>
                                 <td>${keyword}</td>
-                                <td id="type2SuffixONLYStem">${affixTypesMap.nounSuffix.resultMap[0].affixStem}</td>
+                                <td id="stem">${affixTypesMap.nounSuffix.resultMap[0].stem}</td>
                                 <td>${wordclass}</td>
-                                <td>${stemNotes || '...'}</td>
+                                <td>${notes}</td>
                             </tr>
                         </table>
                     </div>
-                    <br>
-                    <br>
-                    <br>
-                    <div id=tablesContainer>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="width:116px">...</th>
-                                    <th>Suffix</th>
-                                    <th>Declension</th>
-                                    <th>Gender</th>
-                                    <th>Number</th>
-                                    <th>Case</th>
-                                    <th>Definition</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody"></tbody>
-                        </table>
-                    </div>
+                    <div id="nounTable"></div>
                     `;
                 helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.nounSuffix.resultMap.forEach(arr => {
-                    const suffixDeclension = arr.affixDeclension;
-                    const suffixGender = arr.affixGender;
-                    const suffixNumber = arr.affixNumber;
-                    const suffixCase = arr.affixCase;
-                    const suffix = arr.affix;
-
-                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
-                    for (const [gndr, def] of Object.entries(combinedGendersObject)) {
-                        if (gndr === suffixGender) {
-                            stemDifinition = def;
-                            console.log(combinedGendersObject);
-                            console.log(gndr, def);
-
-                            const html = `
-                                <tr>
-                                    <th>Info</th>
-                                    <td>${suffix}</td>
-                                    <td>${suffixDeclension}</td>
-                                    <td>${suffixGender}</td>
-                                    <td>${suffixNumber}</td>
-                                    <td>${suffixCase}</td>
-                                    <td>${stemDifinition}</td>
-                                </tr>
-                                `;
-                            helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                const nounTable = document.getElementById('nounTable');
+                for (const result of affixTypesMap.nounSuffix.resultMap) {
+                    function definition() {
+                        const entry = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffix.resultMap[0].stem];
+                        for (const [gender, def] of Object.entries(entry.genders)) {
+                            if (gender === path.gender) {
+                                return def;
+                            }
                         }
                     }
-                });
+                    const path = result.path;
+                    helperFunctions.standard.resultTables.nounTable(result.suffix, path.declension, path.gender, path.number, path.case, definition(), nounTable, 'suffix');
+                }
                 const stemTd = document.querySelector('#type2SuffixONLYStem');
                 if (stemTd) {
                     stemTd.style.cursor = 'pointer';
@@ -1451,6 +1415,7 @@ function dictionaryPage() {
 
                 openPageOld('page96');
             }
+            return;
             if (affixTypesMap.ppPrefix.state) {
                 console.log('--prepositional prefix--');
                 matchType = 2;
