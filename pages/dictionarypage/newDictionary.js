@@ -1492,10 +1492,10 @@ function dictionaryPage() {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
-
-                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
-                let stemDifinition = stemMap.definition || '...';
-                const stemNotes = stemMap.usage_notes || '...';
+                const stem = affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                let definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
 
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
@@ -1503,104 +1503,54 @@ function dictionaryPage() {
                 };
 
                 const html = `
-                                <div>
-                                    <table>
-                                        <tr>
-                                            <th style="width:116px">...</th>
-                                            <th>Word</th>
-                                            <th>Stem</th>
-                                            <th>Wordclass</th>
-                                            <th>Usage Notes</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Info</th>
-                                            <td>${keyword}</td>
-                                            <td id="type2SuffixONLYStem">${affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].affixStem}</td>
-                                            <td>${wordclass}</td>
-                                            <td>${stemNotes || '...'}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <br>
-                                <br>
-                                <br>
-                                <div id=tablesContainer>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th style="width:116px">...</th>
-                                                <th>Suffix</th>
-                                                <th>Declension</th>
-                                                <th>Gender</th>
-                                                <th>Number</th>
-                                                <th>Case</th>
-                                                <th>Definition</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbody"></tbody>
-                                    </table>
-                                </div>
-                                `;
+                    <div>
+                        <table>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Word</th>
+                                <th>Stem</th>
+                                <th>Wordclass</th>
+                                <th>Usage Notes</th>
+                            </tr>
+                            <tr>
+                                <th>Info</th>
+                                <td>${keyword}</td>
+                                <td id="stem">${stem}</td>
+                                <td>${wordclass}</td>
+                                <td>${notes || '...'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="prepositionTableWrapper"></div>
+                    <div id="suffixTableWrapper"></div>
+                `;
                 helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix.forEach(arr => {
-                    const suffixDeclension = arr.affixDeclension;
-                    const suffixGender = arr.affixGender;
-                    const suffixNumber = arr.affixNumber;
-                    const suffixCase = arr.affixCase;
-                    const suffix = arr.affix;
 
-                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
-                    for (const [gndr, def] of Object.entries(combinedGendersObject)) {
-                        if (gndr === suffixGender) {
-                            stemDifinition = def;
-                            //console.log(combinedGendersObject);
-                            //console.log(gndr, def);
+                const ppWrapper = document.getElementById('prepositionTableWrapper');
+                for (const result of affixTypesMap.nounSuffixANDppPrefix.resultMap.preposition) {
+                    console.log(result);
+                    const def = DICTIONARY.ALL_WORDS.MAP[result.prefix].definition;
+                    const notes = DICTIONARY.ALL_WORDS.MAP[result.prefix].usage_notes;
+                    helperFunctions.standard.resultTables.prepositionTable(result.prefix, def, notes || '...', ppWrapper);
 
-                            const html = `
-                                <tr>
-                                    <th>Info</th>
-                                    <td>${suffix}</td>
-                                    <td>${suffixDeclension}</td>
-                                    <td>${suffixGender}</td>
-                                    <td>${suffixNumber}</td>
-                                    <td>${suffixCase}</td>
-                                    <td>${stemDifinition}</td>
-                                </tr>
-                                `;
-                            helperFunctions.standard.insertTrIntoTableById('tbody', html);
+
+                }
+                const suffixWrapper = document.getElementById('suffixTableWrapper');
+                for (const entries of affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix) {
+                    for (const result of Object.values(entries)) {
+                        //console.log(result);
+                        function definition() {
+                            const entry = DICTIONARY.ALL_WORDS.MAP[result.stem];
+                            for (const [gender, def] of Object.entries(entry.genders)) {
+                                if (gender === path.gender) {
+                                    return def;
+                                }
+                            }
                         }
+                        const path = result.path;
+                        helperFunctions.standard.resultTables.nounTable(result.suffix, path.declension, path.gender, path.number, path.case, definition(), suffixWrapper, 'suffix');
                     }
-                });
-
-                //added div vv
-                const prefix = affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix[0].affix; console.log(prefix);
-                const map = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDppPrefix.resultMap.prefix[0].affix]; console.log(map);
-                const ppHtml = `
-                                <table style="margin-top:35px">
-                                    <thead>
-                                        <tr>
-                                            <th>...</th>
-                                            <th style="width:116px">Prefix</th>
-                                            <th>Definition</th>
-                                            <th>Usage Notes</th>
-                                            <th>Wordclass</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>Info</th>
-                                            <td>${prefix || '...'}</td>
-                                            <td>${map.definition || '...'}</td>
-                                            <td>${map.usage_notes || '...'}</td>
-                                            <td>${'preposition'}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            `;
-
-                const wrapper = document.getElementById('tablesContainer');
-                helperFunctions.standard.createDivById('', wrapper, ppHtml);
-
+                }
                 helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.pPrefix.state) {
