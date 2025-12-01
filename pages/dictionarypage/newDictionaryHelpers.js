@@ -315,10 +315,44 @@ const prepositionTable = function prepositionTable(affix, definition, notes, wra
     helperFunctions.standard.insertTrIntoTableById('tbody', html);
 }
 
+const particleTable = function particleTable(affix, definition, notes, wrapper) {
+    if (!affix || !definition || !notes) return;
+
+    const tbody = document.getElementById('tbody') || '';
+    if (tbody === '') {
+        const html = `
+            <div style="margin-top:15px">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:116px">...</th>
+                            <th>Particle</th>
+                            <th>Definition</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        `;
+        helperFunctions.standard.createDivById('particleTable', wrapper, html);
+    }
+    const html = `
+        <tr>
+            <th>Info</th>
+            <td>${affix}</td>
+            <td>${definition}</td>
+            <td>${notes}</td>
+        </tr>
+    `;
+    helperFunctions.standard.insertTrIntoTableById('tbody', html);
+}
+
 const resultTables = {
     nounTable,
     verbTable,
-    prepositionTable
+    prepositionTable,
+    particleTable
 }
 
 const standard = {

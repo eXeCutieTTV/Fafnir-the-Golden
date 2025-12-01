@@ -1494,7 +1494,6 @@ function dictionaryPage() {
 
                 const stem = affixTypesMap.nounSuffixANDppPrefix.resultMap.suffix[0].stem;
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
-                let definition = stemMap.definition || '...';
                 const notes = stemMap.usage_notes || '...';
 
                 let wordclass = '';
@@ -1559,92 +1558,58 @@ function dictionaryPage() {
                 helperFunctions.standard.clearPageById('page96');
 
 
-                const array = affixTypesMap.pPrefix.resultMap[0];
-                const prefix = array.affix;
-                const prefixStem = array.affixStem;
+                const stem = affixTypesMap.pPrefix.resultMap[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                const notes = stemMap.usage_notes || '...';
 
-                const pArray = DICTIONARY.ALL_WORDS.MAP[prefix];
-                const pDefinition = pArray.definition;
-                const pUsage_notes = pArray.usage_notes;
-                console.log(array);
-                if (DICTIONARY.ALL_WORDS.MAP[prefixStem]) {
+                if (DICTIONARY.ALL_WORDS.MAP[stem]) {
                     console.log('clean match');
 
-                    let nounTblDiv = '';
-                    let html = '';
 
-                    const arr = DICTIONARY.ALL_WORDS.MAP[prefixStem];
-                    const NcombinedGendersObject = GENDERS.combine(arr.genders) // Key-value pairs
-                    switch (prefix) {
-                        case 'i':
-                            html = `
-                                <div>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>...</th>
-                                                <th>Stem</th>
-                                                <th>Declension</th>
-                                                <th>Definition</th>
-                                                <th>Gender</th>
-                                                <th>Usage_Notes</th>
-                                                <th>Wordclass</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyP"></tbody>
-                                    </table>
-                                </div>
-                                <div style="margin-top:35px">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>...</th>
-                                                <th style="width:116px">Prefix</th>
-                                                <th>Definition</th>
-                                                <th>Usage Notes</th>
-                                                <th>Wordclass</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>Info</th>
-                                                <td>${prefix || '...'}</td>
-                                                <td>${pDefinition || '...'}</td>
-                                                <td>${pUsage_notes || '...'}</td>
-                                                <td>${'particle'}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div style="margin-top:50px" id="pNounTable"></div>
-                            `;
-                            helperFunctions.standard.createPageById('page96', html);
-                            for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
-                                //console.log(gndr, def);
-                                const htmlP = `
+                    const html = `
+                        <div>
+                            <table>
+                                <thead>
                                     <tr>
-                                        <th>Info</th>
-                                        <td>${prefixStem}</td>
-                                        <td>${arr.declension}</td>
-                                        <td>${def}</td>
-                                        <td>${gndr}</td>
-                                        <td>${arr.usage_notes || '...'}</td>
-                                        <td>${'noun'}</td>
+                                        <th>...</th>
+                                        <th>Stem</th>
+                                        <th>Declension</th>
+                                        <th>Definition</th>
+                                        <th>Usage_Notes</th>
+                                        <th>Wordclass</th>
                                     </tr>
-                                `;
-                                helperFunctions.standard.insertTrIntoTableById('tbodyP', htmlP);
-                            }
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Info</td>
+                                        <td>${stem}</td>
+                                        <td>${stemMap.declension}</td>
+                                        <td id="definition">${'placeholder'}</td>
+                                        <td>${stemMap.usage_notes || '...'}</td>
+                                        <td>Noun</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="particleTableWrapper"></div>
+                        <div style="margin-top:50px" id="suffixTableWrapper"></div>
+                    `;
+                    helperFunctions.standard.createPageById('page96', html);
 
-                            nounTblDiv = document.getElementById('pNounTable');
-                            helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
-                            helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
-                            helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
-                            break;
+                    const deftd = document.getElementById('definition');
+                    deftd.innerHTML = defsToSingleString(stemMap.genders);
 
-                        default:
-                            console.warn(`${prefix} is not available as a noun prefix`);
-                            return;
+                    const particleTableWrapper = document.getElementById('particleTableWrapper');
+                    for (const result of affixTypesMap.pPrefix.resultMap) {
+                        console.log(result);
+                        const particleMap = DICTIONARY.ALL_WORDS.MAP[result.prefix];
+                        helperFunctions.standard.resultTables.particleTable(result.prefix, particleMap.definition, particleMap.usage_notes, particleTableWrapper);
                     }
+                    const suffixTableWrapper = document.getElementById('suffixTableWrapper');
+                    helperFunctions.matchtype1.neoNounTables(stemMap.declension, 1, suffixTableWrapper, stemMap.genders);
+                    helperFunctions.matchtype1.neoNounTables(stemMap.declension, 2, suffixTableWrapper, stemMap.genders);
+                    helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+
                     helperFunctions.standard.openPageById('page96');
                 }
             }
