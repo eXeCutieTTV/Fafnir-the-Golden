@@ -49,6 +49,37 @@ const createPageById = function createPageById(id, html) {
 
     pagewrapper.appendChild(page);
 }
+const openPageById = function openPageById(pageId, element) {
+
+    const pageEl = document.getElementById(pageId);
+    if (!pageEl) {
+        if (pageId === 'page11999') return;
+        console.error(`openPage: No element found with id "${pageId}"`);
+        return;
+    }
+    pageEl.classList.add('active');
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+    // Show selected page
+    document.getElementById(pageId).classList.add('active');
+
+    // Reset all tabs
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+    // Highlight current tab
+    if (element) {
+        element.classList.add('active');
+    }
+    // If pageId number is above 1000, highlight a constant tab
+    const match = pageId.match(/\d+/); // extract number from pageId
+    if (match && parseInt(match[0], 10) > 1000) {
+        const constantTab = document.getElementById('permatab'); // <-- your fixed tab's ID
+        if (constantTab) {
+            constantTab.classList.add('active');
+        }
+    }
+}
 const createDivById = function createDivById(id, wrapper, html) {
     let div = document.getElementById(id);
     if (!div) {
@@ -294,6 +325,7 @@ const standard = {
     test,
     clearPageById,
     createPageById,
+    openPageById,
     createDivById,
     sliceKeywordNegative,
     sliceKeywordPositive,
@@ -1581,7 +1613,7 @@ const displayForms = function displayForms(allMatchesArray) {
                 }
 
                 helperFunctions.standard.createPageById('page94', pageHtml);
-                openPageOld('page94');
+                helperFunctions.standard.openPageById('page94');
                 // ⟅(^‿^)⟆ - Shelf the elf
             }
             td.addEventListener('click', () => {

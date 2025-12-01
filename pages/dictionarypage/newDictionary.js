@@ -807,7 +807,7 @@ function dictionaryPage() {
                 }
                 if (document.getElementById('page97')) {
                     //console.log(wordclass);
-                    openPageOld('page97');
+                    helperFunctions.standard.openPageById('page97');
                 } else { return; }
             });
         }
@@ -853,7 +853,7 @@ function dictionaryPage() {
                 `;
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
-            openPageOld('page95');
+            helperFunctions.standard.openPageById('page95');
         }
         else if (matchType === 1.2) {//type 1.2
 
@@ -894,7 +894,7 @@ function dictionaryPage() {
                 `;
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
-            openPageOld('page95');
+            helperFunctions.standard.openPageById('page95');
         }
         else if (matchType === 1.3) {//type 1.3
             console.log('-----type1.3-----');
@@ -934,7 +934,7 @@ function dictionaryPage() {
                 `;
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
-            openPageOld('page95');
+            helperFunctions.standard.openPageById('page95');
         }
         else if (matchType === 1.4) {//type 1.4
             console.log('-----type1.4-----');
@@ -970,7 +970,7 @@ function dictionaryPage() {
                 `;
                 helperFunctions.standard.insertTrIntoTableById('tbody', html);
             });
-            openPageOld('page95');
+            helperFunctions.standard.openPageById('page95');
         }//maybe change to if, insead of else if? vv
         else if (//type 2
             type2AffixesMap.verbPrefix ||
@@ -1234,7 +1234,7 @@ function dictionaryPage() {
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
 
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.verbSuffix.state) {
                 console.log('--verb suffix--');
@@ -1298,7 +1298,7 @@ function dictionaryPage() {
 
                     helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
                 }
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.verbBothAffixes.state) {
                 console.log('--both verb affixes--');
@@ -1364,7 +1364,7 @@ function dictionaryPage() {
                     });
                 }
 
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.nounSuffix.state) {
                 console.log('--noun suffix--');
@@ -1423,7 +1423,7 @@ function dictionaryPage() {
                         search(keyword);
                     });
                 }
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.ppPrefix.state) {
                 console.log('--prepositional prefix--');
@@ -1440,7 +1440,7 @@ function dictionaryPage() {
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n') { wordclass = key.NAME }
                 };
-                
+
 
                 const html = `
                     <div>
@@ -1485,82 +1485,7 @@ function dictionaryPage() {
 
                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
-                /*
-                    if (DICTIONARY.ALL_WORDS.MAP[stem]) {
-                        console.log('clean match');
-         
-                            const arr = DICTIONARY.ALL_WORDS.MAP[prefixStem];
-                            console.log(arr);
-                            const NcombinedGendersObject = GENDERS.combine(arr.genders) // Key-value pairs
-                            console.log(NcombinedGendersObject);
-         
-         
-                            const html = `
-                                <div>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>...</th>
-                                                <th>Stem</th>
-                                                <th>Declension</th>
-                                                <th>Definition</th>
-                                                <th>Gender</th>
-                                                <th>Usage_Notes</th>
-                                                <th>Wordclass</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbodyPP"></tbody>
-                                    </table>
-                                </div>
-                                <div style="margin-top:35px">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>...</th>
-                                                <th style="width:116px">Prefix</th>
-                                                <th>Definition</th>
-                                                <th>Usage Notes</th>
-                                                <th>Wordclass</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>Info</th>
-                                                <td>${prefix || '...'}</td>
-                                                <td>${ppDefinition || '...'}</td>
-                                                <td>${ppUsage_notes || '...'}</td>
-                                                <td>${'preposition'}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div style="margin-top:50px" id="ppNounTable"></div>
-                            `;
-                            helperFunctions.standard.createPageById('page96', html);
-                            for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
-                                console.log(gndr, def);
-                                const htmlPP = `
-                                    <tr>
-                                        <th>Info</th>
-                                        <td>${prefixStem}</td>
-                                        <td>${arr.declension}</td>
-                                        <td>${def}</td>
-                                        <td>${gndr}</td>
-                                        <td>${arr.usage_notes || '...'}</td>
-                                        <td>${'noun'}</td>
-                                    </tr>
-                                `;
-                                helperFunctions.standard.insertTrIntoTableById('tbodyPP', htmlPP);
-                            }
-         
-                            const nounTblDiv = document.getElementById('ppNounTable');
-                            helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
-                            helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
-                            helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
-                        openPageOld('page96');
-                    }
-                */
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.nounSuffixANDppPrefix.state) {
                 console.log('--noun with pp and suffix--');
@@ -1676,7 +1601,7 @@ function dictionaryPage() {
                 const wrapper = document.getElementById('tablesContainer');
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.pPrefix.state) {
                 console.log('--noun with particle--');
@@ -1770,7 +1695,7 @@ function dictionaryPage() {
                             console.warn(`${prefix} is not available as a noun prefix`);
                             return;
                     }
-                    openPageOld('page96');
+                    helperFunctions.standard.openPageById('page96');
                 }
             }
             else if (affixTypesMap.pSuffix.state) {
@@ -1857,7 +1782,7 @@ function dictionaryPage() {
                                 helperFunctions.matchtype1.neoAdjectiveTables(arr.declension, 2, ADJwrapper);
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Adjective-Table-Directive': false, 'Adjective-Table-Recessive': false });
 
-                                openPageOld('page96');
+                                helperFunctions.standard.openPageById('page96');
                                 break;
                             case 'nyl':
                                 console.log('adj turned into adv');
@@ -1884,7 +1809,7 @@ function dictionaryPage() {
                                     </div>
                                 `;
                                 helperFunctions.standard.createPageById('page96', htmlADV);
-                                openPageOld('page96');
+                                helperFunctions.standard.openPageById('page96');
                                 break;
                             default:
                                 console.warn(`${particle} is not available as a noun suffix`);
@@ -1961,7 +1886,7 @@ function dictionaryPage() {
                                 helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
                                 helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
-                                openPageOld('page96');
+                                helperFunctions.standard.openPageById('page96');
                                 break;
                             default:
                                 console.warn(`${particle} is not available as a noun suffix`);
@@ -2087,7 +2012,7 @@ function dictionaryPage() {
                 const wrapper = document.getElementById('tablesContainer');
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.nounSuffixANDpSuffix.state) {
                 console.log('--noun with particle suffix and suffix--');
@@ -2202,7 +2127,7 @@ function dictionaryPage() {
                 const wrapper = document.getElementById('tablesContainer');
                 helperFunctions.standard.createDivById('', wrapper, ppHtml);
 
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.adjSuffix.state) {
                 matchType = 2;
@@ -2257,7 +2182,7 @@ function dictionaryPage() {
                     `;
                     helperFunctions.standard.insertTrIntoTableById('tbody', html);
                 });
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.adjSuffixANDpSuffix.state) {
                 matchType = 2;
@@ -2332,7 +2257,7 @@ function dictionaryPage() {
                     `;
                     helperFunctions.standard.insertTrIntoTableById('tbody2', html);
                 });
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.auxPrefix.state) {
                 matchType = 2;
@@ -2384,7 +2309,7 @@ function dictionaryPage() {
                     `;
                     helperFunctions.standard.insertTrIntoTableById('tbody', html);
                 });
-                openPageOld('page96');
+                helperFunctions.standard.openPageById('page96');
             }
         }
         return;
