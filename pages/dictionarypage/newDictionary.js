@@ -1557,14 +1557,16 @@ function dictionaryPage() {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
-
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'n' || key.SHORT === 'adj') { wordclass = key.NAME }
+                };
                 const stem = affixTypesMap.pPrefix.resultMap[0].stem;
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
                 const notes = stemMap.usage_notes || '...';
 
                 if (DICTIONARY.ALL_WORDS.MAP[stem]) {
                     console.log('clean match');
-
 
                     const html = `
                         <div>
@@ -1581,12 +1583,12 @@ function dictionaryPage() {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Info</td>
+                                        <th>Info</th>
                                         <td>${stem}</td>
                                         <td>${stemMap.declension}</td>
                                         <td id="definition">${'placeholder'}</td>
-                                        <td>${stemMap.usage_notes || '...'}</td>
-                                        <td>Noun</td>
+                                        <td>${notes}</td>
+                                        <td>${wordclass}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1599,12 +1601,14 @@ function dictionaryPage() {
                     const deftd = document.getElementById('definition');
                     deftd.innerHTML = defsToSingleString(stemMap.genders);
 
+
                     const particleTableWrapper = document.getElementById('particleTableWrapper');
                     for (const result of affixTypesMap.pPrefix.resultMap) {
-                        console.log(result);
+                        //console.log(result);
                         const particleMap = DICTIONARY.ALL_WORDS.MAP[result.prefix];
                         helperFunctions.standard.resultTables.particleTable(result.prefix, particleMap.definition, particleMap.usage_notes, particleTableWrapper);
                     }
+
                     const suffixTableWrapper = document.getElementById('suffixTableWrapper');
                     helperFunctions.matchtype1.neoNounTables(stemMap.declension, 1, suffixTableWrapper, stemMap.genders);
                     helperFunctions.matchtype1.neoNounTables(stemMap.declension, 2, suffixTableWrapper, stemMap.genders);
@@ -1619,196 +1623,74 @@ function dictionaryPage() {
                 helperFunctions.standard.clearPageById('page96');
 
 
-                const array = affixTypesMap.pSuffix.resultMap[0];
-                const particle = array.affix;
-                const particleStem = array.affixStem;
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'n' || key.SHORT === 'adj') { wordclass = key.NAME }
+                };
+                const stem = affixTypesMap.pSuffix.resultMap[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                const notes = stemMap.usage_notes || '...';
 
-                const pArray = DICTIONARY.ALL_WORDS.MAP[particle];
-                const pDefinition = pArray.definition;
-                const pUsage_notes = pArray.usage_notes;
-                //console.log(pArray);
-                if (DICTIONARY.ALL_WORDS.MAP[particleStem]) {
-                    console.log('clean match');
 
-                    const arr = DICTIONARY.ALL_WORDS.MAP[particleStem];
-                    console.log(arr);
-                    if (arr.type === 'adj') {
-                        console.log('adj')
+                const html = `
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>...</th>
+                                    <th>Stem</th>
+                                    <th>Declension</th>
+                                    <th>Definition</th>
+                                    <th>Usage_Notes</th>
+                                    <th>Wordclass</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${stem}</td>
+                                    <td>${stemMap.declension}</td>
+                                    <td id="definition">${'placeholder'}</td>
+                                    <td>${notes}</td>
+                                    <td id="wordclass">${wordclass}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="particleTableWrapper"></div>
+                    <div style="margin-top:50px" id="suffixTableWrapper"></div>
+                `;
+                helperFunctions.standard.createPageById('page96', html);
 
-                        switch (particle) {
-                            case 'ān':
-                            case 'ōn':
-                            case 'ūn':
-                                const html = `
-                                    <div>
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>...</th>
-                                                    <th>Stem</th>
-                                                    <th>Declension</th>
-                                                    <th>Definition</th>
-                                                    <th>Usage_Notes</th>
-                                                    <th>Wordclass</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbodyP"></tbody>
-                                        </table>
-                                    </div>
-                                    <div style="margin-top:35px">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>...</th>
-                                                    <th style="width:116px">Suffix</th>
-                                                    <th>Definition</th>
-                                                    <th>Usage Notes</th>
-                                                    <th>Wordclass</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th>Info</th>
-                                                    <td>${particle || '...'}</td>
-                                                    <td>${pDefinition || '...'}</td>
-                                                    <td>${pUsage_notes || '...'}</td>
-                                                    <td>${'particle'}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div style="margin-top:50px" id="pNounTable"></div>
-                                `;
-                                helperFunctions.standard.createPageById('page96', html);
-                                const htmlP = `
-                                        <tr>
-                                            <th>Info</th>
-                                            <td>${particleStem}</td>
-                                            <td>${arr.declension}</td>
-                                            <td>${arr.definition}</td>
-                                            <td>${arr.usage_notes || '...'}</td>
-                                            <td>${'noun'}</td>
-                                        </tr>
-                                    `;
-                                helperFunctions.standard.insertTrIntoTableById('tbodyP', htmlP);
-
-                                const ADJwrapper = document.getElementById('pNounTable');
-                                helperFunctions.matchtype1.neoAdjectiveTables(arr.declension, 1, ADJwrapper);
-                                helperFunctions.matchtype1.neoAdjectiveTables(arr.declension, 2, ADJwrapper);
-                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Adjective-Table-Directive': false, 'Adjective-Table-Recessive': false });
-
-                                helperFunctions.standard.openPageById('page96');
-                                break;
-                            case 'nyl':
-                                console.log('adj turned into adv');
-                                const htmlADV = `
-                                    <div>
-                                        <table>
-                                            <theader>
-                                                <tr>
-                                                    <th>Word</th>
-                                                    <th>Definition</th>
-                                                    <th>Usage Notes</th>
-                                                    <th>Wordclass</th>
-                                                </tr>
-                                            </theader>
-                                            <tbody>
-                                                <tr>
-                                                    <td>${arr.word}</td>
-                                                    <td>${arr.definition}</td>
-                                                    <td>${arr.usage_notes || '...'}</td>
-                                                    <td>${'Adverb'}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                `;
-                                helperFunctions.standard.createPageById('page96', htmlADV);
-                                helperFunctions.standard.openPageById('page96');
-                                break;
-                            default:
-                                console.warn(`${particle} is not available as a noun suffix`);
-                                break;
-                        }
-                    } else if (arr.type === 'n') {
-                        const NcombinedGendersObject = GENDERS.combine(arr.genders) // Key-value pairs
-                        //console.log(NcombinedGendersObject);
-
-                        switch (particle) {
-                            case 'ān':
-                            case 'ōn':
-                            case 'ūn':
-                                const html = `
-                                    <div>
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>...</th>
-                                                    <th>Stem</th>
-                                                    <th>Declension</th>
-                                                    <th>Definition</th>
-                                                    <th>Gender</th>
-                                                    <th>Usage_Notes</th>
-                                                    <th>Wordclass</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbodyP"></tbody>
-                                        </table>
-                                    </div>
-                                    <div style="margin-top:35px">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>...</th>
-                                                    <th style="width:116px">Prefix</th>
-                                                    <th>Definition</th>
-                                                    <th>Usage Notes</th>
-                                                    <th>Wordclass</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th>Info</th>
-                                                    <td>${particle || '...'}</td>
-                                                    <td>${pDefinition || '...'}</td>
-                                                    <td>${pUsage_notes || '...'}</td>
-                                                    <td>${'particle'}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div style="margin-top:50px" id="pNounTable"></div>
-                                `;
-                                helperFunctions.standard.createPageById('page96', html);
-                                for (const [gndr, def] of Object.entries(NcombinedGendersObject)) {
-                                    console.log(gndr, def);
-                                    const htmlP = `
-                                        <tr>
-                                            <th>Info</th>
-                                            <td>${particleStem}</td>
-                                            <td>${arr.declension}</td>
-                                            <td>${def}</td>
-                                            <td>${gndr}</td>
-                                            <td>${arr.usage_notes || '...'}</td>
-                                            <td>${'noun'}</td>
-                                        </tr>
-                                    `;
-                                    helperFunctions.standard.insertTrIntoTableById('tbodyP', htmlP);
-                                }
-
-                                const nounTblDiv = document.getElementById('pNounTable');
-                                helperFunctions.matchtype1.neoNounTables(arr.declension, 1, nounTblDiv, NcombinedGendersObject);
-                                helperFunctions.matchtype1.neoNounTables(arr.declension, 2, nounTblDiv, NcombinedGendersObject);
-                                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
-
-                                helperFunctions.standard.openPageById('page96');
-                                break;
-                            default:
-                                console.warn(`${particle} is not available as a noun suffix`);
-                                break;
-                        }
+                const deftd = document.getElementById('definition');
+                if (stemMap.type === 'n') {
+                    deftd.innerHTML = defsToSingleString(stemMap.genders);
+                } else deftd.innerHTML = stemMap.definition;
+                const particleTableWrapper = document.getElementById('particleTableWrapper');
+                for (const result of affixTypesMap.pSuffix.resultMap) {
+                    //console.log(result);
+                    const particleMap = DICTIONARY.ALL_WORDS.MAP[result.suffix];
+                    helperFunctions.standard.resultTables.particleTable(result.suffix, particleMap.definition, particleMap.usage_notes, particleTableWrapper);
+                    console.log(stemMap, result)
+                    if (stemMap.type === 'adj' && result.suffix === 'nyl') {
+                        const wordclasstd = document.getElementById('wordclass');
+                        wordclasstd.textContent = 'Adverb';
                     }
                 }
+
+
+                const suffixTableWrapper = document.getElementById('suffixTableWrapper');
+                if (stemMap.type === 'n') {
+                    helperFunctions.matchtype1.neoNounTables(stemMap.declension, 1, suffixTableWrapper, stemMap.genders);
+                    helperFunctions.matchtype1.neoNounTables(stemMap.declension, 2, suffixTableWrapper, stemMap.genders);
+                    helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+                } else if (stemMap.type === 'adj') {
+                    helperFunctions.matchtype1.neoAdjectiveTables(stemMap.declension, 1, suffixTableWrapper);
+                    helperFunctions.matchtype1.neoAdjectiveTables(stemMap.declension, 2, suffixTableWrapper);
+                    helperFunctions.tablegen.populateSummaryTables(keyword, { 'Adjective-Table-Directive': false, 'Adjective-Table-Recessive': false });
+                }
+
+                helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.nounSuffixANDpPrefix.state) {
                 console.log('--noun with particle prefix and suffix--');
