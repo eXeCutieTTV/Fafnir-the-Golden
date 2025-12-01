@@ -1208,7 +1208,7 @@ function dictionaryPage() {
                 if (verbTableWrapper) {
                     for (const result of affixTypesMap.verbPrefix.resultMap) {
                         const path = result.path;
-                        helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, verbTableWrapper, true);
+                        helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, verbTableWrapper, 'Prefix');
                     }
                 }
                 const stemSTd = document.querySelector('#stem');
@@ -1272,7 +1272,7 @@ function dictionaryPage() {
                 if (verbTableWrapper) {
                     for (const result of affixTypesMap.verbSuffix.resultMap) {
                         const path = result.path;
-                        helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, verbTableWrapper, false);
+                        helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, verbTableWrapper, 'Suffix');
                     }
                 }
                 const stemSTd = document.querySelector('#stem');
@@ -1337,12 +1337,12 @@ function dictionaryPage() {
                 for (const result of affixTypesMap.verbBothAffixes.resultMap.prefix) {
                     //console.log(result);
                     const path = result.path;
-                    helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, prefixVerbTableWrapper, true);
+                    helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, prefixVerbTableWrapper, 'Prefix');
                 }
                 for (const result of affixTypesMap.verbBothAffixes.resultMap.suffix) {
                     //console.log(result);
                     const path = result.path;
-                    helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, suffixVerbTableWrapper, false);
+                    helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, suffixVerbTableWrapper, 'Suffix');
                 }
 
                 const stemSTd = document.querySelector('#stem');
