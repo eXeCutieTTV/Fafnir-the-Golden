@@ -180,42 +180,79 @@ const nounTable = function nounTable() {
 
 }
 
-const verbTable = function verbTable(affix, gender, number, person, wrapper) {
-
+const verbTable = function verbTable(affix, gender, number, person, wrapper, isPrefix) {
     if (!affix || !gender || !number || !person || !wrapper) return;
 
-    const tbody = document.getElementById('tbody') || '';
-    if (tbody === '') {
+    if (isPrefix === true) {
+        const tbody = document.getElementById('tbodyPrefix') || '';
+
+        if (tbody === '') {
+            const html = `
+                <div style="margin-top:15px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Prefix</th>
+                                <th>Gender</th>
+                                <th>Number</th>
+                                <th>Person</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyPrefix"></tbody>
+                    </table>
+                </div>
+            `;
+            helperFunctions.standard.createDivById('verbTablePrefix', wrapper, html);
+        }
+
         const html = `
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width:116px">...</th>
-                            <th>Prefix</th>
-                            <th>Gender</th>
-                            <th>Number</th>
-                            <th>Person</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody"></tbody>
-                </table>
-            </div>
+            <tr>
+                <th>Info</th>
+                <td>${affix}</td>
+                <td>${gender}</td>
+                <td>${number}</td>
+                <td>${person}</td>
+            </tr>
         `;
-        helperFunctions.standard.createDivById('verbTable', wrapper, html);
+
+        helperFunctions.standard.insertTrIntoTableById('tbodyPrefix', html);
+    } else if (isPrefix === false) {
+
+        const tbody = document.getElementById('tbodySuffix') || '';
+
+        if (tbody === '') {
+            const html = `
+                <div style="margin-top:15px">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:116px">...</th>
+                                <th>Suffix</th>
+                                <th>Gender</th>
+                                <th>Number</th>
+                                <th>Person</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodySuffix"></tbody>
+                    </table>
+                </div>
+            `;
+            helperFunctions.standard.createDivById('verbTableSuffix', wrapper, html);
+        }
+
+        const html = `
+            <tr>
+                <th>Info</th>
+                <td>${affix}</td>
+                <td>${gender}</td>
+                <td>${number}</td>
+                <td>${person}</td>
+            </tr>
+        `;
+
+        helperFunctions.standard.insertTrIntoTableById('tbodySuffix', html);
     }
-
-    const html = `
-        <tr>
-            <th>Info</th>
-            <td>${affix}</td>
-            <td>${gender}</td>
-            <td>${number}</td>
-            <td>${person}</td>
-        </tr>
-    `;
-
-    helperFunctions.standard.insertTrIntoTableById('tbody', html);
 }
 
 const resultTables = {

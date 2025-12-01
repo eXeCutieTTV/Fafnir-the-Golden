@@ -1201,7 +1201,7 @@ function dictionaryPage() {
                 if (verbTableWrapper) {
                     for (const result of affixTypesMap.verbPrefix.resultMap) {
                         const path = result.path;
-                        helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, verbTableWrapper);
+                        helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, verbTableWrapper, true);
                     }
                 }
                 const stemSTd = document.querySelector('#stem');
@@ -1265,7 +1265,7 @@ function dictionaryPage() {
                 if (verbTableWrapper) {
                     for (const result of affixTypesMap.verbSuffix.resultMap) {
                         const path = result.path;
-                        helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, verbTableWrapper);
+                        helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, verbTableWrapper, false);
                     }
                 }
                 const stemSTd = document.querySelector('#stem');
@@ -1284,15 +1284,14 @@ function dictionaryPage() {
                 }
                 openPageOld('page96');
             }
-            return;
             if (affixTypesMap.verbBothAffixes.state) {
                 console.log('--both verb affixes--');
                 matchType = 2;
 
 
-                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem] || [];
-                const stemDifinition = stemMap.definition || '...';
-                const stemNotes = stemMap.usage_notes || '...';
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.verbBothAffixes.resultMap.prefix[0].stem] || [];
+                const definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
 
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
@@ -1300,110 +1299,57 @@ function dictionaryPage() {
                 };
 
                 const html = `
-                            <div>
-                                <table>
-                                    <tr>
-                                        <th style="width:116px">...</th>
-                                        <th>Word</th>
-                                        <th>Stem</th>
-                                        <th>Wordclass</th>
-                                        <th>Definition</th>
-                                        <th>Usage Notes</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Info</th>
-                                        <td>${keyword}</td>
-                                        <td id="type2PrefixONLYStem">${affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem}</td>
-                                        <td>${wordclass}</td>
-                                        <td>${stemDifinition}</td>
-                                        <td>${stemNotes || '...'}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <br>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th style="width:116px">...</th>
-                                            <th>Prefix</th>
-                                            <th>Gender</th>
-                                            <th>Number</th>
-                                            <th>Person</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbodyPrefix"></tbody>
-                                </table>
-                            </div>
-                            <br>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th style="width:116px">...</th>
-                                            <th>Suffix</th>
-                                            <th>Gender</th>
-                                            <th>Number</th>
-                                            <th>Person</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbodySuffix"></tbody>
-                                </table>
-                            </div>
-                        `;
+                    <div>
+                        <div>
+                            <table>
+                                <tr>
+                                    <th style="width:116px">...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
+                                    <th>Wordclass</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                </tr>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${keyword}</td>
+                                    <td id="stem">${affixTypesMap.verbBothAffixes.resultMap.prefix[0].stem}</td>
+                                    <td>${wordclass}</td>
+                                    <td>${definition}</td>
+                                    <td>${notes || '...'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="prefixVerbTableWrapper"></div>
+                        <div id="suffixVerbTableWrapper"></div>
+                    </div>
+                `;
                 helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.verbBothAffixes.resultMap.prefix.forEach(arr => {
+                const prefixVerbTableWrapper = document.getElementById('prefixVerbTableWrapper');
+                const suffixVerbTableWrapper = document.getElementById('suffixVerbTableWrapper');
+                for (const result of affixTypesMap.verbBothAffixes.resultMap.prefix) {
+                    console.log(result);
+                    const path = result.path;
+                    helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, prefixVerbTableWrapper, true);
+                }
+                for (const result of affixTypesMap.verbBothAffixes.resultMap.suffix) {
+                    console.log(result);
+                    const path = result.path;
+                    helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, suffixVerbTableWrapper, false);
+                }
 
-                    if (DICTIONARY.ALL_WORDS.MAP[arr.affixStem]) {
-                        const prefixGender = arr.affixGender;
-                        const prefixNumber = arr.affixNumber;
-                        const prefixPerson = arr.affixPerson;
-                        const prefix = arr.affix;
-
-                        const html = `
-                                <tr>
-                                    <th>Prefix</th>
-                                    <td>${prefix}</td>
-                                    <td>${prefixGender}</td>
-                                    <td>${prefixNumber}</td>
-                                    <td>${prefixPerson}</td>
-                                </tr>`
-
-                        helperFunctions.standard.insertTrIntoTableById('tbodyPrefix', html);
-                    }
-                });
-                affixTypesMap.verbBothAffixes.resultMap.suffix.forEach(arr => {
-
-                    if (DICTIONARY.ALL_WORDS.MAP[arr.affixStem]) {
-                        const suffixGender = arr.affixGender;
-                        const suffixNumber = arr.affixNumber;
-                        const suffixPerson = arr.affixPerson;
-                        const suffix = arr.affix;
-
-                        const html = `
-                                <tr>
-                                    <th>Suffix</th>
-                                    <td>${suffix}</td>
-                                    <td>${suffixGender}</td>
-                                    <td>${suffixNumber}</td>
-                                    <td>${suffixPerson}</td>
-                                </tr>`
-
-                        helperFunctions.standard.insertTrIntoTableById('tbodySuffix', html);
-                    }
-                });
-
-                const stemSTd = document.querySelector('#type2PrefixONLYStem');
+                const stemSTd = document.querySelector('#stem');
                 if (stemSTd) {
                     stemSTd.style.cursor = 'pointer';
                     stemSTd.addEventListener('click', () => {
-                        keyword = affixTypesMap.verbBothAffixes.resultMap.prefix[0].affixStem; //console.log(keyword);
+                        keyword = affixTypesMap.verbBothAffixes.resultMap.prefix[0].stem; //console.log(keyword);
                         search(keyword);
                     });
                 }
 
                 openPageOld('page96');
             }
+            return;
             if (affixTypesMap.nounSuffix.state) {
                 console.log('--noun suffix--');
                 matchType = 2;
