@@ -1103,19 +1103,24 @@ function dictionaryPage() {
                             affixTypesMap.pPrefix.state = true;
                         } else {
                             nounSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false) || [];
-                            if (nounSuffix.length > 0) {
-                                affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
-                                for (obj of Object.values(nounSuffix)) {
-                                    entry.stem = obj.stem; //fix stem.
-                                    affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(obj);
+                            //console.log(nounSuffix);
+                            if (nounSuffix.arrayLength > 0) {
+                                for (const entry2 of Object.values(nounSuffix)) {
+                                    //console.log(obj)
+                                    if (typeof (entry2) === 'object') {
+                                        entry.stem = entry2[0].stem; //fix stem.
+                                        console.log(entry, entry2);
+                                        affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(entry2);
+                                    }
                                 }
+                                affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
                                 affixTypesMap.nounSuffixANDpPrefix.state = true;
                             }
                         }
                     }
                 }
             }
-            if (affixTypesMap.pSuffix.rawMap.arrayLength) {
+            if (affixTypesMap.pSuffix.rawMap.arrayLength) {//<-- surely wont work. need to have nounSuffixANDpSuffix logic inside nounsuffix logic. actually, double check the order of suffix/part as human mentioned it...
                 for (const entries of Object.values(affixTypesMap.pSuffix.rawMap)) {
                     for (const entry of Object.values(entries)) {
                         if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
@@ -1557,6 +1562,12 @@ function dictionaryPage() {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
+                if (affixTypesMap.pPrefix.resultMap[0].prefix != 'i') { //<--
+                    const msg = `${affixTypesMap.pPrefix.resultMap[0].prefix} is not available as a noun prefix`;
+                    console.warn(msg);
+                    alert(msg);
+                    return;
+                }
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n' || key.SHORT === 'adj') { wordclass = key.NAME }
@@ -1622,7 +1633,13 @@ function dictionaryPage() {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
-
+                const suffix = affixTypesMap.pSuffix.resultMap[0].suffix;
+                if (suffix != 'ān' || suffix != 'ōn' || suffix != 'ūn' || suffix != 'ûl' || suffix != 'nyl') { //<--
+                    const msg = `${suffix} is not available as a noun prefix`;
+                    console.warn(msg);
+                    alert(msg);
+                    return;
+                }
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n' || key.SHORT === 'adj') { wordclass = key.NAME }
@@ -1678,7 +1695,6 @@ function dictionaryPage() {
                     }
                 }
 
-
                 const suffixTableWrapper = document.getElementById('suffixTableWrapper');
                 if (stemMap.type === 'n') {
                     helperFunctions.matchtype1.neoNounTables(stemMap.declension, 1, suffixTableWrapper, stemMap.genders);
@@ -1698,116 +1714,70 @@ function dictionaryPage() {
                 helperFunctions.standard.clearPageById('page96');
 
 
-                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0].affixStem] || []; //console.log(stemMap);
-                let stemDifinition = stemMap.definition || '...';
-                const stemNotes = stemMap.usage_notes || '...';
+                const stem = affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0][0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                let definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
 
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n') { wordclass = key.NAME }
                 };
-                if (affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix != 'i') { //<--
-                    console.warn(`${affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix} is not available as a noun prefix`);
+                if (affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].prefix != 'i') { //<--
+                    const msg = `${affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix} is not available as a noun prefix`;
+                    console.warn(msg);
+                    alert(msg);
                     return;
                 }
                 const html = `
                     <div>
                         <table>
-                            <tr>
-                                <th style="width:116px">...</th>
-                                <th>Word</th>
-                                <th>Stem</th>
-                                <th>Wordclass</th>
-                                <th>Usage Notes</th>
-                            </tr>
-                            <tr>
-                                <th>Info</th>
-                                <td>${keyword}</td>
-                                <td id="type2SuffixONLYStem">${affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix[0].affixStem}</td>
-                                <td>${wordclass}</td>
-                                <td>${stemNotes || '...'}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <div id=tablesContainer>
-                        <table>
                             <thead>
                                 <tr>
-                                    <th style="width:116px">...</th>
-                                    <th>Suffix</th>
+                                    <th>...</th>
+                                    <th>Stem</th>
                                     <th>Declension</th>
-                                    <th>Gender</th>
-                                    <th>Number</th>
-                                    <th>Case</th>
-                                    <th>Definition</th>
+                                    <th>Usage_Notes</th>
+                                    <th>Wordclass</th>
                                 </tr>
                             </thead>
-                            <tbody id="tbody"></tbody>
-                        </table>
-                    </div>
-                    `;
-                helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.forEach(arr => {
-                    const suffixDeclension = arr.affixDeclension;
-                    const suffixGender = arr.affixGender;
-                    const suffixNumber = arr.affixNumber;
-                    const suffixCase = arr.affixCase;
-                    const suffix = arr.affix;
-
-                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
-                    for (const [gndr, def] of Object.entries(combinedGendersObject)) {
-                        if (gndr === suffixGender) {
-                            stemDifinition = def;
-                            //console.log(combinedGendersObject);
-                            //console.log(gndr, def);
-
-                            const html = `
+                            <tbody>
                                 <tr>
                                     <th>Info</th>
-                                    <td>${suffix}</td>
-                                    <td>${suffixDeclension}</td>
-                                    <td>${suffixGender}</td>
-                                    <td>${suffixNumber}</td>
-                                    <td>${suffixCase}</td>
-                                    <td>${stemDifinition}</td>
+                                    <td>${stem}</td>
+                                    <td>${stemMap.declension}</td>
+                                    <td>${notes}</td>
+                                    <td>${wordclass}</td>
                                 </tr>
-                                `;
-                            helperFunctions.standard.insertTrIntoTableById('tbody', html);
-                        }
-                    }
-                });
-
-                //added div vv
-                const particle = affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix; //console.log(prefix);
-                const map = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpPrefix.resultMap.particle[0].affix]; //console.log(map);
-                const ppHtml = `
-                    <table style="margin-top:35px">
-                        <thead>
-                            <tr>
-                                <th>...</th>
-                                <th style="width:116px">Prefix</th>
-                                <th>Definition</th>
-                                <th>Usage Notes</th>
-                                <th>Wordclass</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Info</th>
-                                <td>${particle || '...'}</td>
-                                <td>${map.definition || '...'}</td>
-                                <td>${map.usage_notes || '...'}</td>
-                                <td>${'particle'}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="particleTableWrapper"></div>
+                    <div id="suffixTableWrapper"></div>
                 `;
+                helperFunctions.standard.createPageById('page96', html);
 
-                const wrapper = document.getElementById('tablesContainer');
-                helperFunctions.standard.createDivById('', wrapper, ppHtml);
+                const particleTableWrapper = document.getElementById('particleTableWrapper');
+                for (const result of affixTypesMap.nounSuffixANDpPrefix.resultMap.particle) {
+                    const particleMap = DICTIONARY.ALL_WORDS.MAP[result.prefix];
+                    helperFunctions.standard.resultTables.particleTable(result.prefix, particleMap.definition, particleMap.usage_notes, particleTableWrapper);
+                }
+                const suffixTableWrapper = document.getElementById('suffixTableWrapper');
+                for (const results of affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix) {
+                    for (const result of results) {
+
+                        function definition() {//<-- universalise this function?...
+                            const entry = DICTIONARY.ALL_WORDS.MAP[result.stem];
+                            for (const [gender, def] of Object.entries(entry.genders)) {
+                                if (gender === path.gender) {
+                                    return def;
+                                }
+                            }
+                        }
+                        const path = result.path;
+                        helperFunctions.standard.resultTables.nounTable(result.suffix, path.declension, path.gender, path.number, path.case, definition(), suffixTableWrapper, 'suffix');
+                    }
+                }
 
                 helperFunctions.standard.openPageById('page96');
             }
@@ -2207,8 +2177,4 @@ dictionaryPage();
 */
 //maybe add a 4th type? if number, then use lirioz' NUMBERS.numberToText.
 //5th type is a buttonpress that just loads the entire plain dictionary.
-//maybe need an entire 6th type just for lur?
-//rest of particle suffixes.
-//probably revert that change that codex added to page loading lmao. it fucks up when you re-enter the page - from a searchpage.
-//update to betterTrInsert();
 //make 'short_path's //make every array, atleast inside allMatchesArray, have similar formatting - path{} etc.
