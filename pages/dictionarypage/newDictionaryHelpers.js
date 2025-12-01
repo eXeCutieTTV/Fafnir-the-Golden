@@ -183,7 +183,7 @@ const nounTable = function nounTable() {
 const verbTable = function verbTable(affix, gender, number, person, wrapper, affixState) {
     if (!affix || !gender || !number || !person || !wrapper) return;
 
-    const tbody = document.getElementById(affixState) || '';
+    const tbody = document.getElementById(`tbody-${affixState}`) || '';
 
     if (tbody === '') {
         const html = `
@@ -198,7 +198,7 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, aff
                                 <th>Person</th>
                             </tr>
                         </thead>
-                        <tbody id="${affixState}"></tbody>
+                        <tbody id="tbody-${affixState}"></tbody>
                     </table>
                 </div>
             `;
@@ -213,7 +213,7 @@ const verbTable = function verbTable(affix, gender, number, person, wrapper, aff
                 <td>${person}</td>
             </tr>
         `;
-    helperFunctions.standard.insertTrIntoTableById(affixState, html);
+    helperFunctions.standard.insertTrIntoTableById(`tbody-${affixState}`, html);
 }
 
 const resultTables = {
