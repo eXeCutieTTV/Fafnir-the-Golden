@@ -1268,49 +1268,6 @@ function dictionaryPage() {
                         helperFunctions.standard.resultTables.verbTable(result.suffix, path.gender, path.number, path.person, verbTableWrapper);
                     }
                 }
-                /*
-                affixTypesMap.verbSuffix.resultMap.forEach(arr => {
-                    //console.log('arr | ', arr);
-
-
-                    const suffixGender = arr.affixGender;
-                    const suffixNumber = arr.affixNumber;
-                    const suffixPerson = arr.affixPerson;
-                    const suffix = arr.affix;
-                    const suffixStem = arr.affixStem;
-
-                    if (DICTIONARY.ALL_WORDS.MAP[suffixStem]) {
-                        const PShtml = `
-                                <tr>
-                                    <th>Suffix</th>
-                                    <td>${suffix}</td>
-                                    <td>${suffixGender}</td>
-                                    <td>${suffixNumber}</td>
-                                    <td>${suffixPerson}</td>
-                                </tr>
-                            `;
-
-                        helperFunctions.standard.insertTrIntoTableById('tbody', PShtml);
-                    } else return;
-                });
-                if (document.getElementById('tbody').rows.length > 0) { //only openpage etc if the tbody has shit in it.
-                    const stemSTd = document.querySelector('#type2SuffixONLYStem');
-                    if (stemSTd) {
-                        stemSTd.style.cursor = 'pointer';
-                        stemSTd.addEventListener('click', () => {
-                            keyword = affixTypesMap.verbSuffix.resultMap[0].affixStem;
-                            search(keyword);
-                        });
-                    }
-                    const suffixONLYPrefixtableWrapper = document.getElementById('suffixONLYPrefixtable');
-                    if (suffixONLYPrefixtableWrapper) {
-                        helperFunctions.matchtype1.neoVerbTables(true, keyword, suffixONLYPrefixtableWrapper);
-
-                        helperFunctions.tablegen.populateSummaryTables(keyword, { 'Verb-Table-Prefix': true, 'Verb-Table-Suffix': false });
-                    }
-                    openPageOld('page96');
-                }
-                */
                 const stemSTd = document.querySelector('#stem');
                 if (stemSTd) {
                     stemSTd.style.cursor = 'pointer';
