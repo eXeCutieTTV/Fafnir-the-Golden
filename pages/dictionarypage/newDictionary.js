@@ -1780,7 +1780,7 @@ function dictionaryPage() {
                 }
 
                 helperFunctions.standard.openPageById('page96');
-            }
+            }//<-- this is where i got to:)
             else if (affixTypesMap.nounSuffixANDpSuffix.state) {
                 console.log('--noun with particle suffix and suffix--');
                 matchType = 2;
