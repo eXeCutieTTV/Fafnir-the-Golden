@@ -1475,11 +1475,12 @@ function dictionaryPage() {
                     helperFunctions.standard.resultTables.prepositionTable(result.prefix, resultMap.definition, resultMap.usage_notes || '...', prepositionTableWrapper);
                 }
 
-                
-                                //helperFunctions.matchtype1.neoNounTables(entry.declension, 1, Nwrapper, NcombinedGendersObject);
-                                //helperFunctions.matchtype1.neoNounTables(entry.declension, 2, Nwrapper, NcombinedGendersObject);
+                const suffixesWrapper = document.getElementById('prepositionTableSuffixes');
 
-                                //helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
+                helperFunctions.matchtype1.neoNounTables(stemMap.declension, 1, suffixesWrapper, stemMap.genders);
+                helperFunctions.matchtype1.neoNounTables(stemMap.declension, 2, suffixesWrapper, stemMap.genders);
+
+                helperFunctions.tablegen.populateSummaryTables(keyword, { 'Noun-Table-Directive': false, 'Noun-Table-Recessive': false });
 
                 /*
                     if (DICTIONARY.ALL_WORDS.MAP[stem]) {
