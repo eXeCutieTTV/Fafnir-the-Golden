@@ -1058,22 +1058,24 @@ function dictionaryPage() {
                             affixTypesMap.nounSuffix.state = true;
                         } else {
                             pSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, false) || [];
-                            for (const entries2 of Object.values(pSuffix)) {
-                                //console.log(entries2, typeof (entries2) === 'object');
-                                if (typeof (entries2) === 'object') {
-                                    for (const entry2 of Object.values(entries2)) {
-                                        if (DICTIONARY.ALL_WORDS.MAP[entry2.stem] && DICTIONARY.ALL_WORDS.MAP[entry2.stem].type === 'n') {
-                                            console.log(entry2);
+                            if (pSuffix.arrayLength > 0) {
+                                for (const entries2 of Object.values(pSuffix)) {
+                                    //console.log(entries2, typeof (entries2) === 'object');
+                                    if (typeof (entries2) === 'object') {
+                                        for (const entry2 of Object.values(entries2)) {
+                                            if (DICTIONARY.ALL_WORDS.MAP[entry2.stem] && DICTIONARY.ALL_WORDS.MAP[entry2.stem].type === 'n') {
+                                                console.log(entry2);
 
-                                            entry.stem = entry2.stem;//fix affixStem for prefix.
+                                                entry.stem = entry2.stem;//fix affixStem for prefix.
 
-                                            affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
-                                            affixTypesMap.nounSuffixANDpSuffix.state = true;
+                                                affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
+                                                affixTypesMap.nounSuffixANDpSuffix.state = true;
+                                            }
                                         }
                                     }
                                 }
+                                affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
                             }
-                            affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
                         }
                     }
                 }
