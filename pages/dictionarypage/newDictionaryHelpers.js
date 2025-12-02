@@ -639,7 +639,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                         prefix: prefix,
                         affixState: 'prefix',
                         wordclass: 'part',
-                        short_path: ''//no path for parts
+                        short_path: 'part' + " " + prefix
                     }
                     tempArray[stem] ? null : tempArray[stem] = [];
                     tempArray[stem].push(result);
@@ -654,7 +654,7 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
                         suffix: suffix,
                         affixState: 'suffix',
                         wordclass: 'part',
-                        short_path: ''//no path for parts
+                        short_path: 'part' + " " + suffix
                     }
                     tempArray[stem] ? null : tempArray[stem] = [];
                     tempArray[stem].push(result);

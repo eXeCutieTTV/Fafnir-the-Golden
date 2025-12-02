@@ -1007,13 +1007,14 @@ function dictionaryPage() {
 
             //array / data update vv //make matchtype = 2 inside here vv. later do if matchtype === 2, createpagebyid, then each indivual if ...state, creates extra row on that page?
             if (affixTypesMap.verbPrefix.rawMap.arrayLength) {
+                const checkerArr = [];
                 for (const entries of Object.values(affixTypesMap.verbPrefix.rawMap)) {
                     //console.log(entries);
                     for (const entry of Object.values(entries)) {
                         if (typeof (entry) === 'object') {
                             //    console.log(entry);
 
-                            if (DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
+                            if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'v') {
                                 //     console.log(entry);
                                 affixTypesMap.verbPrefix.resultMap.push(entry);
                                 affixTypesMap.verbPrefix.state = true;
@@ -1022,12 +1023,17 @@ function dictionaryPage() {
                                 if (verbSuffix.arrayLength > 0) {
                                     for (const entries2 of Object.values(verbSuffix)) {
                                         for (const entry2 of Object.values(entries2)) {
-                                            console.log(entry);
+                                            //console.log(entry);
                                             if (DICTIONARY.ALL_WORDS.MAP[entry2.stem].type === 'v') {
 
                                                 entry.stem = entry2.stem;//fix affixStem for prefix.
 
-                                                affixTypesMap.verbBothAffixes.resultMap.suffix.push(entry2);
+                                                if (!checkerArr.includes(entry2.short_path)) {//<- prevent pushing every possible suffix, for every possible prefix - only show possible suffixes once.
+                                                    checkerArr.push(entry2.short_path);
+                                                    console.log('pushed for el with short_path:', entry2.short_path);
+                                                    affixTypesMap.verbBothAffixes.resultMap.suffix.push(entry2);
+                                                }
+
                                                 affixTypesMap.verbBothAffixes.state = true;
                                             }
                                         }
@@ -1050,31 +1056,39 @@ function dictionaryPage() {
                 }
             }
             if (affixTypesMap.nounSuffix.rawMap.arrayLength) {
+                const checkerArr = [];
                 for (const entries of Object.values(affixTypesMap.nounSuffix.rawMap)) {
                     for (const entry of Object.values(entries)) {
-                        //console.log(entry);
-                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'n') {
-                            affixTypesMap.nounSuffix.resultMap.push(entry);
-                            affixTypesMap.nounSuffix.state = true;
-                        } else {
-                            pSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, false) || [];
-                            if (pSuffix.arrayLength > 0) {
-                                for (const entries2 of Object.values(pSuffix)) {
-                                    //console.log(entries2, typeof (entries2) === 'object');
-                                    if (typeof (entries2) === 'object') {
-                                        for (const entry2 of Object.values(entries2)) {
-                                            if (DICTIONARY.ALL_WORDS.MAP[entry2.stem] && DICTIONARY.ALL_WORDS.MAP[entry2.stem].type === 'n') {
-                                                console.log(entry2);
+                        if (typeof (entry) === 'object') {
+                            //console.log(entry);
+                            if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'n') {
+                                affixTypesMap.nounSuffix.resultMap.push(entry);
+                                affixTypesMap.nounSuffix.state = true;
+                            } else {
+                                pSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, false) || [];
+                                if (pSuffix.arrayLength > 0) {
+                                    for (const entries2 of Object.values(pSuffix)) {
+                                        //console.log(entries2, typeof (entries2) === 'object');
+                                        if (typeof (entries2) === 'object') {
+                                            for (const entry2 of Object.values(entries2)) {
+                                                if (DICTIONARY.ALL_WORDS.MAP[entry2.stem] && DICTIONARY.ALL_WORDS.MAP[entry2.stem].type === 'n') {
+                                                    console.log(entry2);
 
-                                                entry.stem = entry2.stem;//fix affixStem for prefix.
+                                                    entry.stem = entry2.stem;//fix affixStem for prefix.
 
-                                                affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
-                                                affixTypesMap.nounSuffixANDpSuffix.state = true;
+                                                    if (!checkerArr.includes(entry2.short_path)) {//<- prevent pushing every possible suffix, for every possible prefix - only show possible suffixes once.
+                                                        checkerArr.push(entry2.short_path);
+                                                        console.log('pushed for el with short_path:', entry2.short_path);
+                                                        affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
+                                                    }
+
+                                                    affixTypesMap.nounSuffixANDpSuffix.state = true;
+                                                }
                                             }
                                         }
                                     }
+                                    affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
                                 }
-                                affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
                             }
                         }
                     }
@@ -1802,7 +1816,7 @@ function dictionaryPage() {
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n') { wordclass = key.NAME }
                 };
-                if (affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].prefix === 'i') { //<--
+                if (affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].suffix === 'i') { //<--
                     const msg = `${affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix} is not available as a noun suffix`;
                     console.warn(msg);
                     alert(msg);
