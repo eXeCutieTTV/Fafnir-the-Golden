@@ -1052,25 +1052,28 @@ function dictionaryPage() {
             if (affixTypesMap.nounSuffix.rawMap.arrayLength) {
                 for (const entries of Object.values(affixTypesMap.nounSuffix.rawMap)) {
                     for (const entry of Object.values(entries)) {
-
                         //console.log(entry);
-                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && entry.wordclass === 'n') {
+                        if (DICTIONARY.ALL_WORDS.MAP[entry.stem] && DICTIONARY.ALL_WORDS.MAP[entry.stem].type === 'n') {
                             affixTypesMap.nounSuffix.resultMap.push(entry);
                             affixTypesMap.nounSuffix.state = true;
                         } else {
-                            pSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, true) || [];
+                            pSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, false) || [];
                             for (const entries2 of Object.values(pSuffix)) {
-                                for (const entry2 of Object.values(entries2)) {
-                                    if (DICTIONARY.ALL_WORDS.MAP[entry2.stem] && entry.wordclass === 'n') {
+                                //console.log(entries2, typeof (entries2) === 'object');
+                                if (typeof (entries2) === 'object') {
+                                    for (const entry2 of Object.values(entries2)) {
+                                        if (DICTIONARY.ALL_WORDS.MAP[entry2.stem] && DICTIONARY.ALL_WORDS.MAP[entry2.stem].type === 'n') {
+                                            console.log(entry2);
 
-                                        entry.stem = entry2.stem;//fix affixStem for prefix.
+                                            entry.stem = entry2.stem;//fix affixStem for prefix.
 
-                                        affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
-                                        affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
-                                        affixTypesMap.nounSuffixANDpSuffix.state = true;
+                                            affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry2);
+                                            affixTypesMap.nounSuffixANDpSuffix.state = true;
+                                        }
                                     }
                                 }
                             }
+                            affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.push(entry);
                         }
                     }
                 }
@@ -1126,7 +1129,7 @@ function dictionaryPage() {
                         if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
                             affixTypesMap.pSuffix.resultMap.push(entry);
                             affixTypesMap.pSuffix.state = true;
-                        } else {
+                        } /*else {
                             nounSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false) || [];
                             if (nounSuffix.arrayLength > 0) {
                                 affixTypesMap.nounSuffixANDpSuffix.resultMap.particle.push(entry);
@@ -1136,7 +1139,7 @@ function dictionaryPage() {
                                 }
                                 affixTypesMap.nounSuffixANDpSuffix.state = true;
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -1787,112 +1790,73 @@ function dictionaryPage() {
                 helperFunctions.standard.clearPageById('page96');
 
 
-                const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].affixStem] || []; console.log(stemMap);
-                let stemDifinition = stemMap.definition || '...';
-                const stemNotes = stemMap.usage_notes || '...';
+                const stem = affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                let definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
+
 
                 let wordclass = '';
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n') { wordclass = key.NAME }
                 };
+                if (affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].prefix === 'i') { //<--
+                    const msg = `${affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix} is not available as a noun suffix`;
+                    console.warn(msg);
+                    alert(msg);
+                    return;
+                }
 
                 const html = `
                     <div>
                         <table>
-                            <tr>
-                                <th style="width:116px">...</th>
-                                <th>Word</th>
-                                <th>Stem</th>
-                                <th>Wordclass</th>
-                                <th>Usage Notes</th>
-                            </tr>
-                            <tr>
-                                <th>Info</th>
-                                <td>${keyword}</td>
-                                <td id="type2SuffixONLYStem">${affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix[0].affixStem}</td>
-                                <td>${wordclass}</td>
-                                <td>${stemNotes || '...'}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <div id=tablesContainer>
-                        <table>
                             <thead>
                                 <tr>
-                                    <th style="width:116px">...</th>
-                                    <th>Suffix</th>
+                                    <th>...</th>
+                                    <th>Stem</th>
                                     <th>Declension</th>
-                                    <th>Gender</th>
-                                    <th>Number</th>
-                                    <th>Case</th>
-                                    <th>Definition</th>
+                                    <th>Usage_Notes</th>
+                                    <th>Wordclass</th>
                                 </tr>
                             </thead>
-                            <tbody id="tbody"></tbody>
-                        </table>
-                    </div>
-                    `;
-                helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix.forEach(arr => {
-                    const suffixDeclension = arr.affixDeclension;
-                    const suffixGender = arr.affixGender;
-                    const suffixNumber = arr.affixNumber;
-                    const suffixCase = arr.affixCase;
-                    const suffix = arr.affix;
-
-                    const combinedGendersObject = GENDERS.combine(stemMap.genders) // Key-value pairs
-                    for (const [gndr, def] of Object.entries(combinedGendersObject)) {
-                        if (gndr === suffixGender) {
-                            stemDifinition = def;
-                            //console.log(combinedGendersObject);
-                            //console.log(gndr, def);
-
-                            const html = `
+                            <tbody>
                                 <tr>
                                     <th>Info</th>
-                                    <td>${suffix}</td>
-                                    <td>${suffixDeclension}</td>
-                                    <td>${suffixGender}</td>
-                                    <td>${suffixNumber}</td>
-                                    <td>${suffixCase}</td>
-                                    <td>${stemDifinition}</td>
+                                    <td>${stem}</td>
+                                    <td>${stemMap.declension}</td>
+                                    <td>${notes}</td>
+                                    <td>${wordclass}</td>
                                 </tr>
-                                `;
-                            helperFunctions.standard.insertTrIntoTableById('tbody', html);
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="particleTableWrapper"></div>
+                    <div id="suffixTableWrapper"></div>
+                `;
+                helperFunctions.standard.createPageById('page96', html);
+
+
+                const particleTableWrapper = document.getElementById('particleTableWrapper');
+                for (const result of affixTypesMap.nounSuffixANDpSuffix.resultMap.particle) {
+                    //console.log(result);
+                    const particleMap = DICTIONARY.ALL_WORDS.MAP[result.suffix];
+                    //console.log(particleMap);
+                    helperFunctions.standard.resultTables.particleTable(result.suffix, particleMap.definition, particleMap.usage_notes, particleTableWrapper);
+                }
+                const suffixTableWrapper = document.getElementById('suffixTableWrapper');
+                for (const result of affixTypesMap.nounSuffixANDpSuffix.resultMap.suffix) {
+
+                    function definition() {//<-- universalise this function?...
+                        const entry = DICTIONARY.ALL_WORDS.MAP[result.stem];
+                        for (const [gender, def] of Object.entries(entry.genders)) {
+                            if (gender === path.gender) {
+                                return def;
+                            }
                         }
                     }
-                });
-
-                //added div vv
-                const particle = affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix; //console.log(prefix);
-                const map = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.nounSuffixANDpSuffix.resultMap.particle[0].affix]; //console.log(map);
-                const ppHtml = `
-                    <table style="margin-top:35px">
-                        <thead>
-                            <tr>
-                                <th>...</th>
-                                <th style="width:116px">Particle</th>
-                                <th>Definition</th>
-                                <th>Usage Notes</th>
-                                <th>Wordclass</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Info</th>
-                                <td>${particle || '...'}</td>
-                                <td>${map.definition || '...'}</td>
-                                <td>${map.usage_notes || '...'}</td>
-                                <td>${'preposition'}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `;
-                const wrapper = document.getElementById('tablesContainer');
-                helperFunctions.standard.createDivById('', wrapper, ppHtml);
+                    const path = result.path;
+                    helperFunctions.standard.resultTables.nounTable(result.suffix, path.declension, path.gender, path.number, path.case, definition(), suffixTableWrapper, 'suffix');
+                }
 
                 helperFunctions.standard.openPageById('page96');
             }
