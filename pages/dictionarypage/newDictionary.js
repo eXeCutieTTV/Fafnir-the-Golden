@@ -1799,7 +1799,7 @@ function dictionaryPage() {
                 }
 
                 helperFunctions.standard.openPageById('page96');
-            }//<-- this is where i got to:)
+            }
             else if (affixTypesMap.nounSuffixANDpSuffix.state) {
                 console.log('--noun with particle suffix and suffix--');
                 matchType = 2;
@@ -1875,60 +1875,59 @@ function dictionaryPage() {
                 }
 
                 helperFunctions.standard.openPageById('page96');
-            }
+            }//<-- this is where i got to:)
             else if (affixTypesMap.adjSuffix.state) {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
+
+                const stem = affixTypesMap.adjSuffix.resultMap[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                const definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
+
+
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'adj') { wordclass = key.NAME }
+                };
                 const html = `
                     <div>
                         <table>
                             <theader>
                                 <tr>
+                                    <th>...</th>
                                     <th>Word</th>
+                                    <th>Stem</th>
                                     <th>Definition</th>
                                     <th>Usage Notes</th>
                                     <th>Wordclass</th>
                                 </tr>
                             </theader>
                             <tbody>
-                                <td>${keyword}</td>
-                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].definition}</td>
-                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].usage_notes || '...'}</td>
-                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffix.resultMap[0].affixStem].type}</td>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${keyword}</td>
+                                    <td>${stem}</td>
+                                    <td>${definition}</td>
+                                    <td>${notes || '...'}</td>
+                                    <td>${wordclass}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div style="margin-top:15px">
-                        <table>
-                            <theader>
-                                <tr>
-                                    <th>Suffix</th>
-                                    <th>Stem</th>
-                                    <th>Declension</th>
-                                    <th>Case</th>
-                                    <th>Gender</th>
-                                    <th>Number</th>
-                                </tr>
-                            </theader>
-                            <tbody id="tbody"></tbody>
-                        </table>
-                    </div>
+                    <div id="adjectiveTableWrapper"></div>
                 `;
+
                 helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.adjSuffix.resultMap.forEach(entry => {
-                    const html = `
-                        <tr>
-                            <td>${entry.affix}</td>
-                            <td>${entry.affixStem}</td>
-                            <td>${entry.affixDeclension}</td>
-                            <td>${entry.affixCase}</td>
-                            <td>${entry.affixGender}</td>
-                            <td>${entry.affixNumber}</td>
-                        </tr>
-                    `;
-                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
-                });
+
+                const adjectiveTableWrapper = document.getElementById('adjectiveTableWrapper');
+                for (const result of affixTypesMap.adjSuffix.resultMap) {
+                    const path = result.path
+                    console.log(result);
+                    adjectiveTable(result.suffix, path.declension, path.gender, path.number, path.case, adjectiveTableWrapper, 'suffix');
+                }
+
                 helperFunctions.standard.openPageById('page96');
             }
             else if (affixTypesMap.adjSuffixANDpSuffix.state) {

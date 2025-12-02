@@ -348,11 +348,49 @@ const particleTable = function particleTable(affix, definition, notes, wrapper) 
     helperFunctions.standard.insertTrIntoTableById('tbody', html);
 }
 
+const adjectiveTable = function adjectiveTable(affix, declension, gender, number, Case, wrapper, affixState) {
+    if (!affix || !declension || !gender || !number || !Case) return;
+
+    const tbody = document.getElementById(`tbody-${affixState}`) || '';
+    if (tbody === '') {
+        const html = `
+            <div style="margin-top:15px">
+                <table>
+                    <tr>
+                        <thead>
+                            <th style="width:116px">...</th>
+                            <th>Suffix</th>
+                            <th>Declension</th>
+                            <th>Gender</th>
+                            <th>Number</th>
+                            <th>Case</th>
+                        </thead>
+                    </tr>
+                    <tbody id="tbody-${affixState}"></tbody>
+                </table>
+            </div>
+        `;
+        helperFunctions.standard.createDivById(`adjectiveTable-${affixState}`, wrapper, html);
+    }
+    const html = `
+        <tr>
+            <th>Info</th>
+            <td>${affix}</td>
+            <td>${declension}</td>
+            <td>${gender}</td>
+            <td>${number}</td>
+            <td>${Case}</td>
+        </tr>
+    `;
+    helperFunctions.standard.insertTrIntoTableById(`tbody-${affixState}`, html);
+}
+
 const resultTables = {
     nounTable,
     verbTable,
     prepositionTable,
-    particleTable
+    particleTable,
+    adjectiveTable
 }
 
 const standard = {
