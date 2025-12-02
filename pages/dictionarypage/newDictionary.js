@@ -822,7 +822,7 @@ function dictionaryPage() {
             const html = `
                 <div>
                     <table>
-                        <theader>
+                        <thead>
                             <tr>
                                 <th style="width: 200px">Pronoun type</th>
                                 <th>Pronoun</th>
@@ -831,7 +831,7 @@ function dictionaryPage() {
                                 <th>Number</th>
                                 <th>Case</th>
                             </tr>
-                        </theader>
+                        </thead>
                         <tbody id="tbody"></tbody>
                     </table>
                 </div>
@@ -867,14 +867,14 @@ function dictionaryPage() {
             const html = `
                 <div>
                     <table>
-                        <theader>
+                        <thead>
                             <tr>
                                 <th style="width: 200px">Determiner type</th>
                                 <th>Determiner</th>
                                 <th>Gender</th>
                                 <th>Number</th>
                             </tr>
-                        </theader>
+                        </thead>
                         <tbody id="tbody"></tbody>
                     </table>
                 </div>
@@ -907,14 +907,14 @@ function dictionaryPage() {
             const html = `
                 <div>
                     <table>
-                        <theader>
+                        <thead>
                             <tr>
                                 <th style="width: 200px">Correlative type</th>
                                 <th>Correlative</th>
                                 <th>Gender</th>
                                 <th>Case</th>
                             </tr>
-                        </theader>
+                        </thead>
                         <tbody id="tbody"></tbody>
                     </table>
                 </div>
@@ -942,7 +942,7 @@ function dictionaryPage() {
             const html = `
                 <div>
                     <table>
-                        <theader>
+                        <thead>
                             <tr>
                                 <th>Word</th>
                                 <th>Aspect</th>
@@ -951,7 +951,7 @@ function dictionaryPage() {
                                 <th>Person</th>
                                 <th>Number</th>
                             </tr>
-                        </theader>
+                        </thead>
                         <tbody id="tbody"></tbody>
                     </table>
                 </div>
@@ -1160,21 +1160,25 @@ function dictionaryPage() {
                 }
             }
             if (affixTypesMap.adjSuffix.rawMap.arrayLength) {
+                const checkerArr = [];
                 for (const entries of Object.values(affixTypesMap.adjSuffix.rawMap)) {
                     for (const entry of Object.values(entries)) {
                         if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
                             affixTypesMap.adjSuffix.resultMap.push(entry);
                             affixTypesMap.adjSuffix.state = true;
                         } else {
-                            pPrefix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, true) || [];
-                            for (const entries2 of Object.values(pPrefix)) {
+                            pSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, false) || [];
+                            for (const entries2 of Object.values(pSuffix)) {
                                 for (const entry2 of Object.values(entries2)) {
                                     entry.stem = entry2.stem;//fix affixStem for prefix.
                                     if (DICTIONARY.ALL_WORDS.MAP[entry2.stem]) {
-
-                                        affixTypesMap.adjSuffixANDpPrefix.resultMap.particle.push(entry2);
-                                        affixTypesMap.adjSuffixANDpPrefix.resultMap.suffix.push(entry);
-                                        affixTypesMap.adjSuffixANDpPrefix.state = true;
+                                        if (!checkerArr.includes(entry2.short_path)) {//<- prevent pushing every possible suffix, for every possible prefix - only show possible suffixes once.
+                                            checkerArr.push(entry2.short_path);
+                                            console.log('pushed for el with short_path:', entry2.short_path);
+                                            affixTypesMap.adjSuffixANDpSuffix.resultMap.particle.push(entry2);
+                                        }
+                                        affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix.push(entry);
+                                        affixTypesMap.adjSuffixANDpSuffix.state = true;
                                     }
                                 }
                             }
@@ -1455,7 +1459,6 @@ function dictionaryPage() {
                 helperFunctions.standard.clearPageById('page96');
 
 
-
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[affixTypesMap.ppPrefix.resultMap[0].stem] || [];
                 const notes = stemMap.usage_notes || '...';
                 const stem = affixTypesMap.ppPrefix.resultMap[0].stem;
@@ -1464,7 +1467,6 @@ function dictionaryPage() {
                 for (const key of Object.values(WORDCLASSES)) {
                     if (key.SHORT === 'n') { wordclass = key.NAME }
                 };
-
 
                 const html = `
                     <div>
@@ -1875,7 +1877,7 @@ function dictionaryPage() {
                 }
 
                 helperFunctions.standard.openPageById('page96');
-            }//<-- this is where i got to:)
+            }
             else if (affixTypesMap.adjSuffix.state) {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
@@ -1894,7 +1896,7 @@ function dictionaryPage() {
                 const html = `
                     <div>
                         <table>
-                            <theader>
+                            <thead>
                                 <tr>
                                     <th>...</th>
                                     <th>Word</th>
@@ -1903,7 +1905,7 @@ function dictionaryPage() {
                                     <th>Usage Notes</th>
                                     <th>Wordclass</th>
                                 </tr>
-                            </theader>
+                            </thead>
                             <tbody>
                                 <tr>
                                     <th>Info</th>
@@ -1925,86 +1927,68 @@ function dictionaryPage() {
                 for (const result of affixTypesMap.adjSuffix.resultMap) {
                     const path = result.path
                     console.log(result);
-                    adjectiveTable(result.suffix, path.declension, path.gender, path.number, path.case, adjectiveTableWrapper, 'suffix');
+                    helperFunctions.standard.resultTables.adjectiveTable(result.suffix, path.declension, path.gender, path.number, path.case, adjectiveTableWrapper, 'suffix');
                 }
 
                 helperFunctions.standard.openPageById('page96');
             }
-            else if (affixTypesMap.adjSuffixANDpSuffix.state) {
+            else if (affixTypesMap.adjSuffixANDpSuffix.state) {//move nyl logic solely into this vv
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
+
+                const stem = affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                const definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
+
+                let wordclass = '';
+                for (const key of Object.values(WORDCLASSES)) {
+                    if (key.SHORT === 'adj') { wordclass = key.NAME }
+                };
                 const html = `
                     <div>
                         <table>
-                            <theader>
+                            <thead>
                                 <tr>
+                                    <th>...</th>
                                     <th>Word</th>
+                                    <th>Stem</th>
                                     <th>Definition</th>
                                     <th>Usage Notes</th>
                                     <th>Wordclass</th>
                                 </tr>
-                            </theader>
+                            </thead>
                             <tbody>
-                                <td>${keyword}</td>
-                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].definition}</td>
-                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].usage_notes || '...'}</td>
-                                <td>${DICTIONARY.ALL_WORDS.MAP[affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix[0].affixStem].type}</td>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${keyword}</td>
+                                    <td>${stem}</td>
+                                    <td>${definition}</td>
+                                    <td>${notes}</td>
+                                    <td>${wordclass}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div style="margin-top:15px">
-                        <table>
-                            <theader>
-                                <tr>
-                                    <th>Suffix</th>
-                                    <th>Stem</th>
-                                    <th>Declension</th>
-                                    <th>Case</th>
-                                    <th>Gender</th>
-                                    <th>Number</th>
-                                </tr>
-                            </theader>
-                            <tbody id="tbody"></tbody>
-                        </table>
-                        <table style="margin-top:15px">
-                            <theader>
-                                <tr>
-                                    <th>Particle</th>
-                                    <th>Stem</th>
-                                    <th>Wordclass</th>
-                                </tr>
-                            </theader>
-                            <tbody id="tbody2"></tbody>
-                        </table>
-                    </div>
+                    <div id="suffixTableWrapper"></div>
+                    <div id="particleTableWrapper"></div>
                 `;
                 helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix.forEach(entry => {
-                    const html = `
-                        <tr>
-                            <td>${entry.affix}</td>
-                            <td>${entry.affixStem}</td>
-                            <td>${entry.affixDeclension}</td>
-                            <td>${entry.affixCase}</td>
-                            <td>${entry.affixGender}</td>
-                            <td>${entry.affixNumber}</td>
-                        </tr>
-                    `;
-                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
-                });
-                affixTypesMap.adjSuffixANDpSuffix.resultMap.particle.forEach(entry => {
-                    const html = `
-                        <tr>
-                            <td>${entry.affix}</td>
-                            <td>${entry.affixStem}</td>
-                            <td>${entry.affixType}</td>
-                        </tr>
-                    `;
-                    helperFunctions.standard.insertTrIntoTableById('tbody2', html);
-                });
+
+                const suffixTableWrapper = document.getElementById('suffixTableWrapper');
+                for (const result of affixTypesMap.adjSuffixANDpSuffix.resultMap.suffix) {
+                    const path = result.path;
+                    helperFunctions.standard.resultTables.adjectiveTable(result.suffix, path.declension, path.gender, path.number, path.case, suffixTableWrapper, 'suffix');
+                }
+
+                const particleTableWrapper = document.getElementById('particleTableWrapper');
+                for (const result of affixTypesMap.adjSuffixANDpSuffix.resultMap.particle) {
+                    const particleMap = DICTIONARY.ALL_WORDS.MAP[result.suffix];
+                    helperFunctions.standard.resultTables.particleTable(result.suffix, particleMap.definition, particleMap.notes || '...', particleTableWrapper);
+                }
                 helperFunctions.standard.openPageById('page96');
-            }
+            }//<-- this is where i got to:)
             else if (affixTypesMap.auxPrefix.state) {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
@@ -2013,14 +1997,14 @@ function dictionaryPage() {
                 const html = `
                     <div>
                         <table>
-                            <theader>
+                            <thead>
                                 <tr>
                                     <th>Word</th>
                                     <th>Definition</th>
                                     <th>Usage Notes</th>
                                     <th>Wordclass</th>
                                 </tr>
-                            </theader>
+                            </thead>
                             <tbody>
                                 <tr>
                                     <td>${keyword}</td>
@@ -2031,14 +2015,14 @@ function dictionaryPage() {
                             </tbody>
                         </table>
                         <table style="margin-top:15px">
-                            <theader>
+                            <thead>
                                 <tr>
                                     <th>Prefix</th>
                                     <th>Stem</th>
                                     <th>Gender</th>
                                     <th>Person</th>
                                 </tr>
-                            </theader>
+                            </thead>
                             <tbody id="tbody"></tbody>
                         </table>
                     </div>
@@ -2057,6 +2041,8 @@ function dictionaryPage() {
                 });
                 helperFunctions.standard.openPageById('page96');
             }
+            //adj with only pprefix
+            //adj with pps?
         }
         return;
         if (matchType === 3) {//type 3
