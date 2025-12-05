@@ -1215,7 +1215,7 @@ const neoVerbTables = function neoVerbTables(isPrefix, word, wrapper) {
                 </tr>
                 <tr>
                     <th>3.</th>
-                    ${affixHandlerGenders(isPrefix, word, 3, IDS.NUMBERS.P, true)} 
+                    ${affixHandlerGenders(isPrefix, word, 3, IDS.NUMBERS.P)} 
                 </tr>
             </tbody>
         </table>
