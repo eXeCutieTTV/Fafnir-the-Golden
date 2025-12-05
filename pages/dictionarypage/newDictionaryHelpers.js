@@ -1455,11 +1455,37 @@ const keepDigitsOnly = function keepDigitsOnly(str) {
 const removeParensSpacesAndDigits = function removeParensSpacesAndDigits(str) {
     return String(str || "").replace(/[\d() \t\r\n]+/g, "");
 }
+const defsToSingleString = function defsToSingleString(gendersArray) {
+    const gendersCombined = GENDERS.combine(gendersArray) // Key-value pairs
+    let html = '';
+    const arr = [];
+    //console.log(gendersCombined);
+    for (const [gender, def] of Object.entries(gendersCombined)) {
+        //console.log(gender, def);
+        for (const key of Object.values(GENDERS.MAP)) {
+            if (key.NAME === gender) {
+                //console.log(key.SHORT);
+                arr.push({
+                    gender: key.SHORT,
+                    definition: def
+                });
+            }
+        }
+    }
+
+    for (let i = 0; i < arr.length; i++) {
+        const entry = arr[i];
+        html += `(${entry.gender}) - ${entry.definition}.`;
+        if (i < arr.length - 1) html += ' <br>';
+    }
+    return html;
+}
 
 const formatting = {
     keepDigitsOnly,
     removeParensSpacesAndDigits,
-    shorten_path
+    shorten_path,
+    defsToSingleString
 }
 
 
@@ -1501,12 +1527,37 @@ const displayForms = function displayForms(allMatchesArray) {
         }
     }
     for (const [key, map] of Object.entries(allMatchesArray.type2)) {
+
+        if (map.state) {
+            //console.log('hello world', map.state, map.affixAmount);
+            //console.log(key, map);
+            if (map.affixAmount === 1) {
+
+            } else if (map.affixAmount === 2) {
+                for (const [prefix, suffix] of Object.entries(map.resultMap)) {
+                    //console.log(prefix, suffix);
+                    for (const result of Object.values(prefix)) {
+                        if (typeof (result) === 'object') {
+                            //console.log(result);
+                            tempArray.type2.push(result);
+                        }
+                    }
+                    for (const result of Object.values(suffix)) {
+                        if (typeof (result) === 'object') {
+                            //console.log(result);
+                            tempArray.type2.push(result);
+                        }
+                    }
+                }
+            }
+        }/*
+        return;
         if (map.state) {
             for (el of map.resultMap) {
                 el['key'] = key;
                 tempArray.type2.push(el);
             }
-        }
+        }*/
     }
     console.log(tempArray);
 
@@ -1532,9 +1583,9 @@ const displayForms = function displayForms(allMatchesArray) {
                     style="cursor:pointer"; 
                     data-verbType="${el.verbType || ''}"; 
                     data-wordclass="${el.wordclass}"; 
-                    data-path="${el.path_short || '...'}"; 
+                    data-path="${el.short_path || '...'}"; 
                     data-pausestate="false";
-                >${el.wordclass}.${el.path_short || '..'}</td>
+                >${el.wordclass}.${el.short_path || '..'}</td>
             `;
             helperFunctions.standard.betterTrInsert("listTbody", htmlEach);
 
@@ -1702,7 +1753,43 @@ const displayForms = function displayForms(allMatchesArray) {
                     newDiv.appendChild(div);
                 } else return;
             });
-        });
+        });//<-- change to for loop, instead of .forEach
+        for (const el of tempArray.type2) {
+            console.log(el, el.affixState);
+            const htmlEach = `
+                <td 
+                    style="cursor:pointer"; 
+                    data-wordclass="${el.wordclass}"; 
+                    data-path="${el.short_path || '...'}"; 
+                    data-pausestate="false";
+                >${el.wordclass}.${el.short_path || '..'}</td>
+            `;
+            helperFunctions.standard.betterTrInsert("listTbody", htmlEach);
+
+            const td = document.querySelector('#listTbody tr:last-child td:last-child');
+            function search() {
+                console.log('hello world');
+                helperFunctions.standard.createPageById('page94', 'pageHtml');
+                helperFunctions.standard.openPageById('page94');
+            }
+
+
+            td.addEventListener('click', () => {
+                if (td.dataset.pausestate === "false") {
+                    helperFunctions.standard.clearPageById('page97'); //type 1
+                    helperFunctions.standard.clearPageById('page95'); //type 1.1
+                    helperFunctions.standard.clearPageById('page96'); //type 2
+                    helperFunctions.standard.clearPageById('page94'); //type 
+                    search();
+
+                    //moves the 'were you lf' table to result page.vv
+                    let newDiv = document.getElementById('listDiv');
+                    //console.log(div, newDiv);
+                    newDiv.appendChild(div);
+                } else return;
+            });
+
+        }
     }
     fixTable();
 
@@ -1822,29 +1909,3 @@ function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
 //make function for each wordclass' tablegen
 
 
-
-function defsToSingleString(gendersArray) {
-    const gendersCombined = GENDERS.combine(gendersArray) // Key-value pairs
-    let html = '';
-    const arr = [];
-    //console.log(gendersCombined);
-    for (const [gender, def] of Object.entries(gendersCombined)) {
-        //console.log(gender, def);
-        for (const key of Object.values(GENDERS.MAP)) {
-            if (key.NAME === gender) {
-                //console.log(key.SHORT);
-                arr.push({
-                    gender: key.SHORT,
-                    definition: def
-                });
-            }
-        }
-    }
-
-    for (let i = 0; i < arr.length; i++) {
-        const entry = arr[i];
-        html += `(${entry.gender}) - ${entry.definition}.`;
-        if (i < arr.length - 1) html += ' <br>';
-    }
-    return html;
-}

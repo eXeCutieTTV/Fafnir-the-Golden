@@ -79,7 +79,7 @@ function dictionaryPage() {
                                     },
                                     word: caseValue,
                                     type: 'personal',
-                                    path_short: shortpath() || '',
+                                    short_path: shortpath() || '',
                                 }
                                 matches.push(result);
                                 allMatchesArray.type1.pn.push(result);
@@ -131,7 +131,7 @@ function dictionaryPage() {
                                 },
                                 word: numberValue,
                                 type: typeKey,
-                                path_short: shortpath() || '',
+                                short_path: shortpath() || '',
                             }
                             matches.push(result);
                             allMatchesArray.type1.det.push(result);
@@ -182,7 +182,7 @@ function dictionaryPage() {
                                 },
                                 word: caseValue,
                                 type: typeKey,
-                                path_short: shortpath() || '',
+                                short_path: shortpath() || '',
                             }
                             matches.push(result);
                             allMatchesArray.type1.cor.push(result);
@@ -240,7 +240,7 @@ function dictionaryPage() {
                                             person: personKey,
                                             number: numberKey
                                         },
-                                        path_short: shortpath() || '',
+                                        short_path: shortpath() || '',
                                         word: numberValue
                                     }
                                     matches.push(result);
@@ -300,7 +300,7 @@ function dictionaryPage() {
                     case 'adj':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
                             allMatchesArray.type1.adj.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -365,7 +365,7 @@ function dictionaryPage() {
                     case 'adv':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
                             allMatchesArray.type1.adv.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -382,7 +382,7 @@ function dictionaryPage() {
                     case 'aux':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
                             allMatchesArray.type1.aux.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -431,7 +431,7 @@ function dictionaryPage() {
                         if (word === keyword) {
                             allMatchesArray.type1.con.push(entry);
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
 
                             const html = `
                                 <div class="outerdiv">
@@ -490,7 +490,7 @@ function dictionaryPage() {
                         console.log(wordclass);
                         if (entry.word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
 
 
                             console.log(entry);
@@ -566,7 +566,7 @@ function dictionaryPage() {
                         const NcombinedGendersObject = GENDERS.combine(entry.genders) // Key-value pairs
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
 
 
                             allMatchesArray.type1.n.push(entry);
@@ -627,7 +627,7 @@ function dictionaryPage() {
                     case 'part':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
                             allMatchesArray.type1.part.push(entry);
 
                             const html = `
@@ -686,7 +686,7 @@ function dictionaryPage() {
                     case 'pp':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
                             allMatchesArray.type1.pp.push(entry);
 
                             helperFunctions.matchtype1.page97Base(keyword, wordclass);
@@ -716,7 +716,7 @@ function dictionaryPage() {
                     case 'v':
                         if (word === keyword) {
                             console.log('clean match |', keyword);
-                            entry.path_short = "stem";
+                            entry.short_path = "stem";
                             allMatchesArray.type1.v.regular.push(entry);
 
                             const html = `
@@ -985,21 +985,21 @@ function dictionaryPage() {
             console.log('-----type2-----');
 
             const affixTypesMap = {
-                verbPrefix: { rawMap: type2AffixesMap.verbPrefix, resultMap: [], state: false },
-                verbSuffix: { rawMap: type2AffixesMap.verbSuffix, resultMap: [], state: false },
-                nounSuffix: { rawMap: type2AffixesMap.nounSuffix, resultMap: [], state: false },
-                ppPrefix: { rawMap: type2AffixesMap.ppPrefix, resultMap: [], state: false },
-                adjSuffix: { rawMap: type2AffixesMap.adjSuffix, resultMap: [], state: false },
-                pPrefix: { rawMap: type2AffixesMap.pPrefix, resultMap: [], state: false },
-                pSuffix: { rawMap: type2AffixesMap.pSuffix, resultMap: [], state: false },
-                detSuffix: { rawMap: type2AffixesMap.detSuffix, resultMap: [], state: false },
-                auxPrefix: { rawMap: type2AffixesMap.auxPrefix, resultMap: [], state: false },
-                verbBothAffixes: { resultMap: { prefix: [], suffix: [], }, state: false },
-                nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [], }, state: false },
-                nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
-                nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
-                adjSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false },
-                adjSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false },
+                verbPrefix: { rawMap: type2AffixesMap.verbPrefix, resultMap: [], state: false, affixAmount: 1 },
+                verbSuffix: { rawMap: type2AffixesMap.verbSuffix, resultMap: [], state: false, affixAmount: 1 },
+                nounSuffix: { rawMap: type2AffixesMap.nounSuffix, resultMap: [], state: false, affixAmount: 1 },
+                ppPrefix: { rawMap: type2AffixesMap.ppPrefix, resultMap: [], state: false, affixAmount: 1 },
+                adjSuffix: { rawMap: type2AffixesMap.adjSuffix, resultMap: [], state: false, affixAmount: 1 },
+                pPrefix: { rawMap: type2AffixesMap.pPrefix, resultMap: [], state: false, affixAmount: 1 },
+                pSuffix: { rawMap: type2AffixesMap.pSuffix, resultMap: [], state: false, affixAmount: 1 },
+                detSuffix: { rawMap: type2AffixesMap.detSuffix, resultMap: [], state: false, affixAmount: 1 },
+                auxPrefix: { rawMap: type2AffixesMap.auxPrefix, resultMap: [], state: false, affixAmount: 1 },
+                verbBothAffixes: { resultMap: { prefix: [], suffix: [], }, state: false, affixAmount: 2 },
+                nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [], }, state: false, affixAmount: 2 },
+                nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
+                nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
+                adjSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
+                adjSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
             }
             //console.log(affixTypesMap);
             allMatchesArray.type2 = affixTypesMap;
@@ -1496,7 +1496,7 @@ function dictionaryPage() {
                 `;
                 helperFunctions.standard.createPageById('page96', html);
                 const deftd = document.getElementById('definition');
-                deftd.innerHTML = defsToSingleString(stemMap.genders);
+                deftd.innerHTML = helperFunctions.formatting.defsToSingleString(stemMap.genders);
                 const prepositionTableWrapper = document.getElementById('prepositionTableWrapper');
 
                 for (const result of affixTypesMap.ppPrefix.resultMap) {
@@ -1631,7 +1631,7 @@ function dictionaryPage() {
                     helperFunctions.standard.createPageById('page96', html);
 
                     const deftd = document.getElementById('definition');
-                    deftd.innerHTML = defsToSingleString(stemMap.genders);
+                    deftd.innerHTML = helperFunctions.formatting.defsToSingleString(stemMap.genders);
 
 
                     const particleTableWrapper = document.getElementById('particleTableWrapper');
@@ -1702,7 +1702,7 @@ function dictionaryPage() {
 
                 const deftd = document.getElementById('definition');
                 if (stemMap.type === 'n') {
-                    deftd.innerHTML = defsToSingleString(stemMap.genders);
+                    deftd.innerHTML = helperFunctions.formatting.defsToSingleString(stemMap.genders);
                 } else deftd.innerHTML = stemMap.definition;
                 const particleTableWrapper = document.getElementById('particleTableWrapper');
                 for (const result of affixTypesMap.pSuffix.resultMap) {
