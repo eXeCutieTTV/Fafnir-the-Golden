@@ -1988,18 +1988,26 @@ function dictionaryPage() {
                     helperFunctions.standard.resultTables.particleTable(result.suffix, particleMap.definition, particleMap.notes || '...', particleTableWrapper);
                 }
                 helperFunctions.standard.openPageById('page96');
-            }//<-- this is where i got to:)
+            }
             else if (affixTypesMap.auxPrefix.state) {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
                 const array = affixTypesMap.auxPrefix.resultMap[0];
+
+                const stem = affixTypesMap.auxPrefix.resultMap[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                const definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
+
 
                 const html = `
                     <div>
                         <table>
                             <thead>
                                 <tr>
+                                    <th>...</th>
                                     <th>Word</th>
+                                    <th>Stem</th>
                                     <th>Definition</th>
                                     <th>Usage Notes</th>
                                     <th>Wordclass</th>
@@ -2007,44 +2015,29 @@ function dictionaryPage() {
                             </thead>
                             <tbody>
                                 <tr>
+                                    <th>Info</th>
                                     <td>${keyword}</td>
-                                    <td>${DICTIONARY.ALL_WORDS.MAP[array.affixStem].definition}</td>
-                                    <td>${DICTIONARY.ALL_WORDS.MAP[array.affixStem].usage_notes}</td>
+                                    <td>${stem}</td>
+                                    <td>${definition}</td>
+                                    <td>${notes}</td>
                                     <td>${'Auxilary'}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <table style="margin-top:15px">
-                            <thead>
-                                <tr>
-                                    <th>Prefix</th>
-                                    <th>Stem</th>
-                                    <th>Gender</th>
-                                    <th>Person</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody"></tbody>
-                        </table>
                     </div>
+                    <div id="auxilaryPrefixTableWrapper"></div>
                 `;
                 helperFunctions.standard.createPageById('page96', html);
-                affixTypesMap.auxPrefix.resultMap.forEach(entry => {
-                    const html = `
-                        <tr>
-                            <td>${entry.affix}</td>
-                            <td>${entry.affixStem}</td>
-                            <td>${entry.affixGender}</td>
-                            <td>${entry.affixPerson}</td>
-                        </tr>
-                    `;
-                    helperFunctions.standard.insertTrIntoTableById('tbody', html);
-                });
+                const auxilaryPrefixTableWrapper = document.getElementById('auxilaryPrefixTableWrapper');
+                for (const result of affixTypesMap.auxPrefix.resultMap) {
+                    const path = result.path;
+                    helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, auxilaryPrefixTableWrapper, 'Prefix');
+                }
                 helperFunctions.standard.openPageById('page96');
-            }
+            }//<-- this is where i got to:)
             //adj with only pprefix
             //adj with pps?
         }
-        return;
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
             const searchHandler = DICTIONARY.ALL_WORDS.fetchByDefinition(keyword); // Array[]
