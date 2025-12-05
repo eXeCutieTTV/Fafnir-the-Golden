@@ -30,11 +30,23 @@ const createPageById = function createPageById(id, html) {
     leftDiv.innerHTML = html;
 
     const rightDiv = document.createElement('div');
-    rightDiv.id = `listDiv`;
+    rightDiv.id = `${id}.rigthDiv`;
     rightDiv.style.display = "inline";
     rightDiv.style.flex = "0.2";
-    rightDiv.innerHTML = '';
+    rightDiv.innerHTML = `
+    <div id="searchDiv" style="margin-bottom:10px;">
+        <input type="text" autocomplete="off" id="search_field" placeholder="Search..." />
+        <button id="search_button">Search</button>
+        <div id="tableSearchBtnWrapper">
+            <!--<button id="tableSearchBtn">Table is seachable</button>-->
+        </div>
+    </div>
+    `;
 
+    const listDiv = document.createElement('div');
+    listDiv.id = `listDiv`;
+
+    rightDiv.appendChild(listDiv);
     divWrapper.appendChild(leftDiv);
     divWrapper.appendChild(rightDiv);
 
