@@ -6,6 +6,8 @@ function dictionaryPage() {
     // main search function
     function search(word) {
         if (searchFLD.value.length === 0) { return; }//doesnt search if searchFLD is empty
+
+
         let allMatchesArray = {
             type1: {
                 v: {
@@ -269,7 +271,7 @@ function dictionaryPage() {
         }
         console.log(type2AffixesMap);
 
-        const pagesToClear = ['page97', 'page95', 'page96', 'dictionaryTable'];
+        const pagesToClear = ['page97', 'page95', 'page96', 'dictionaryTable', 'page99'];
         for (const page of pagesToClear) {
             helperFunctions.standard.clearPageById(page);
             //console.log(`page by id ${page} has been cleared`);
@@ -2035,8 +2037,10 @@ function dictionaryPage() {
                 }
                 helperFunctions.standard.openPageById('page96');
             }//<-- this is where i got to:)
-            //adj with only pprefix
             //adj with pps?
+            //noun w p suffix and p prefix
+            //noun w p suffix and p prefix and suffix
+            //^^noun w i+nyl
         }
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
@@ -2068,7 +2072,7 @@ function dictionaryPage() {
                 }
             });
         }
-        helperFunctions.standard.reverseSearchIdsOnSearch();
+        //helperFunctions.standard.reverseSearchIdsOnSearch();
 
         console.log('all matches |', allMatchesArray);
 
@@ -2076,9 +2080,23 @@ function dictionaryPage() {
             helperFunctions.final.displayForms(allMatchesArray);
             //console.log('done', listDiv);
         });
-
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
+        console.log(searchBTN, searchFLD);
+        searchBTN.addEventListener('click', () => {
+            search(); // /\(/o.o\)/\ - Spooky the spider
+        });
+
+        // === Trigger search on Enter key ===
+        searchFLD.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // prevent form submission
+                search();
+            }
+        });
+    }
+
+    if (document.getElementById('page99')) {
         //evenlisteners vv
         // === Search button click ===
         searchBTN.addEventListener('click', () => {
@@ -2092,22 +2110,7 @@ function dictionaryPage() {
                 search();
             }
         });
-        //console.log(searchBTN, searchFLD);
     }
-
-    //evenlisteners vv
-    // === Search button click ===
-    searchBTN.addEventListener('click', () => {
-        search(); // /\(/o.o\)/\ - Spooky the spider
-    });
-
-    // === Trigger search on Enter key ===
-    searchFLD.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // prevent form submission
-            search();
-        }
-    });
 }
 dictionaryPage();
 
