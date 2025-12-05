@@ -271,7 +271,8 @@ function dictionaryPage() {
         }
         console.log(type2AffixesMap);
 
-        const pagesToClear = ['page97', 'page95', 'page96', 'dictionaryTable', 'page99'];
+        document.getElementById('page99').innerHTML = '';
+        const pagesToClear = ['page97', 'page95', 'page96', 'dictionaryTable'];
         for (const page of pagesToClear) {
             helperFunctions.standard.clearPageById(page);
             //console.log(`page by id ${page} has been cleared`);
@@ -2096,7 +2097,7 @@ function dictionaryPage() {
         });
     }
 
-    if (document.getElementById('page99')) {
+    if (document.getElementById('page99').innerHTML !== '') {
         //evenlisteners vv
         // === Search button click ===
         searchBTN.addEventListener('click', () => {
