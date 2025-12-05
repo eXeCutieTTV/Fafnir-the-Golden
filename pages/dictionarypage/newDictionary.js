@@ -1003,6 +1003,7 @@ function dictionaryPage() {
                 nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
                 adjSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
                 adjSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
+                pSuffixANDpPrefix: { resultMap: { prefix: [], suffix: [], }, state: false, affixAmount: 2 },
             }
             //console.log(affixTypesMap);
             allMatchesArray.type2 = affixTypesMap;
@@ -1125,6 +1126,7 @@ function dictionaryPage() {
                             affixTypesMap.pPrefix.state = true;
                         } else {
                             nounSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.NOUNS.SUFFIXES.MATCHES, false) || [];
+                            particleSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, false) || [];
                             //console.log(nounSuffix);
                             if (nounSuffix.arrayLength > 0) {
                                 for (const entry2 of Object.values(nounSuffix)) {
@@ -1137,6 +1139,18 @@ function dictionaryPage() {
                                 }
                                 affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
                                 affixTypesMap.nounSuffixANDpPrefix.state = true;
+                            }
+                            if (particleSuffix.arrayLength > 0) {
+                                for (const entry2 of Object.values(particleSuffix)) {
+                                    //console.log(obj)
+                                    if (typeof (entry2) === 'object') {
+                                        entry.stem = entry2[0].stem; //fix stem.
+                                        console.log(entry, entry2);
+                                        affixTypesMap.pSuffixANDpPrefix.resultMap.suffix.push(entry2);
+                                    }
+                                }
+                                affixTypesMap.pSuffixANDpPrefix.resultMap.prefix.push(entry);
+                                affixTypesMap.pSuffixANDpPrefix.state = true;
                             }
                         }
                     }
@@ -1995,7 +2009,6 @@ function dictionaryPage() {
             else if (affixTypesMap.auxPrefix.state) {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
-                const array = affixTypesMap.auxPrefix.resultMap[0];
 
                 const stem = affixTypesMap.auxPrefix.resultMap[0].stem;
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
@@ -2037,11 +2050,75 @@ function dictionaryPage() {
                     helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, auxilaryPrefixTableWrapper, 'Prefix');
                 }
                 helperFunctions.standard.openPageById('page96');
+            } else if (affixTypesMap.pSuffixANDpPrefix.state) {
+                matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
+
+                const stem = affixTypesMap.pSuffixANDpPrefix.resultMap.prefix[0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                const definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
+
+                const html = `
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                    <th>Wordclass</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${keyword}</td>
+                                    <td>${stem}</td>
+                                    <td>${definition}</td>
+                                    <td>${notes}</td>
+                                    <td id="wordclassTd">${'Noun'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="prefixWrapper"></div>
+                    <div id="suffixWrapper"></div>
+                `;
+                let tempStr = '';
+                helperFunctions.standard.createPageById('page96', html);
+                const prefixWrapper = document.getElementById('prefixWrapper');
+                for (const result of affixTypesMap.pSuffixANDpPrefix.resultMap.prefix) {
+                    const particleMap = DICTIONARY.ALL_WORDS.MAP[result.prefix];
+                    helperFunctions.standard.resultTables.particleTable(result.prefix, particleMap.definition, particleMap.usage_notes || '...', prefixWrapper);
+                    tempStr += result.prefix;
+                }
+
+                const suffixWrapper = document.getElementById('suffixWrapper');
+                for (const results of affixTypesMap.pSuffixANDpPrefix.resultMap.suffix) {
+                    for (const result of results) {
+                        const particleMap = DICTIONARY.ALL_WORDS.MAP[result.suffix];
+                        helperFunctions.standard.resultTables.particleTable(result.suffix, particleMap.definition, particleMap.usage_notes || '...', suffixWrapper);
+                        tempStr += result.suffix;
+                    }
+                }
+                //console.log(tempStr);
+                if (tempStr === 'inyl') {
+                    document.getElementById('wordclassTd').textContent = 'Adverb';
+                }
+
+                helperFunctions.standard.openPageById('page96');
             }//<-- this is where i got to:)
             //adj with pps?
             //noun w p suffix and p prefix
             //noun w p suffix and p prefix and suffix
             //^^noun w i+nyl
+            else {
+                console.warn('type not found');
+                return;
+            }
         }
         if (matchType === 3) {//type 3
             console.log('-----type3-----');
