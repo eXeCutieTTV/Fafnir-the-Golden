@@ -1172,14 +1172,14 @@ function dictionaryPage() {
                                                     }
                                                 }
                                             }
-                                            console.log(entry2);
+                                            //console.log(entry2);
                                             entry.stem = entry2[0].stem; //fix stem.
-                                            console.log(entry.stem);
+                                            //console.log(entry.stem);
                                         }
                                         if (push_nounSuffixANDpPrefix) {
-                                            console.log(entry2);
+                                            //console.log(entry2);
                                             entry.stem = entry2[0].stem; //fix stem.
-                                            console.log(entry.stem);
+                                            //console.log(entry.stem);
                                             /*
                                             if (pSuffixANDpPrefixANDnounSuffix_temp === true) {
                                                 affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix.push(entry2);
