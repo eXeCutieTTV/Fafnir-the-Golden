@@ -2210,16 +2210,24 @@ function dictionaryPage() {
                     <div id="suffixWrapper"></div>
                 `;
                 helperFunctions.standard.createPageById('page96', html);
+
+                let tempStr = '';
                 const particleWrapper = document.getElementById('particleWrapper');
                 for (const result of affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.pPrefix) {
                     const particleMap = DICTIONARY.ALL_WORDS.MAP[result.prefix];
                     helperFunctions.standard.resultTables.particleTable(result.prefix, particleMap.definition, particleMap.usage_notes || '...', particleWrapper);
+                    tempStr += result.prefix;
                 }
                 for (const results of affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.pSuffix) {
                     for (const result of results) {
                         const particleMap = DICTIONARY.ALL_WORDS.MAP[result.suffix];
                         helperFunctions.standard.resultTables.particleTable(result.suffix, particleMap.definition, particleMap.usage_notes || '...', particleWrapper);
+                        tempStr += result.suffix;
                     }
+                }
+                //console.log(tempStr);
+                if (tempStr === 'inyl') {
+                    document.getElementById('wordclassTd').textContent = 'Adverb';
                 }
                 const suffixWrapper = document.getElementById('suffixWrapper');
                 for (const result of affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix) {
