@@ -420,71 +420,6 @@ const standard = {
     resultTables
 }
 
-const shorten_path = function shorten_path(wordclass, {
-    aspect = 'Episodic',
-    number = null,
-    tense = 'Non-Past',
-    gender = null,
-    person = null,
-    Case = null,
-    declension = null
-} = {}) {
-    let result;
-    const tempArray = [];
-    switch (wordclass) {
-        case 'v':
-            //console.log(aspect, number, tense, gender, person);
-
-            const mapArrayV = [IDS.ASPECT, IDS.NUMBERS, IDS.TENSE];
-            mapArrayV.forEach(el => {
-                for (const [short, long] of Object.entries(el)) {
-                    if (aspect === long) {
-                        tempArray.push(short);
-                    }
-                    if (tense === long) {
-                        tempArray.push(short);
-                    }
-                    if (number === long) {
-                        tempArray.push(short);
-                    }
-                }
-            });
-
-            for (entry of Object.values(GENDERS.MAP)) {
-                if (entry.NAME === gender) {
-                    tempArray.push(entry.SHORT);
-                }
-            }
-            result = `${tempArray[0]}.${tempArray[3]}.${tempArray[1]}.${person}.${tempArray[2]}`;//aspect.gender.number.person.tense.
-            break;
-        case 'adj':
-        case 'n':
-            //console.log(declension, gender, Case, number);
-
-            const mapArrayN = [IDS.MOODS, IDS.NUMBERS];
-            for (el of mapArrayN) {
-                for (const [short, long] of Object.entries(el)) {
-                    if (number === long) {
-                        tempArray.push(short);
-                    }
-                    if (Case === long) {
-                        tempArray.push(short);
-                    }
-                }
-            }
-
-            for (entry of Object.values(GENDERS.MAP)) {
-                if (entry.NAME === gender) {
-                    tempArray.push(entry.SHORT);
-                }
-            }
-            result = `${declension}.${tempArray[0]}.${tempArray[2]}.${tempArray[1]}`;//declension.case.gender.number
-            break;
-    }
-
-    return result;
-}
-
 const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     let tempArray = [];
     //decide if applied or unapplied suffix is used
@@ -720,265 +655,22 @@ const neoAffixChecker = function neoAffixChecker(word, map, isPrefix = false) {
     }
     return tempArray;
 }
-
-const affixChecker = function affixChecker(word, map, isPrefix, returnAll) {
-
-    //console.log(WORD_UTILS.matchAffix(word, map, isPrefix, returnAll));
-
-    let array = [];
-    const match = AFFIXES.match(word, map, isPrefix, returnAll);
-    //console.log(match);
-    if (Array.isArray(match)) {
-        array = match[0] || {};
-    } else if (match && typeof match === 'object') {
-        array = match;
-    } else {
-        return;
-    }
-
-    //let xarray = WORD_UTILS.matchAffix(word, map, isPrefix, returnAll)[0] || WORD_UTILS.matchAffix(word, map, isPrefix, returnAll) || [];
-    //console.log(array);
-    if (!array) {
-        return;
-    }
-    let affixType = array[3] || array.type;
-    let affix = '';
-    let affixPerson = '';
-    let affixNumber = '';
-    let affixGender = '';
-    let affixDeclension = '';
-    let affixCase = '';
-
-    let affixStem = '';
-
-    //decide if applied or unapplied suffix is used
-    function appliedOrUnapplied(applied, unapplied, affixType) {
-
-        let affixUsed = '';
-
-        if (affixType === 'suffix') {
-            if (applied && unapplied) {
-                if (word.endsWith(applied) && word.endsWith(unapplied)) {
-                    affixUsed = applied;
-                } else if (word.endsWith(unapplied)) {
-                    affixUsed = unapplied;
-                } else {
-                    return null;
-                }
-            } else if (applied) {
-                affixUsed = applied;
-            }
-            else if (unapplied) {
-                affixUsed = unapplied;
-            }
-            if (!affixUsed) {
-                return null;
-            } else {
-                affix = affixUsed;
-            }
-        } else if (affixType === 'prefix') {
-            if (applied && unapplied) {
-                if (word.startsWith(applied) && word.startsWith(unapplied)) {
-                    affixUsed = applied;
-                } else if (word.startsWith(unapplied)) {
-                    affixUsed = unapplied;
-                } else {
-                    return null;
-                }
-            } else if (applied) {
-                affixUsed = applied;
-            }
-            else if (unapplied) {
-                affixUsed = unapplied;
-            }
-            if (!affixUsed) {
-                return null;
-            } else {
-                affix = affixUsed;
-            }
+const findStemWhenShortstem = function findStemWhenShortstem(short_stem) {
+    const tempArray = [];
+    const matches = DICTIONARY.ALL_WORDS.fetch(short_stem);
+    for (const result of matches) {
+        //console.log(result);
+        if (result.word.length === short_stem.length + 1 && helperFunctions.formatting.isVowel_regex.test(result.word.slice(-1))) {
+            tempArray.push(result.word);
+        } else if (result.word === short_stem) {
+            tempArray.push(result.word);
         }
-
-
     }
-
-    switch (affixType) {
-        case 'v':
-            if (isPrefix) {
-                const verbPrefResult = [];
-                match.forEach(arr => {
-
-                    const affixApplied = arr[1][0] || '';
-                    const affixUnapplied = arr[1][1] || '';
-
-                    affixPerson = arr[2][0];
-                    affixGender = arr[2][2];
-                    affixNumber = arr[2][1][0];
-
-                    appliedOrUnapplied(affixApplied, affixUnapplied, 'prefix');
-
-                    const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordPositive(word, affix.length);
-
-                    let matchResult = {
-                        affixType,
-                        affixPerson,
-                        affixGender,
-                        affixNumber,
-                        affixStem: V2,
-                        affix,
-                    }
-                    verbPrefResult.push(matchResult);
-                });
-                return verbPrefResult;
-            } else if (isPrefix === false) {
-                const verbSuffResult = [];
-                match.forEach(arr => {
-
-                    const affixApplied = arr[1][0] || '';
-                    const affixUnapplied = arr[1][1] || '';
-
-                    affixPerson = arr[2][0];
-                    affixGender = arr[2][2];
-                    affixNumber = arr[2][1][0];
-
-                    appliedOrUnapplied(affixApplied, affixUnapplied, 'suffix');
-
-                    const { slice1: V1, slice2: V2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-
-                    let matchResult = {
-                        affixType,
-                        affixPerson,
-                        affixGender,
-                        affixNumber,
-                        affixStem: V1,
-                        affix,
-                    }
-
-                    verbSuffResult.push(matchResult);
-                });
-                return verbSuffResult;
-            }
-
-            //console.log(affix, affixStem);
-            break;
-        case 'n':
-            if (isPrefix === false) {
-                const nounSuffResult = [];
-                match.forEach(arr => {
-
-                    const affixApplied = arr[1][0] || '';
-                    const affixUnapplied = arr[1][1] || '';
-
-                    appliedOrUnapplied(affixApplied, affixUnapplied, 'suffix');
-
-                    affixDeclension = arr[2][3][0];
-                    affixCase = arr[2][0];
-                    affixGender = arr[2][1];
-                    affixNumber = arr[2][2][0];
-
-                    const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                    const MAP = DICTIONARY.ALL_WORDS.MAP[affixStem];
-
-                    if (MAP && MAP.type === 'adj') { affixType = 'adj' }//check if adj
-                    const matchResult = {
-                        affixType,
-                        affixGender,
-                        affixNumber,
-                        affixDeclension,
-                        affixStem: N1,
-                        affixCase,
-                        affix,
-                    }
-                    nounSuffResult.push(matchResult);
-                });
-                return nounSuffResult;
-            }
-            break;
-        case 'pp':
-            if (isPrefix) {
-                const ppResult = [];
-                match.forEach(arr => {
-
-                    const { slice1: PP1, slice2: PP2 } = helperFunctions.standard.sliceKeywordPositive(word, arr.word.length);
-                    const matchResult = {
-                        affix: arr.word || '',
-                        affixStem: PP2,
-                        affixType: match.type
-                    }
-                    ppResult.push(matchResult);
-                });
-                return ppResult;
-            }
-            break;
-        case 'part':
-            if (isPrefix) {
-                const pResult = [];
-                match.forEach(arr => {
-                    //console.log(arr);
-                    //console.log(arr.word, arr.type, arr.word.length);
-                    const { slice1: P1, slice2: P2 } = helperFunctions.standard.sliceKeywordPositive(word, arr.word.length);
-                    const matchResult = {
-                        affix: arr.word,
-                        affixStem: P2,
-                        affixType: arr.type,
-                    }
-                    pResult.push(matchResult);
-                });
-                return pResult;
-            } else if (isPrefix === false) {
-                const pResult = [];
-                match.forEach(arr => {
-                    //console.log(arr);
-                    //console.log(arr.word, arr.type, arr.word.length);
-                    const { slice1: P1, slice2: P2 } = helperFunctions.standard.sliceKeywordNegative(word, arr.word.length);
-                    const matchResult = {
-                        affix: arr.word,
-                        affixStem: P1,
-                        affixType: arr.type,
-                    }
-                    pResult.push(matchResult);
-                });
-                return pResult;
-            }
-            break;
-        case 'adj':
-            if (isPrefix === false) {
-                const adjSuffResult = [];
-                match.forEach(arr => {
-
-                    const affixApplied = arr[1][0] || '';
-                    const affixUnapplied = arr[1][1] || '';
-
-                    appliedOrUnapplied(affixApplied, affixUnapplied, 'suffix');
-
-                    affixDeclension = arr[2][3][0];
-                    affixCase = arr[2][0];
-                    affixGender = arr[2][1];
-                    affixNumber = arr[2][2][0];
-
-                    const { slice1: N1, slice2: N2 } = helperFunctions.standard.sliceKeywordNegative(word, affix.length);
-                    const MAP = DICTIONARY.ALL_WORDS.MAP[affixStem];
-
-                    const matchResult = {
-                        affixType,
-                        affixGender,
-                        affixNumber,
-                        affixDeclension,
-                        affixStem: N1,
-                        affixCase,
-                        affix,
-                    }
-                    adjSuffResult.push(matchResult);
-                });
-                return adjSuffResult;
-            }
-            break;
-        default:
-            console.warn(`${affixType} is not a valid affix type`);
-    }
+    return tempArray;
 }
 
 const matchtype2 = {
-    affixChecker,
+    findStemWhenShortstem,
     neoAffixChecker
 }
 
@@ -1492,6 +1184,70 @@ const defsToSingleString = function defsToSingleString(gendersArray) {
     }
     return html;
 }
+const shorten_path = function shorten_path(wordclass, {
+    aspect = 'Episodic',
+    number = null,
+    tense = 'Non-Past',
+    gender = null,
+    person = null,
+    Case = null,
+    declension = null
+} = {}) {
+    let result;
+    const tempArray = [];
+    switch (wordclass) {
+        case 'v':
+            //console.log(aspect, number, tense, gender, person);
+
+            const mapArrayV = [IDS.ASPECT, IDS.NUMBERS, IDS.TENSE];
+            mapArrayV.forEach(el => {
+                for (const [short, long] of Object.entries(el)) {
+                    if (aspect === long) {
+                        tempArray.push(short);
+                    }
+                    if (tense === long) {
+                        tempArray.push(short);
+                    }
+                    if (number === long) {
+                        tempArray.push(short);
+                    }
+                }
+            });
+
+            for (entry of Object.values(GENDERS.MAP)) {
+                if (entry.NAME === gender) {
+                    tempArray.push(entry.SHORT);
+                }
+            }
+            result = `${tempArray[0]}.${tempArray[3]}.${tempArray[1]}.${person}.${tempArray[2]}`;//aspect.gender.number.person.tense.
+            break;
+        case 'adj':
+        case 'n':
+            //console.log(declension, gender, Case, number);
+
+            const mapArrayN = [IDS.MOODS, IDS.NUMBERS];
+            for (el of mapArrayN) {
+                for (const [short, long] of Object.entries(el)) {
+                    if (number === long) {
+                        tempArray.push(short);
+                    }
+                    if (Case === long) {
+                        tempArray.push(short);
+                    }
+                }
+            }
+
+            for (entry of Object.values(GENDERS.MAP)) {
+                if (entry.NAME === gender) {
+                    tempArray.push(entry.SHORT);
+                }
+            }
+            result = `${declension}.${tempArray[0]}.${tempArray[2]}.${tempArray[1]}`;//declension.case.gender.number
+            break;
+    }
+
+    return result;
+}
 const isVowel_regex = /^[iīeēæyuūoōaāúûóôáâIĪEĒÆYUŪOŌAĀÚÛÓÔÁÂ]$/;
 const isConsonant_regex = /^[tkqq̇'cfdszgχhlrɾmnŋTKQQ̇'CFDSZGΧHLRɾMNŊ]$/;
 
@@ -1893,16 +1649,4 @@ const helperFunctions =
     tablegen,
     formatting,
     final
-}
-
-
-function findStemWhenShortstem(short_stem) {
-    const tempArray = [];
-    const matches = DICTIONARY.ALL_WORDS.fetch(short_stem);
-    for (const result of matches) {
-        if (result.word.length === short_stem.length + 1 && helperFunctions.formatting.isVowel_regex.test(result.word.slice(-1))) {
-            tempArray.push(result);
-        }
-    }
-    return tempArray;
 }
