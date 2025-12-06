@@ -1158,8 +1158,24 @@ function dictionaryPage() {
                                                     }
                                                 }
                                             }
+                                            if (pSuffixANDpPrefixANDnounSuffix_temp === true) {
+                                                console.log(result);
+                                                //affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix.push(entry2);
+                                                //result.stem = pSuffixANDpPrefixANDnounSuffix_stem; //fix stem.
+
+                                                if (!checkerArr.includes(result.short_path)) {//<- prevent pushing every possible suffix, for every possible prefix - only show possible suffixes once.
+                                                    checkerArr.push(result.short_path);
+                                                    console.log('pushed for el with short_path:', result.short_path);
+                                                    affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix.push(result);
+                                                    //console.log(entry3[0].stem);
+                                                    result.stem = pSuffixANDpPrefixANDnounSuffix_stem; //fix stem.
+                                                }
+                                            }
                                         }
-                                        if (pSuffixANDpPrefixANDnounSuffix_temp) {
+                                        entry.stem = entry2[0].stem; //fix stem.
+                                        console.log(entry.stem);
+                                        /*
+                                        if (pSuffixANDpPrefixANDnounSuffix_temp === true) {
                                             affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix.push(entry2);
                                             //console.log(entry2);
                                             for (const result of entry2) {
@@ -1167,7 +1183,7 @@ function dictionaryPage() {
                                                 result.stem = pSuffixANDpPrefixANDnounSuffix_stem; //fix stem.
                                             }
                                         }
-                                        entry.stem = entry2[0].stem; //fix stem.
+                                            */
                                         //console.log(entry, entry2);
                                         affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(entry2);
                                     }
@@ -2149,6 +2165,45 @@ function dictionaryPage() {
                 }
 
                 helperFunctions.standard.openPageById('page96');
+            }
+            else if (affixTypesMap.pSuffixANDpPrefixANDnounSuffix.state) {
+                matchType = 2;
+                helperFunctions.standard.clearPageById('page96');
+
+                const stem = affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix[0][0].stem;
+                const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
+                const definition = stemMap.definition || '...';
+                const notes = stemMap.usage_notes || '...';
+
+                const html = `
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>...</th>
+                                    <th>Word</th>
+                                    <th>Stem</th>
+                                    <th>Definition</th>
+                                    <th>Usage Notes</th>
+                                    <th>Wordclass</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Info</th>
+                                    <td>${keyword}</td>
+                                    <td>${stem}</td>
+                                    <td>${definition}</td>
+                                    <td>${notes}</td>
+                                    <td id="wordclassTd">${'Noun'}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="particleWrapper"></div>
+                    <div id="suffixWrapper"></div>
+                `;
+                helperFunctions.standard.createPageById('page96', html);
             }//<-- this is where i got to:)
             //adj with pps?
             //noun w p suffix and p prefix
