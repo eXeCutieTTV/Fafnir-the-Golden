@@ -1492,12 +1492,16 @@ const defsToSingleString = function defsToSingleString(gendersArray) {
     }
     return html;
 }
+const isVowel_regex = /^[iīeēæyuūoōaāúûóôáâIĪEĒÆYUŪOŌAĀÚÛÓÔÁÂ]$/;
+const isConsonant_regex = /^[tkqq̇'cfdszgχhlrɾmnŋTKQQ̇'CFDSZGΧHLRɾMNŊ]$/;
 
 const formatting = {
     keepDigitsOnly,
     removeParensSpacesAndDigits,
     shorten_path,
-    defsToSingleString
+    defsToSingleString,
+    isVowel_regex,
+    isConsonant_regex
 }
 
 
@@ -1890,34 +1894,15 @@ const helperFunctions =
     formatting,
     final
 }
-/*
-function testingAffixChecker(input, map, isPrefix = true, returnAll = false) {
-    if (!input || typeof input !== "string") return null;
 
-    const matches = [];
-    let best = null;
-    let bestLen = 0;
 
-    for (const [key, val] of Object.entries(map)) {
-        const variants = Array.isArray(val[1]) ? val[1] : [key];
-        console.log(val);
-        for (const v of variants) {
-            if (typeof v !== "string") continue;
-            const match = isPrefix ? input.startsWith(v) : input.endsWith(v);
-            if (!match) continue;
-
-            if (returnAll) matches.push(val);
-            else if (v.length > bestLen) {
-                best = val;
-                bestLen = v.length;
-            }
+function findStemWhenShortstem(short_stem) {
+    const tempArray = [];
+    const matches = DICTIONARY.ALL_WORDS.fetch(short_stem);
+    for (const result of matches) {
+        if (result.word.length === short_stem.length + 1 && helperFunctions.formatting.isVowel_regex.test(result.word.slice(-1))) {
+            tempArray.push(result);
         }
     }
-
-    if (returnAll) return matches.length ? matches : null;
-    return best;
-};
-*/
-//make function for each wordclass' tablegen
-
-
+    return tempArray;
+}
