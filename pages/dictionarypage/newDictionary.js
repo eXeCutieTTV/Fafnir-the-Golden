@@ -2245,9 +2245,6 @@ function dictionaryPage() {
                 helperFunctions.standard.openPageById('page96');
             }//<-- this is where i got to:)
             //adj with pps?
-            //noun w p suffix and p prefix
-            //noun w p suffix and p prefix and suffix
-            //^^noun w i+nyl
             else {
                 console.warn('type not found');
                 return;
