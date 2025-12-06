@@ -2179,9 +2179,8 @@ function dictionaryPage() {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
-                const stem = affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix[0][0].stem;
+                const stem = affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix[0].stem;
                 const stemMap = DICTIONARY.ALL_WORDS.MAP[stem] || [];
-                const definition = stemMap.definition || '...';
                 const notes = stemMap.usage_notes || '...';
 
                 const html = `
@@ -2192,7 +2191,6 @@ function dictionaryPage() {
                                     <th>...</th>
                                     <th>Word</th>
                                     <th>Stem</th>
-                                    <th>Definition</th>
                                     <th>Usage Notes</th>
                                     <th>Wordclass</th>
                                 </tr>
@@ -2202,7 +2200,6 @@ function dictionaryPage() {
                                     <th>Info</th>
                                     <td>${keyword}</td>
                                     <td>${stem}</td>
-                                    <td>${definition}</td>
                                     <td>${notes}</td>
                                     <td id="wordclassTd">${'Noun'}</td>
                                 </tr>
@@ -2213,6 +2210,31 @@ function dictionaryPage() {
                     <div id="suffixWrapper"></div>
                 `;
                 helperFunctions.standard.createPageById('page96', html);
+                const particleWrapper = document.getElementById('particleWrapper');
+                for (const result of affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.pPrefix) {
+                    const particleMap = DICTIONARY.ALL_WORDS.MAP[result.prefix];
+                    helperFunctions.standard.resultTables.particleTable(result.prefix, particleMap.definition, particleMap.usage_notes || '...', particleWrapper);
+                }
+                for (const results of affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.pSuffix) {
+                    for (const result of results) {
+                        const particleMap = DICTIONARY.ALL_WORDS.MAP[result.suffix];
+                        helperFunctions.standard.resultTables.particleTable(result.suffix, particleMap.definition, particleMap.usage_notes || '...', particleWrapper);
+                    }
+                }
+                const suffixWrapper = document.getElementById('suffixWrapper');
+                for (const result of affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix) {
+                    const path = result.path;
+                    function definition() {//<-- universalise this function?...
+                        const entry = DICTIONARY.ALL_WORDS.MAP[result.stem];
+                        for (const [gender, def] of Object.entries(entry.genders)) {
+                            if (gender === path.gender) {
+                                return def;
+                            }
+                        }
+                    }
+                    helperFunctions.standard.resultTables.nounTable(result.suffix, path.declension, path.gender, path.number, path.case, definition(), suffixWrapper, 'suffix');
+                }
+                helperFunctions.standard.openPageById('page96');
             }//<-- this is where i got to:)
             //adj with pps?
             //noun w p suffix and p prefix
