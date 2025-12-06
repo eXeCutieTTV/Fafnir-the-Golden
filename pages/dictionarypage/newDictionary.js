@@ -2245,6 +2245,8 @@ function dictionaryPage() {
                 helperFunctions.standard.openPageById('page96');
             }//<-- this is where i got to:)
             //adj with pps?
+
+            //TODO add affix tables to the newly made sections.
             else {
                 console.warn('type not found');
                 return;
