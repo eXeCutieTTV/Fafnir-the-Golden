@@ -1083,12 +1083,12 @@ const page97Base = function page97Base(word, wordclass) {
                 </div>
             </div>
             <div id="rightdivdictionary" class="rightdivdictionary">
-                <div class="pageSearch">
+                <!--<div class="pageSearch">
                     <input type="text" id="search_field" placeholder="Search..." />
                     <button id="search_button">Search</button>
                     <button id="tableSearchBtn">Table is seachable</button>
                     <div id="textBoxContainer"></div>
-                </div>
+                </div>-->
             </div>
         </div>`;
     helperFunctions.standard.createPageById('page97', html);
