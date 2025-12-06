@@ -997,13 +997,14 @@ function dictionaryPage() {
                 pSuffix: { rawMap: type2AffixesMap.pSuffix, resultMap: [], state: false, affixAmount: 1 },
                 detSuffix: { rawMap: type2AffixesMap.detSuffix, resultMap: [], state: false, affixAmount: 1 },
                 auxPrefix: { rawMap: type2AffixesMap.auxPrefix, resultMap: [], state: false, affixAmount: 1 },
-                verbBothAffixes: { resultMap: { prefix: [], suffix: [], }, state: false, affixAmount: 2 },
-                nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [], }, state: false, affixAmount: 2 },
-                nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
-                nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
-                adjSuffixANDpSuffix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
-                adjSuffixANDpPrefix: { resultMap: { particle: [], suffix: [], }, state: false, affixAmount: 2 },
-                pSuffixANDpPrefix: { resultMap: { prefix: [], suffix: [], }, state: false, affixAmount: 2 },
+                verbBothAffixes: { resultMap: { prefix: [], suffix: [] }, state: false, affixAmount: 2 },
+                nounSuffixANDppPrefix: { resultMap: { preposition: [], suffix: [] }, state: false, affixAmount: 2 },
+                nounSuffixANDpPrefix: { resultMap: { particle: [], suffix: [] }, state: false, affixAmount: 2 },
+                nounSuffixANDpSuffix: { resultMap: { particle: [], suffix: [] }, state: false, affixAmount: 2 },
+                adjSuffixANDpSuffix: { resultMap: { particle: [], suffix: [] }, state: false, affixAmount: 2 },
+                adjSuffixANDpPrefix: { resultMap: { particle: [], suffix: [] }, state: false, affixAmount: 2 },
+                pSuffixANDpPrefix: { resultMap: { prefix: [], suffix: [] }, state: false, affixAmount: 2 },
+                pSuffixANDpPrefixANDnounSuffix: { resultMap: { pPrefix: [], pSuffix: [], suffix: [] }, state: false, affixAmount: 3 },
             }
             //console.log(affixTypesMap);
             allMatchesArray.type2 = affixTypesMap;
@@ -1119,6 +1120,7 @@ function dictionaryPage() {
                 }
             }
             if (affixTypesMap.pPrefix.rawMap.arrayLength) {
+                const checkerArr = [];
                 for (const entries of Object.values(affixTypesMap.pPrefix.rawMap)) {
                     for (const entry of Object.values(entries)) {
                         if (DICTIONARY.ALL_WORDS.MAP[entry.stem]) {
@@ -1129,13 +1131,49 @@ function dictionaryPage() {
                             particleSuffix = helperFunctions.matchtype2.neoAffixChecker(entry.stem, DICTIONARY.PARTICLES.MAP, false) || [];
                             //console.log(nounSuffix);
                             if (nounSuffix.arrayLength > 0) {
+                                let pSuffixANDpPrefixANDnounSuffix_temp = false;
+                                let pSuffixANDpPrefixANDnounSuffix_stem = '';
                                 for (const entry2 of Object.values(nounSuffix)) {
                                     //console.log(obj)
                                     if (typeof (entry2) === 'object') {
+                                        //console.log(entry2[0].stem);
+                                        for (const result of entry2) {
+                                            //console.log(result);
+                                            particleSuffix2 = helperFunctions.matchtype2.neoAffixChecker(result.stem, DICTIONARY.PARTICLES.MAP, false) || [];
+                                            //console.log(particleSuffix2);
+                                            for (const entry3 of Object.values(particleSuffix2)) {
+                                                if (typeof (entry3) === 'object') {
+                                                    //console.log(entry3);
+                                                    for (const result2 of entry3) {
+                                                        //console.log(result2)
+                                                        if (!checkerArr.includes(result2.short_path)) {//<- prevent pushing every possible suffix, for every possible prefix - only show possible suffixes once.
+                                                            checkerArr.push(result2.short_path);
+                                                            console.log('pushed for el with short_path:', result2.short_path);
+                                                            affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.pSuffix.push(entry3);
+                                                            //console.log(entry3[0].stem);
+                                                            pSuffixANDpPrefixANDnounSuffix_stem = result2.stem;
+                                                            affixTypesMap.pSuffixANDpPrefixANDnounSuffix.state = true;
+                                                        }
+                                                        pSuffixANDpPrefixANDnounSuffix_temp = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (pSuffixANDpPrefixANDnounSuffix_temp) {
+                                            affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.suffix.push(entry2);
+                                            //console.log(entry2);
+                                            for (const result of entry2) {
+                                                //console.log(result)
+                                                result.stem = pSuffixANDpPrefixANDnounSuffix_stem; //fix stem.
+                                            }
+                                        }
                                         entry.stem = entry2[0].stem; //fix stem.
-                                        console.log(entry, entry2);
+                                        //console.log(entry, entry2);
                                         affixTypesMap.nounSuffixANDpPrefix.resultMap.suffix.push(entry2);
                                     }
+                                }
+                                if (pSuffixANDpPrefixANDnounSuffix_temp) {
+                                    affixTypesMap.pSuffixANDpPrefixANDnounSuffix.resultMap.pPrefix.push(entry);
                                 }
                                 affixTypesMap.nounSuffixANDpPrefix.resultMap.particle.push(entry);
                                 affixTypesMap.nounSuffixANDpPrefix.state = true;
@@ -2050,7 +2088,8 @@ function dictionaryPage() {
                     helperFunctions.standard.resultTables.verbTable(result.prefix, path.gender, path.number, path.person, auxilaryPrefixTableWrapper, 'Prefix');
                 }
                 helperFunctions.standard.openPageById('page96');
-            } else if (affixTypesMap.pSuffixANDpPrefix.state) {
+            }
+            else if (affixTypesMap.pSuffixANDpPrefix.state) {
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
@@ -2160,7 +2199,7 @@ function dictionaryPage() {
         });
         searchBTN = document.getElementById('search_button');
         searchFLD = document.getElementById('search_field');
-        console.log(searchBTN, searchFLD);
+        //console.log(searchBTN, searchFLD);
         searchBTN.addEventListener('click', () => {
             search(); // /\(/o.o\)/\ - Spooky the spider
         });
