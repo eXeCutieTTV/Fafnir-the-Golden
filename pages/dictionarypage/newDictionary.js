@@ -2012,7 +2012,7 @@ function dictionaryPage() {
 
                 helperFunctions.standard.openPageById('page96');
             }
-            else if (affixTypesMap.adjSuffixANDpSuffix.state) {//move nyl logic solely into this vv
+            else if (affixTypesMap.adjSuffixANDpSuffix.state) {//move nyl logic into this vv
                 matchType = 2;
                 helperFunctions.standard.clearPageById('page96');
 
